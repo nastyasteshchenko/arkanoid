@@ -63,12 +63,12 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
         pauseButton.setFont(Font.font("Droid Sans Mono"));
         pauseButton.setTextFill(Color.WHITE);
 
-        highScoreLabel.setLayoutX(120);
+        highScoreLabel.setLayoutX(125);
         highScoreLabel.setLayoutY(860);
         highScoreLabel.setFont(Font.font("Droid Sans Mono"));
         highScoreLabel.setStyle("-fx-font-size: 20");
 
-        highScoreCountLabel.setLayoutX(250);
+        highScoreCountLabel.setLayoutX(230);
         highScoreCountLabel.setLayoutY(860);
         highScoreCountLabel.setFont(Font.font("Droid Sans Mono"));
         highScoreCountLabel.setStyle("-fx-font-size: 20");
@@ -113,6 +113,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     }
 
     public void clear() {
+        scoreCountLabel.setText("0");
         isStartMovingBall = false;
         platformX = PLATFORM_START_X + PLATFORM_WIDTH / 2;
         blocks.clear();

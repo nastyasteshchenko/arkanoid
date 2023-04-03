@@ -21,18 +21,17 @@ import java.util.Properties;
 
 public class Controller {
 
-    private static FileInputStream fis;
-    private static Properties records;
-
-    private static FileOutputStream fos;
+    private static Properties records = new Properties();
 
     private static int numLevel = 0;
 
-    private Timeline animation;
+    private static Timeline animation;
 
-    private Timeline pauseTimeline;
+    private static Timeline pauseTimeline;
+
     private static LevelView gameView = new FirstLevelView();
-    private static Model model;
+
+    private static final Model model = new Model(LevelView.SCENE_HEIGHT, LevelView.SCENE_WIDTH);
 
     private void pause() {
         pauseTimeline = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
@@ -47,6 +46,11 @@ public class Controller {
         pauseTimeline.play();
     }
 
+    private void setRecord(){
+        if(model.getScore()>Integer.parseInt(records.getProperty(String.valueOf(numLevel)))){
+            records.setProperty(String.valueOf(numLevel), String.valueOf(model.getScore()));
+        }
+    }
     private void moveBall() {
         animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
             if (gameView.isStartMovingBall()) {
@@ -56,9 +60,8 @@ public class Controller {
                     gameView.changeScore(model.getScore());
                     if (model.getAmountOfBreakableBlocks() == 0) {
                         Arkanoid.gameWin();
+                        setRecord();
                         ++numLevel;
-                        records.put("level1.score", String.valueOf(model.getScore()));
-                        records.store(fos, "Changed records");
                         animation.stop();
                         if (pauseTimeline != null)
                             pauseTimeline.stop();
@@ -69,8 +72,7 @@ public class Controller {
                     gameView.movePlatform(model.recountPlatformX(gameView.getPlatformX()));
                     if (model.isGameOver()) {
                         Arkanoid.gameOver();
-                        records.put("level1.score", String.valueOf(model.getScore()));
-                        records.store(fos, "Changed records");
+                        setRecord();
                         animation.stop();
                         if (pauseTimeline != null)
                             pauseTimeline.stop();
@@ -86,15 +88,17 @@ public class Controller {
 
     @FXML
     protected void restartGame() throws IOException {
+        records.store(new FileOutputStream("src/main/resources/oop/arkanoid/records.properties"), null);
         gameView.clear();
         startGame();
     }
 
     private void startFirstLevel() {
 
+        gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
         gameView.render();
 
-        model = new Model(FirstLevelView.AMOUNT_OF_BLOCKS, FirstLevelView.AMOUNT_OF_BREAKABLE_BLOCKS, FirstLevelView.SCENE_HEIGHT, FirstLevelView.SCENE_WIDTH);
+        model.restartModel(FirstLevelView.AMOUNT_OF_BLOCKS, FirstLevelView.AMOUNT_OF_BREAKABLE_BLOCKS);
         Rectangle platform = gameView.getPlatform();
         model.setPlatform(platform.getX(), platform.getY(), platform.getWidth(), platform.getHeight());
 
@@ -114,9 +118,10 @@ public class Controller {
 
     private void startSecondLevel() {
         gameView = new SecondLevelView();
+        gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
         gameView.render();
 
-        model = new Model(SecondLevelView.AMOUNT_OF_BLOCKS, SecondLevelView.AMOUNT_OF_BREAKABLE_BLOCKS, SecondLevelView.SCENE_HEIGHT, SecondLevelView.SCENE_WIDTH);
+        model.restartModel(SecondLevelView.AMOUNT_OF_BLOCKS, SecondLevelView.AMOUNT_OF_BREAKABLE_BLOCKS);
         Rectangle platform = gameView.getPlatform();
         model.setPlatform(platform.getX(), platform.getY(), platform.getWidth(), platform.getHeight());
 
@@ -147,21 +152,13 @@ public class Controller {
     @FXML
     protected void startGame() throws IOException {
         if (numLevel == 0) {
-            records = new Properties();
-            fis = new FileInputStream("src/main/resources/oop/arkanoid/records.properties");
-            fos = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties");
-            records.load(fis);
+            records.load(new FileInputStream("src/main/resources/oop/arkanoid/records.properties"));
             numLevel++;
         }
+
         switch (numLevel) {
-            case 1 -> {
-              //  gameView.setHighScoreCountLabel(records.getProperty("1"));
-                startFirstLevel();
-            }
-            case 2 -> {
-               // gameView.setHighScoreCountLabel(records.getProperty("2"));
-                startSecondLevel();
-            }
+            case 1 -> startFirstLevel();
+            case 2 -> startSecondLevel();
         }
     }
 

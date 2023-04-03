@@ -10,16 +10,21 @@ public class Model {
     private boolean isGameOver = false;
     private int score = 0;
     private int amountOfBreakableBlocks;
-    private final int amountOfBlocks;
+    private int amountOfBlocks;
     private final double sceneWidth;
     private final double sceneHeight;
     private final HashMap<String, Block> blocks = new HashMap<>();
     private Platform platform;
     private Ball ball;
 
-    public Model(int amountOfBlocks, int amountOfBreakableBlocks, double sceneHeight, double sceneWidth) {
+    public void restartModel(int amountOfBlocks, int amountOfBreakableBlocks) {
         this.amountOfBlocks = amountOfBlocks;
         this.amountOfBreakableBlocks = amountOfBreakableBlocks;
+        score = 0;
+        isGameOver = false;
+    }
+
+    public Model(double sceneHeight, double sceneWidth) {
         this.sceneWidth = sceneWidth;
         this.sceneHeight = sceneHeight;
     }
