@@ -62,7 +62,7 @@ public class Controller {
         animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
             if (gameView.isStartMovingBall()) {
                 try {
-                    gameView.deleteBlock(model.detectCollisionsWithBricks());
+                    gameView.deleteBrick(model.detectCollisionsWithBricks());
                     gameView.moveBall(model.recountBallCoordinates());
                     gameView.changeScore(model.getScore());
                     if (model.getAmountOfBreakableBricks() == 0) {
@@ -107,13 +107,13 @@ public class Controller {
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
         gameView.render();
 
-        model.restartModel(gameView.getAmountOfBlocks(), gameView.getAmountOfBreakableBlocks());
+        model.restartModel(gameView.getAmountOfBricks(), gameView.getAmountOfBreakableBricks());
 
         model.setPlatform(gameView.getPlatform().getX(), gameView.getPlatform().getY(), gameView.getPlatform().getWidth(), gameView.getPlatform().getHeight());
 
         model.setBall(gameView.getBall().getRadius(), gameView.getBall().getCenterX(), gameView.getBall().getCenterY());
 
-        HashMap<String, Rectangle> bricks = gameView.getBlocks();
+        HashMap<String, Rectangle> bricks = gameView.getBricks();
 
         for (int i = 0; i < bricks.size() - 5; i++) {
             Rectangle block = bricks.get(String.valueOf(i));
@@ -134,20 +134,20 @@ public class Controller {
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
         gameView.render();
 
-        model.restartModel(gameView.getAmountOfBlocks(), gameView.getAmountOfBreakableBlocks());
+        model.restartModel(gameView.getAmountOfBricks(), gameView.getAmountOfBreakableBricks());
         Rectangle platform = gameView.getPlatform();
         model.setPlatform(platform.getX(), platform.getY(), platform.getWidth(), platform.getHeight());
 
         model.setBall(gameView.getBall().getRadius(), gameView.getBall().getCenterX(), gameView.getBall().getCenterY());
 
-        HashMap<String, Rectangle> bricks = gameView.getBlocks();
+        HashMap<String, Rectangle> bricks = gameView.getBricks();
 
-        for (int i = 0; i < gameView.getAmountOfBreakableBlocks(); i++) {
+        for (int i = 0; i < gameView.getAmountOfBreakableBricks(); i++) {
             Rectangle brick = bricks.get(String.valueOf(i));
             model.addStandardBrick(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight(), brick.getId());
         }
 
-        for (int i = gameView.getAmountOfBreakableBlocks(); i < gameView.getAmountOfBlocks(); i++) {
+        for (int i = gameView.getAmountOfBreakableBricks(); i < gameView.getAmountOfBricks(); i++) {
             Rectangle brick = bricks.get(String.valueOf(i));
             model.addIndestructibleBrick(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight(), brick.getId());
         }
@@ -175,7 +175,7 @@ public class Controller {
     }
 
     @FXML
-    protected void seeAboutGame() throws IOException {
+    protected void watchAboutGame() throws IOException {
         Arkanoid.changeScene(new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("about-scene.fxml")))));
     }
 

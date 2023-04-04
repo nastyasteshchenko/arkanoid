@@ -54,7 +54,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     protected static Scene gameScene;
 
     protected static Pane root;
-    protected static Properties params = new Properties();
+    protected static Properties fieldParameters = new Properties();
     protected static final HashMap<String, Rectangle> bricks = new HashMap<>();
 
     public void render() {
@@ -62,55 +62,55 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
 
     public static void downloadField() throws IOException {
 
-        params.load(new FileInputStream("src/main/resources/oop/arkanoid/field-view.properties"));
+        fieldParameters.load(new FileInputStream("src/main/resources/oop/arkanoid/field-view.properties"));
 
-        sceneHeight = Double.parseDouble(params.getProperty("scene.height"));
-        sceneWidth = Double.parseDouble(params.getProperty("scene.width"));
+        sceneHeight = Double.parseDouble(fieldParameters.getProperty("scene.height"));
+        sceneWidth = Double.parseDouble(fieldParameters.getProperty("scene.width"));
 
-        platformWidth = Double.parseDouble(params.getProperty("platform.width"));
-        platformHeight = Double.parseDouble(params.getProperty("platform.height"));
-        platformStartX = Double.parseDouble(params.getProperty("platform.start.x"));
-        platformStartY = Double.parseDouble(params.getProperty("platform.start.y"));
+        platformWidth = Double.parseDouble(fieldParameters.getProperty("platform.width"));
+        platformHeight = Double.parseDouble(fieldParameters.getProperty("platform.height"));
+        platformStartX = Double.parseDouble(fieldParameters.getProperty("platform.start.x"));
+        platformStartY = Double.parseDouble(fieldParameters.getProperty("platform.start.y"));
 
-        ballStartX = Double.parseDouble(params.getProperty("ball.start.x"));
-        ballStartY = Double.parseDouble(params.getProperty("ball.start.y"));
-        ballRadius = Double.parseDouble(params.getProperty("ball.radius"));
+        ballStartX = Double.parseDouble(fieldParameters.getProperty("ball.start.x"));
+        ballStartY = Double.parseDouble(fieldParameters.getProperty("ball.start.y"));
+        ballRadius = Double.parseDouble(fieldParameters.getProperty("ball.radius"));
 
-        brickHeight = Double.parseDouble(params.getProperty("brick.height"));
-        brickWidth = Double.parseDouble(params.getProperty("brick.width"));
-        distanceBetweenBricks = Double.parseDouble(params.getProperty("distance.between.bricks"));
+        brickHeight = Double.parseDouble(fieldParameters.getProperty("brick.height"));
+        brickWidth = Double.parseDouble(fieldParameters.getProperty("brick.width"));
+        distanceBetweenBricks = Double.parseDouble(fieldParameters.getProperty("distance.between.bricks"));
 
-        startOfBricksX = Double.parseDouble(params.getProperty("start.of.bricks.x"));
-        startOfBricksY = Double.parseDouble(params.getProperty("start.of.bricks.y"));
+        startOfBricksX = Double.parseDouble(fieldParameters.getProperty("start.of.bricks.x"));
+        startOfBricksY = Double.parseDouble(fieldParameters.getProperty("start.of.bricks.y"));
 
         pauseButton.setOnMouseClicked(event -> isPause = !isPause);
 
-        pauseButton.setTranslateX(Double.parseDouble(params.getProperty("pause.button.x")));
-        pauseButton.setTranslateY(Double.parseDouble(params.getProperty("pause.button.y")));
-        pauseButton.setPrefSize(Double.parseDouble(params.getProperty("pause.button.pref.width")), Double.parseDouble(params.getProperty("pause.button.pref.height")));
-        pauseButton.setStyle("-fx-font-size: " + params.getProperty("pause.button.font.size"));
-        pauseButton.setFont(Font.font(params.getProperty("pause.button.font")));
-        pauseButton.setTextFill(Color.valueOf(params.getProperty("pause.button.text.color")));
+        pauseButton.setTranslateX(Double.parseDouble(fieldParameters.getProperty("pause.button.x")));
+        pauseButton.setTranslateY(Double.parseDouble(fieldParameters.getProperty("pause.button.y")));
+        pauseButton.setPrefSize(Double.parseDouble(fieldParameters.getProperty("pause.button.pref.width")), Double.parseDouble(fieldParameters.getProperty("pause.button.pref.height")));
+        pauseButton.setStyle("-fx-font-size: " + fieldParameters.getProperty("pause.button.font.size"));
+        pauseButton.setFont(Font.font(fieldParameters.getProperty("pause.button.font")));
+        pauseButton.setTextFill(Color.valueOf(fieldParameters.getProperty("pause.button.text.color")));
 
-        highScoreLabel.setLayoutX(Double.parseDouble(params.getProperty("high.score.label.x")));
-        highScoreLabel.setLayoutY(Double.parseDouble(params.getProperty("high.score.label.y")));
-        highScoreLabel.setFont(Font.font(params.getProperty("high.score.label.font")));
-        highScoreLabel.setStyle("-fx-font-size: " + params.getProperty("high.score.label.font.size"));
+        highScoreLabel.setLayoutX(Double.parseDouble(fieldParameters.getProperty("high.score.label.x")));
+        highScoreLabel.setLayoutY(Double.parseDouble(fieldParameters.getProperty("high.score.label.y")));
+        highScoreLabel.setFont(Font.font(fieldParameters.getProperty("high.score.label.font")));
+        highScoreLabel.setStyle("-fx-font-size: " + fieldParameters.getProperty("high.score.label.font.size"));
 
-        highScoreCountLabel.setLayoutX(Double.parseDouble(params.getProperty("high.score.count.label.x")));
-        highScoreCountLabel.setLayoutY(Double.parseDouble(params.getProperty("high.score.count.label.y")));
-        highScoreCountLabel.setFont(Font.font(params.getProperty("high.score.count.label.font")));
-        highScoreCountLabel.setStyle("-fx-font-size: " + params.getProperty("high.score.count.label.font.size"));
+        highScoreCountLabel.setLayoutX(Double.parseDouble(fieldParameters.getProperty("high.score.count.label.x")));
+        highScoreCountLabel.setLayoutY(Double.parseDouble(fieldParameters.getProperty("high.score.count.label.y")));
+        highScoreCountLabel.setFont(Font.font(fieldParameters.getProperty("high.score.count.label.font")));
+        highScoreCountLabel.setStyle("-fx-font-size: " + fieldParameters.getProperty("high.score.count.label.font.size"));
 
-        scoreLabel.setLayoutX(Double.parseDouble(params.getProperty("score.label.x")));
-        scoreLabel.setLayoutY(Double.parseDouble(params.getProperty("score.label.y")));
-        scoreLabel.setFont(Font.font(params.getProperty("score.label.font")));
-        scoreLabel.setStyle("-fx-font-size: " + params.getProperty("score.label.font.size"));
+        scoreLabel.setLayoutX(Double.parseDouble(fieldParameters.getProperty("score.label.x")));
+        scoreLabel.setLayoutY(Double.parseDouble(fieldParameters.getProperty("score.label.y")));
+        scoreLabel.setFont(Font.font(fieldParameters.getProperty("score.label.font")));
+        scoreLabel.setStyle("-fx-font-size: " + fieldParameters.getProperty("score.label.font.size"));
 
-        scoreCountLabel.setLayoutX(Double.parseDouble(params.getProperty("score.count.label.x")));
-        scoreCountLabel.setLayoutY(Double.parseDouble(params.getProperty("score.count.label.y")));
-        scoreCountLabel.setFont(Font.font(params.getProperty("score.count.label.font")));
-        scoreCountLabel.setStyle("-fx-font-size: " + params.getProperty("score.count.label.font.size"));
+        scoreCountLabel.setLayoutX(Double.parseDouble(fieldParameters.getProperty("score.count.label.x")));
+        scoreCountLabel.setLayoutY(Double.parseDouble(fieldParameters.getProperty("score.count.label.y")));
+        scoreCountLabel.setFont(Font.font(fieldParameters.getProperty("score.count.label.font")));
+        scoreCountLabel.setStyle("-fx-font-size: " + fieldParameters.getProperty("score.count.label.font.size"));
 
         platform = new Rectangle(platformStartX, platformStartY, platformWidth, platformHeight);
         ball = new Circle(ballStartX, ballStartY, ballRadius);
@@ -134,7 +134,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
         scoreCountLabel.setText(String.valueOf(points));
     }
 
-    public void deleteBlock(ArrayList<String> indexes) {
+    public void deleteBrick(ArrayList<String> indexes) {
         for (String index : indexes) {
             root.getChildren().remove(bricks.get(index));
             bricks.remove(index);
@@ -146,12 +146,12 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     }
 
     public void setRecordText(Text text, String level) throws IOException {
-        params.load(new FileInputStream("src/main/resources/oop/arkanoid/field-view.properties"));
-        text.setX(Double.parseDouble(params.getProperty("level" + level + ".score.x")));
-        text.setY(Double.parseDouble(params.getProperty("level" + level + ".score.y")));
-        text.setFont(Font.font(params.getProperty("level" + level + ".score.font")));
-        text.setFill(Color.valueOf(params.getProperty("level" + level + ".score.color")));
-        text.setStyle("-fx-font-size: " + params.getProperty("level" + level + ".score.font.size"));
+        fieldParameters.load(new FileInputStream("src/main/resources/oop/arkanoid/field-view.properties"));
+        text.setX(Double.parseDouble(fieldParameters.getProperty("level" + level + ".score.x")));
+        text.setY(Double.parseDouble(fieldParameters.getProperty("level" + level + ".score.y")));
+        text.setFont(Font.font(fieldParameters.getProperty("level" + level + ".score.font")));
+        text.setFill(Color.valueOf(fieldParameters.getProperty("level" + level + ".score.color")));
+        text.setStyle("-fx-font-size: " + fieldParameters.getProperty("level" + level + ".score.font.size"));
     }
 
     public void clear() {
@@ -176,7 +176,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
         return ball;
     }
 
-    public HashMap<String, Rectangle> getBlocks() {
+    public HashMap<String, Rectangle> getBricks() {
         return bricks;
     }
 
@@ -196,11 +196,11 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
         return sceneHeight;
     }
 
-    public int getAmountOfBlocks() {
+    public int getAmountOfBricks() {
         return amountOfBricks;
     }
 
-    public int getAmountOfBreakableBlocks() {
+    public int getAmountOfBreakableBricks() {
         return amountOfBreakableBricks;
     }
 
