@@ -37,24 +37,24 @@ public class Ball {
                 Math.abs(centerY + radius - platform.getY()) <= speed / 2;
     }
 
-    public boolean isCollisionWithBlockBottom(Block block) {
-        return centerX - radius < block.getX() + block.getWidth() && centerX + radius > block.getX()
-                && Math.abs(centerY - radius - block.getY() - block.getHeight()) <= speed / 2;
+    public boolean isCollisionWithBrickBottom(Brick brick) {
+        return centerX - radius < brick.getX() + brick.getWidth() && centerX + radius > brick.getX()
+                && Math.abs(centerY - radius - brick.getY() - brick.getHeight()) <= speed / 2;
     }
 
-    public boolean isCollisionWithBlockTop(Block block) {
-        return centerX - radius < block.getX() + block.getWidth() && centerX + radius > block.getX()
-                && Math.abs(centerY + radius - block.getY()) <= speed / 2;
+    public boolean isCollisionWithBrickTop(Brick brick) {
+        return centerX - radius < brick.getX() + brick.getWidth() && centerX + radius > brick.getX()
+                && Math.abs(centerY + radius - brick.getY()) <= speed / 2;
     }
 
-    public boolean isCollisionWithBlockLeftSide(Block block) {
-        return Math.abs(centerX + radius - block.getX()) <= speed / 2
-                && centerY + radius > block.getY() && centerY - radius < block.getY() + block.getHeight();
+    public boolean isCollisionWithBrickLeftSide(Brick brick) {
+        return Math.abs(centerX + radius - brick.getX()) <= speed / 2
+                && centerY + radius > brick.getY() && centerY - radius < brick.getY() + brick.getHeight();
     }
 
-    public boolean isCollisionWithBlockRightSide(Block block) {
-        return Math.abs(centerX - radius - block.getX() - block.getWidth()) <= speed / 2
-                && centerY + radius > block.getY() && centerY - radius < block.getY() + block.getHeight();
+    public boolean isCollisionWithBrickRightSide(Brick brick) {
+        return Math.abs(centerX - radius - brick.getX() - brick.getWidth()) <= speed / 2
+                && centerY + radius > brick.getY() && centerY - radius < brick.getY() + brick.getHeight();
     }
 
     public void renewCoordinates() {

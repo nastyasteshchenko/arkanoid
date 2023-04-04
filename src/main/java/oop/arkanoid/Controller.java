@@ -6,7 +6,6 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import oop.arkanoid.model.Model;
@@ -23,9 +22,9 @@ import java.util.Properties;
 
 public class Controller {
 
-    private static Properties records = new Properties();
+    private static final Properties records = new Properties();
 
-    private static int numLevel = 0;
+    private static int numLevel = 1;
 
     private static Timeline animation;
 
@@ -48,19 +47,20 @@ public class Controller {
         pauseTimeline.play();
     }
 
-    private void setRecord(){
-        if(model.getScore()>Integer.parseInt(records.getProperty(String.valueOf(numLevel)))){
+    private void setRecord() {
+        if (model.getScore() > Integer.parseInt(records.getProperty(String.valueOf(numLevel)))) {
             records.setProperty(String.valueOf(numLevel), String.valueOf(model.getScore()));
         }
     }
+
     private void moveBall() {
         animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
             if (gameView.isStartMovingBall()) {
                 try {
-                    gameView.deleteBlock(model.detectCollisionsWithBlocks());
+                    gameView.deleteBlock(model.detectCollisionsWithBricks());
                     gameView.moveBall(model.recountBallCoordinates());
                     gameView.changeScore(model.getScore());
-                    if (model.getAmountOfBreakableBlocks() == 0) {
+                    if (model.getAmountOfBreakableBricks() == 0) {
                         gameWin();
                         setRecord();
                         ++numLevel;
@@ -103,18 +103,17 @@ public class Controller {
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
         gameView.render();
 
-        model.restartModel(FirstLevelView.amountOfBlocks, FirstLevelView.amountOfBreakableBlocks);
-        Rectangle platform = gameView.getPlatform();
-        model.setPlatform(platform.getX(), platform.getY(), platform.getWidth(), platform.getHeight());
+        model.restartModel(gameView.getAmountOfBlocks(), gameView.getAmountOfBreakableBlocks());
 
-        Circle ball = gameView.getBall();
-        model.setBall(ball.getRadius(), ball.getCenterX(), ball.getCenterY());
+        model.setPlatform(gameView.getPlatform().getX(), gameView.getPlatform().getY(), gameView.getPlatform().getWidth(), gameView.getPlatform().getHeight());
 
-        HashMap<String, Rectangle> blocks = gameView.getBlocks();
+        model.setBall(gameView.getBall().getRadius(), gameView.getBall().getCenterX(), gameView.getBall().getCenterY());
 
-        for (int i = 0; i < blocks.size(); i++) {
-            Rectangle block = blocks.get(String.valueOf(i));
-            model.addStandartBlock(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
+        HashMap<String, Rectangle> bricks = gameView.getBlocks();
+
+        for (int i = 0; i < bricks.size(); i++) {
+            Rectangle block = bricks.get(String.valueOf(i));
+            model.addStandardBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
         }
 
         Arkanoid.changeScene(gameView.getGameScene());
@@ -123,26 +122,26 @@ public class Controller {
 
     private void startSecondLevel() {
         gameView = new SecondLevelView();
+
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
         gameView.render();
 
-        model.restartModel(SecondLevelView.amountOfBlocks, SecondLevelView.amountOfBreakableBlocks);
+        model.restartModel(gameView.getAmountOfBlocks(), gameView.getAmountOfBreakableBlocks());
         Rectangle platform = gameView.getPlatform();
         model.setPlatform(platform.getX(), platform.getY(), platform.getWidth(), platform.getHeight());
 
-        Circle ball = gameView.getBall();
-        model.setBall(ball.getRadius(), ball.getCenterX(), ball.getCenterY());
+        model.setBall(gameView.getBall().getRadius(), gameView.getBall().getCenterX(), gameView.getBall().getCenterY());
 
-        HashMap<String, Rectangle> blocks = gameView.getBlocks();
+        HashMap<String, Rectangle> bricks = gameView.getBlocks();
 
-        for (int i = 0; i < SecondLevelView.amountOfBreakableBlocks; i++) {
-            Rectangle block = blocks.get(String.valueOf(i));
-            model.addStandartBlock(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
+        for (int i = 0; i < gameView.getAmountOfBreakableBlocks(); i++) {
+            Rectangle brick = bricks.get(String.valueOf(i));
+            model.addStandardBrick(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight(), brick.getId());
         }
 
-        for (int i = SecondLevelView.amountOfBreakableBlocks; i < SecondLevelView.amountOfBlocks; i++) {
-            Rectangle block = blocks.get(String.valueOf(i));
-            model.addIndestructibleBlock(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
+        for (int i = gameView.getAmountOfBreakableBlocks(); i < gameView.getAmountOfBlocks(); i++) {
+            Rectangle brick = bricks.get(String.valueOf(i));
+            model.addIndestructibleBrick(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight(), brick.getId());
         }
 
         Arkanoid.changeScene(gameView.getGameScene());
@@ -156,22 +155,27 @@ public class Controller {
 
     @FXML
     protected void startGame() throws IOException {
-        if (numLevel == 0) {
-            records.load(new FileInputStream("src/main/resources/oop/arkanoid/records.properties"));
-            numLevel++;
-        }
+        records.load(new FileInputStream("src/main/resources/oop/arkanoid/records.properties"));
         LevelView.downloadField();
         model = new Model(gameView.getSceneHeight(), gameView.getSceneWidth());
         startFirstLevel();
     }
 
+    @FXML
+    protected void backToMainScene() throws IOException {
+        Arkanoid.changeScene(new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-scene.fxml")))));
+    }
+
+    @FXML
+    protected void seeAboutGame() throws IOException {
+        Arkanoid.changeScene(new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("about-scene.fxml")))));
+    }
+
     public static void gameOver() throws IOException {
-        Scene scene = new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("game-over-scene.fxml"))));
-        Arkanoid.changeScene(scene);
+        Arkanoid.changeScene(new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("game-over-scene.fxml")))));
     }
 
     public static void gameWin() throws IOException {
-        Scene scene = new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("game-win-scene.fxml"))));
-        Arkanoid.changeScene(scene);
+        Arkanoid.changeScene(new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("game-win-scene.fxml")))));
     }
 }

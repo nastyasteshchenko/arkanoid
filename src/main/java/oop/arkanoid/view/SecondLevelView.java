@@ -6,14 +6,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public final class SecondLevelView extends LevelView {
-    public static int amountOfBlocks;
-    public static int amountOfBreakableBlocks;
-
     @Override
     public void render() {
 
-        amountOfBlocks = Integer.parseInt(params.getProperty("level2.amount.of.blocks"));
-        amountOfBreakableBlocks = Integer.parseInt(params.getProperty("level2.amount.of.breakable.blocks"));
+        amountOfBricks = Integer.parseInt(params.getProperty("level2.amount.of.bricks"));
+        amountOfBreakableBricks = Integer.parseInt(params.getProperty("level2.amount.of.breakable.bricks"));
 
         pauseButton.setStyle("-fx-background-color: " + params.getProperty("level2.pause.button.color"));
 
@@ -23,32 +20,32 @@ public final class SecondLevelView extends LevelView {
         ball.setStroke(Color.valueOf(params.getProperty("level2.ball.stroke.color")));
         ball.setStyle("-fx-stroke-width: "+ params.getProperty("level2.ball.stroke.width"));
 
-        for (int i = 0, numLine = 0, numColumn = 0; i < amountOfBreakableBlocks; numColumn++, i++) {
+        for (int i = 0, numLine = 0, numColumn = 0; i < amountOfBreakableBricks; numColumn++, i++) {
             if (i % 5 == 0 && i != 0) {
                 ++numLine;
                 numColumn = 0;
             }
-            Rectangle block = new Rectangle(startOfBlocksX + numColumn * (blockWidth + distanceBetweenBlocks), startOfBlocksY + numLine * (blockHeight + distanceBetweenBlocks), blockWidth, blockHeight);
-            block.setFill(Color.valueOf(params.getProperty("level2.standard.block.color")));
-            block.setStroke(Color.valueOf(params.getProperty("level2.standard.block.stroke.color")));
-            block.setStyle("-fx-stroke-width: "+ params.getProperty("level2.standard.block.stroke.width"));
-            block.setId(String.valueOf(i));
-            blocks.put(block.getId(), block);
+            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBticksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
+            brick.setFill(Color.valueOf(params.getProperty("level2.standard.brick.color")));
+            brick.setStroke(Color.valueOf(params.getProperty("level2.standard.brick.stroke.color")));
+            brick.setStyle("-fx-stroke-width: "+ params.getProperty("level2.standard.brick.stroke.width"));
+            brick.setId(String.valueOf(i));
+            bricks.put(brick.getId(), brick);
         }
 
-        for (int i = amountOfBreakableBlocks, numColumn = 1; i < amountOfBlocks; numColumn++, i++) {
-            Rectangle block = new Rectangle(startOfBlocksX + numColumn * (blockWidth + distanceBetweenBlocks), startOfBlocksY + 3 * (blockHeight + distanceBetweenBlocks), blockWidth, blockHeight);
-            block.setFill(Color.valueOf(params.getProperty("level2.indestructible.block.color")));
-            block.setStroke(Color.valueOf(params.getProperty("level2.indestructible.block.stroke.color")));
-            block.setStyle("-fx-stroke-width: "+ params.getProperty("level2.indestructible.block.stroke.width"));
-            block.setId(String.valueOf(i));
-            blocks.put(block.getId(), block);
+        for (int i = amountOfBreakableBricks, numColumn = 1; i < amountOfBricks; numColumn++, i++) {
+            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBticksY + 3 * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
+            brick.setFill(Color.valueOf(params.getProperty("level2.indestructible.brick.color")));
+            brick.setStroke(Color.valueOf(params.getProperty("level2.indestructible.brick.stroke.color")));
+            brick.setStyle("-fx-stroke-width: "+ params.getProperty("level2.indestructible.brick.stroke.width"));
+            brick.setId(String.valueOf(i));
+            bricks.put(brick.getId(), brick);
         }
 
         root = new Pane(platform, ball, scoreLabel, scoreCountLabel, pauseButton, highScoreLabel, highScoreCountLabel);
 
-        for (int i = 0; i < blocks.size(); i++) {
-            root.getChildren().add(blocks.get(String.valueOf(i)));
+        for (int i = 0; i < bricks.size(); i++) {
+            root.getChildren().add(bricks.get(String.valueOf(i)));
         }
 
         gameScene = new Scene(root, sceneWidth, sceneHeight, Color.valueOf(params.getProperty("level2.scene.color")));

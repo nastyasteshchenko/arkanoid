@@ -9,17 +9,17 @@ public class Model {
 
     private boolean isGameOver = false;
     private int score = 0;
-    private int amountOfBreakableBlocks;
-    private int amountOfBlocks;
+    private int amountOfBreakableBricks;
+    private int amountOfBricks;
     private final double sceneWidth;
     private final double sceneHeight;
-    private final HashMap<String, Block> blocks = new HashMap<>();
+    private final HashMap<String, Brick> bricks = new HashMap<>();
     private Platform platform;
     private Ball ball;
 
-    public void restartModel(int amountOfBlocks, int amountOfBreakableBlocks) {
-        this.amountOfBlocks = amountOfBlocks;
-        this.amountOfBreakableBlocks = amountOfBreakableBlocks;
+    public void restartModel(int amountOfBricks, int amountOfBreakableBricks) {
+        this.amountOfBricks = amountOfBricks;
+        this.amountOfBreakableBricks = amountOfBreakableBricks;
         score = 0;
         isGameOver = false;
     }
@@ -37,12 +37,12 @@ public class Model {
         platform = new Platform(x, y, width, height);
     }
 
-    public void addStandartBlock(double x, double y, double width, double height, String id) {
-        blocks.put(id, new StandardBlock(x, y, width, height));
+    public void addStandardBrick(double x, double y, double width, double height, String id) {
+        bricks.put(id, new StandardBrick(x, y, width, height));
     }
 
-    public void addIndestructibleBlock(double x, double y, double width, double height, String id) {
-        blocks.put(id, new IndestructibleBlock(x, y, width, height));
+    public void addIndestructibleBrick(double x, double y, double width, double height, String id) {
+        bricks.put(id, new IndestructibleBrick(x, y, width, height));
     }
 
     public Point recountBallCoordinates() {
@@ -96,39 +96,39 @@ public class Model {
 
     }
 
-    public ArrayList<String> detectCollisionsWithBlocks() {
+    public ArrayList<String> detectCollisionsWithBricks() {
 
-        ArrayList<String> indexesCollisionBlocks = new ArrayList<>();
+        ArrayList<String> indexesCollisionBricks = new ArrayList<>();
 
-        for (int i = 0; i < amountOfBlocks; i++) {
-            Block block = blocks.get(String.valueOf(i));
-            if (block != null) {
-                if (ball.isCollisionWithBlockBottom(block) || ball.isCollisionWithBlockTop(block)) {
+        for (int i = 0; i < amountOfBricks; i++) {
+            Brick brick = bricks.get(String.valueOf(i));
+            if (brick != null) {
+                if (ball.isCollisionWithBrickBottom(brick) || ball.isCollisionWithBrickTop(brick)) {
                     ball.detectCollisionY();
-                    score += block.getPoints();
-                    if (!(block instanceof IndestructibleBlock)) {
-                        indexesCollisionBlocks.add(String.valueOf(i));
+                    score += brick.getPoints();
+                    if (!(brick instanceof IndestructibleBrick)) {
+                        indexesCollisionBricks.add(String.valueOf(i));
                     }
                 } else {
-                    if (ball.isCollisionWithBlockLeftSide(block) || ball.isCollisionWithBlockRightSide(block)) {
+                    if (ball.isCollisionWithBrickLeftSide(brick) || ball.isCollisionWithBrickRightSide(brick)) {
                         ball.detectCollisionX();
-                        score += block.getPoints();
-                        if (!(block instanceof IndestructibleBlock)) {
-                            indexesCollisionBlocks.add(String.valueOf(i));
+                        score += brick.getPoints();
+                        if (!(brick instanceof IndestructibleBrick)) {
+                            indexesCollisionBricks.add(String.valueOf(i));
                         }
                     }
                 }
             }
         }
-        for (String i : indexesCollisionBlocks) {
-            blocks.remove(i);
+        for (String i : indexesCollisionBricks) {
+            bricks.remove(i);
         }
-        amountOfBreakableBlocks -= indexesCollisionBlocks.size();
-        return indexesCollisionBlocks;
+        amountOfBreakableBricks -= indexesCollisionBricks.size();
+        return indexesCollisionBricks;
     }
 
-    public int getAmountOfBreakableBlocks() {
-        return amountOfBreakableBlocks;
+    public int getAmountOfBreakableBricks() {
+        return amountOfBreakableBricks;
     }
 
     public int getScore() {

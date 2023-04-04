@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.Properties;
 
 public sealed class LevelView permits FirstLevelView, SecondLevelView {
+
+    protected static int amountOfBricks;
+    protected static int amountOfBreakableBricks;
     protected double platformX = platformStartX + platformWidth / 2;
     protected boolean isStartMovingBall = false;
     protected static boolean isPause = false;
@@ -32,12 +35,12 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     protected static double ballStartY;
     protected static double ballRadius;
 
-    protected static double blockWidth;
-    protected static double blockHeight;
-    protected static double distanceBetweenBlocks;
+    protected static double brickWidth;
+    protected static double brickHeight;
+    protected static double distanceBetweenBricks;
 
-    protected static double startOfBlocksX;
-    protected static double startOfBlocksY;
+    protected static double startOfBricksX;
+    protected static double startOfBticksY;
 
     protected static Label scoreCountLabel = new Label(String.valueOf(0));
     protected static Label scoreLabel = new Label("Score:");
@@ -50,7 +53,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     protected static Scene gameScene;
     protected static Pane root;
     protected static Properties params = new Properties();
-    protected static final HashMap<String, Rectangle> blocks = new HashMap<>();
+    protected static final HashMap<String, Rectangle> bricks = new HashMap<>();
 
     public void render() {
     }
@@ -71,12 +74,12 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
         ballStartY = Double.parseDouble(params.getProperty("ball.start.y"));
         ballRadius = Double.parseDouble(params.getProperty("ball.radius"));
 
-        blockHeight = Double.parseDouble(params.getProperty("block.height"));
-        blockWidth = Double.parseDouble(params.getProperty("block.width"));
-        distanceBetweenBlocks = Double.parseDouble(params.getProperty("distance.between.blocks"));
+        brickHeight = Double.parseDouble(params.getProperty("brick.height"));
+        brickWidth = Double.parseDouble(params.getProperty("brick.width"));
+        distanceBetweenBricks = Double.parseDouble(params.getProperty("distance.between.bricks"));
 
-        startOfBlocksX = Double.parseDouble(params.getProperty("start.of.blocks.x"));
-        startOfBlocksY = Double.parseDouble(params.getProperty("start.of.blocks.y"));
+        startOfBricksX = Double.parseDouble(params.getProperty("start.of.bricks.x"));
+        startOfBticksY = Double.parseDouble(params.getProperty("start.of.bricks.y"));
 
         pauseButton.setOnMouseClicked(event -> isPause = !isPause);
 
@@ -131,8 +134,8 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
 
     public void deleteBlock(ArrayList<String> indexes) {
         for (String index : indexes) {
-            root.getChildren().remove(blocks.get(index));
-            blocks.remove(index);
+            root.getChildren().remove(bricks.get(index));
+            bricks.remove(index);
         }
     }
 
@@ -147,7 +150,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
         isStartMovingBall = false;
         platformX = platformStartX + platformWidth / 2;
         platform.setX(platformStartX);
-        blocks.clear();
+        bricks.clear();
     }
 
     public Rectangle getPlatform() {
@@ -163,7 +166,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     }
 
     public HashMap<String, Rectangle> getBlocks() {
-        return blocks;
+        return bricks;
     }
 
     public boolean isPause() {
@@ -181,4 +184,13 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     public double getSceneHeight() {
         return sceneHeight;
     }
+
+    public int getAmountOfBlocks() {
+        return amountOfBricks;
+    }
+
+    public int getAmountOfBreakableBlocks() {
+        return amountOfBreakableBricks;
+    }
+
 }
