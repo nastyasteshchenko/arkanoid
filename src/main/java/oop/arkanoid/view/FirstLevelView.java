@@ -19,17 +19,30 @@ public final class FirstLevelView extends LevelView {
 
         ball.setFill(Color.valueOf(params.getProperty("level1.ball.color")));
         ball.setStroke(Color.valueOf(params.getProperty("level1.ball.stroke.color")));
-        ball.setStyle("-fx-stroke-width: "+ params.getProperty("level1.ball.stroke.width"));
+        ball.setStyle("-fx-stroke-width: " + params.getProperty("level1.ball.stroke.width"));
 
-        for (int i = 0, numLine = 0, numColumn = 0; i < amountOfBricks; numColumn++, i++) {
+        int numLine = 0;
+        for (int i = 0, numColumn = 0; i < amountOfBricks - 5; numColumn++, i++) {
             if (i % 5 == 0 && i != 0) {
                 ++numLine;
                 numColumn = 0;
             }
             Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBticksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
-            brick.setFill(Color.valueOf(params.getProperty("level1.brick.color")));
-            brick.setStroke(Color.valueOf(params.getProperty("level1.brick.stroke.color")));
-            brick.setStyle("-fx-stroke-width: "+ params.getProperty("level1.brick.stroke.width"));
+            brick.setFill(Color.valueOf(params.getProperty("level1.standard.brick.color")));
+            brick.setStroke(Color.valueOf(params.getProperty("level1.standard.brick.stroke.color")));
+            brick.setStyle("-fx-stroke-width: " + params.getProperty("level1.standard.brick.stroke.width"));
+            brick.setId(String.valueOf(i));
+            bricks.put(brick.getId(), brick);
+        }
+
+        for (int i = amountOfBricks - 5, numColumn = 0; i < amountOfBricks; numColumn++, i++) {
+            if (i % 5 == 0 && i != 0) {
+                ++numLine;
+            }
+            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBticksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
+            brick.setFill(Color.valueOf(params.getProperty("level1.double.hit.brick.color")));
+            brick.setStroke(Color.valueOf(params.getProperty("level1.double.hit.brick.stroke.color")));
+            brick.setStyle("-fx-stroke-width: " + params.getProperty("level1.double.hit.brick.stroke.width"));
             brick.setId(String.valueOf(i));
             bricks.put(brick.getId(), brick);
         }

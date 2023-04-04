@@ -113,11 +113,15 @@ public class Controller {
 
         HashMap<String, Rectangle> bricks = gameView.getBlocks();
 
-        for (int i = 0; i < bricks.size(); i++) {
+        for (int i = 0; i < bricks.size() - 5; i++) {
             Rectangle block = bricks.get(String.valueOf(i));
             model.addStandardBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
         }
 
+        for (int i = bricks.size()-5; i < bricks.size(); i++) {
+            Rectangle block = bricks.get(String.valueOf(i));
+            model.addDoubleHitBrickBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
+        }
         Arkanoid.changeScene(gameView.getGameScene());
         moveBall();
     }
