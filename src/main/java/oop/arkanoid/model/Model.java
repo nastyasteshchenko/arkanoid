@@ -44,6 +44,7 @@ public class Model {
     public void addDoubleHitBrickBrick(double x, double y, double width, double height, String id) {
         bricks.put(id, new DoubleHitBrick(x, y, width, height));
     }
+
     public void addIndestructibleBrick(double x, double y, double width, double height, String id) {
         bricks.put(id, new IndestructibleBrick(x, y, width, height));
     }
@@ -108,7 +109,7 @@ public class Model {
             if (brick != null) {
                 if (ball.isCollisionWithBrickBottom(brick) || ball.isCollisionWithBrickTop(brick)) {
                     ball.detectCollisionY();
-                    brick.increaseCountOfHits();
+                    brick.decreaseCountOfHits();
                     if (!(brick instanceof IndestructibleBrick) && brick.getCountOfHits() == 0) {
                         score += brick.getPoints();
                         indexesCollisionBricks.add(String.valueOf(i));
@@ -116,7 +117,7 @@ public class Model {
                 } else {
                     if (ball.isCollisionWithBrickLeftSide(brick) || ball.isCollisionWithBrickRightSide(brick)) {
                         ball.detectCollisionX();
-                        brick.increaseCountOfHits();
+                        brick.decreaseCountOfHits();
                         if (!(brick instanceof IndestructibleBrick) && brick.getCountOfHits()==0) {
                             score += brick.getPoints();
                             indexesCollisionBricks.add(String.valueOf(i));

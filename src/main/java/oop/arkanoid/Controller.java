@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
 
+
+//Я когда-нибудь нормально обработаю исключения
+
 public class Controller {
 
     private static final Properties records = new Properties();
@@ -91,8 +94,7 @@ public class Controller {
     }
 
     @FXML
-    protected void restartGame() throws IOException {
-        //  records.store(new FileOutputStream("src/main/resources/oop/arkanoid/records.properties"), null);
+    protected void restartGame() {
         gameView.clear();
         switch (numLevel) {
             case 1 -> startFirstLevel();
@@ -178,7 +180,7 @@ public class Controller {
     }
 
     @FXML
-    protected void seeRecords() throws IOException {
+    protected void watchRecords() throws IOException {
         records.load(new FileInputStream("src/main/resources/oop/arkanoid/records.properties"));
         Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("records-scene.fxml")));
         Text level1Score = new Text(records.getProperty("1"));
@@ -190,12 +192,12 @@ public class Controller {
 
     }
 
-    public static void gameOver() throws IOException {
-        records.store(new FileOutputStream("src/main/resources/oop/arkanoid/records.properties"), null);
-        Arkanoid.changeScene(new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("game-over-scene.fxml")))));
+    private static void gameOver() throws IOException{
+            records.store(new FileOutputStream("src/main/resources/oop/arkanoid/records.properties"), null);
+            Arkanoid.changeScene(new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("game-over-scene.fxml")))));
     }
 
-    public static void gameWin() throws IOException {
+    private static void gameWin() throws IOException {
         records.store(new FileOutputStream("src/main/resources/oop/arkanoid/records.properties"), null);
         Arkanoid.changeScene(new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("game-win-scene.fxml")))));
     }

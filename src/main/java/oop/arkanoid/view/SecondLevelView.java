@@ -25,7 +25,7 @@ public final class SecondLevelView extends LevelView {
                 ++numLine;
                 numColumn = 0;
             }
-            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBticksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
+            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBricksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
             brick.setFill(Color.valueOf(params.getProperty("level2.standard.brick.color")));
             brick.setStroke(Color.valueOf(params.getProperty("level2.standard.brick.stroke.color")));
             brick.setStyle("-fx-stroke-width: "+ params.getProperty("level2.standard.brick.stroke.width"));
@@ -34,7 +34,7 @@ public final class SecondLevelView extends LevelView {
         }
 
         for (int i = amountOfBreakableBricks, numColumn = 1; i < amountOfBricks; numColumn++, i++) {
-            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBticksY + 3 * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
+            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBricksY + 3 * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
             brick.setFill(Color.valueOf(params.getProperty("level2.indestructible.brick.color")));
             brick.setStroke(Color.valueOf(params.getProperty("level2.indestructible.brick.stroke.color")));
             brick.setStyle("-fx-stroke-width: "+ params.getProperty("level2.indestructible.brick.stroke.width"));

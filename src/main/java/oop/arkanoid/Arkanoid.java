@@ -14,7 +14,7 @@ public class Arkanoid extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         Scene startScene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-scene.fxml"))));
-        stage.setTitle("Arcanoid");
+        stage.setTitle("Arkanoid");
         stage.setScene(startScene);
         Arkanoid.stage = stage;
         stage.show();

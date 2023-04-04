@@ -27,7 +27,7 @@ public final class FirstLevelView extends LevelView {
                 ++numLine;
                 numColumn = 0;
             }
-            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBticksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
+            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBricksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
             brick.setFill(Color.valueOf(params.getProperty("level1.standard.brick.color")));
             brick.setStroke(Color.valueOf(params.getProperty("level1.standard.brick.stroke.color")));
             brick.setStyle("-fx-stroke-width: " + params.getProperty("level1.standard.brick.stroke.width"));
@@ -39,7 +39,7 @@ public final class FirstLevelView extends LevelView {
             if (i % 5 == 0 && i != 0) {
                 ++numLine;
             }
-            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBticksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
+            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBricksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
             brick.setFill(Color.valueOf(params.getProperty("level1.double.hit.brick.color")));
             brick.setStroke(Color.valueOf(params.getProperty("level1.double.hit.brick.stroke.color")));
             brick.setStyle("-fx-stroke-width: " + params.getProperty("level1.double.hit.brick.stroke.width"));

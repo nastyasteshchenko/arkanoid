@@ -12,7 +12,6 @@ import javafx.scene.text.Text;
 import oop.arkanoid.Point;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +41,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     protected static double distanceBetweenBricks;
 
     protected static double startOfBricksX;
-    protected static double startOfBticksY;
+    protected static double startOfBricksY;
 
     protected static Label scoreCountLabel = new Label(String.valueOf(0));
     protected static Label scoreLabel = new Label("Score:");
@@ -53,6 +52,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     protected static Rectangle platform;
     protected static Circle ball;
     protected static Scene gameScene;
+
     protected static Pane root;
     protected static Properties params = new Properties();
     protected static final HashMap<String, Rectangle> bricks = new HashMap<>();
@@ -81,7 +81,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
         distanceBetweenBricks = Double.parseDouble(params.getProperty("distance.between.bricks"));
 
         startOfBricksX = Double.parseDouble(params.getProperty("start.of.bricks.x"));
-        startOfBticksY = Double.parseDouble(params.getProperty("start.of.bricks.y"));
+        startOfBricksY = Double.parseDouble(params.getProperty("start.of.bricks.y"));
 
         pauseButton.setOnMouseClicked(event -> isPause = !isPause);
 
