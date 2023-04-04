@@ -8,9 +8,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import oop.arkanoid.Point;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -141,6 +143,15 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
 
     public boolean isStartMovingBall() {
         return isStartMovingBall;
+    }
+
+    public void setRecordText(Text text, String level) throws IOException {
+        params.load(new FileInputStream("src/main/resources/oop/arkanoid/field-view.properties"));
+        text.setX(Double.parseDouble(params.getProperty("level" + level + ".score.x")));
+        text.setY(Double.parseDouble(params.getProperty("level" + level + ".score.y")));
+        text.setFont(Font.font(params.getProperty("level" + level + ".score.font")));
+        text.setFill(Color.valueOf(params.getProperty("level" + level + ".score.color")));
+        text.setStyle("-fx-font-size: " + params.getProperty("level" + level + ".score.font.size"));
     }
 
     public void clear() {

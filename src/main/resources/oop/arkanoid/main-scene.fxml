@@ -16,7 +16,7 @@
             <Font name="Droid Sans Mono" size="70.0" />
         </font>
     </Label>
-   <Button contentDisplay="TOP" layoutX="226.0" layoutY="409.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="70.0" prefWidth="150.0" style="-fx-background-color: #ff0000; -fx-text-fill: #ffffff;" text="Records" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS">
+   <Button contentDisplay="TOP" layoutX="226.0" layoutY="409.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="70.0" prefWidth="150.0" style="-fx-background-color: #ff0000; -fx-text-fill: #ffffff;" text="Records" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" onAction="#seeRecords">
       <font>
          <Font name="Droid Sans Mono" size="19.0" />
       </font>

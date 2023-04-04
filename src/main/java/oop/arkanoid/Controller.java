@@ -6,7 +6,9 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import oop.arkanoid.model.Model;
 import oop.arkanoid.view.FirstLevelView;
@@ -61,8 +63,8 @@ public class Controller {
                     gameView.moveBall(model.recountBallCoordinates());
                     gameView.changeScore(model.getScore());
                     if (model.getAmountOfBreakableBricks() == 0) {
-                        gameWin();
                         setRecord();
+                        gameWin();
                         ++numLevel;
                         animation.stop();
                         if (pauseTimeline != null)
@@ -73,8 +75,8 @@ public class Controller {
                     }
                     gameView.movePlatform(model.recountPlatformX(gameView.getPlatformX()));
                     if (model.isGameOver()) {
-                        gameOver();
                         setRecord();
+                        gameOver();
                         animation.stop();
                         if (pauseTimeline != null)
                             pauseTimeline.stop();
@@ -90,7 +92,7 @@ public class Controller {
 
     @FXML
     protected void restartGame() throws IOException {
-        records.store(new FileOutputStream("src/main/resources/oop/arkanoid/records.properties"), null);
+        //  records.store(new FileOutputStream("src/main/resources/oop/arkanoid/records.properties"), null);
         gameView.clear();
         switch (numLevel) {
             case 1 -> startFirstLevel();
@@ -171,11 +173,26 @@ public class Controller {
         Arkanoid.changeScene(new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("about-scene.fxml")))));
     }
 
+    @FXML
+    protected void seeRecords() throws IOException {
+        records.load(new FileInputStream("src/main/resources/oop/arkanoid/records.properties"));
+        Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("records-scene.fxml")));
+        Text level1Score = new Text(records.getProperty("1"));
+        gameView.setRecordText(level1Score, "1");
+        Text level2Score = new Text(records.getProperty("2"));
+        gameView.setRecordText(level2Score, "2");
+        root.getChildren().addAll(level1Score, level2Score);
+        Arkanoid.changeScene(new Scene(root));
+
+    }
+
     public static void gameOver() throws IOException {
+        records.store(new FileOutputStream("src/main/resources/oop/arkanoid/records.properties"), null);
         Arkanoid.changeScene(new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("game-over-scene.fxml")))));
     }
 
     public static void gameWin() throws IOException {
+        records.store(new FileOutputStream("src/main/resources/oop/arkanoid/records.properties"), null);
         Arkanoid.changeScene(new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("game-win-scene.fxml")))));
     }
 }
