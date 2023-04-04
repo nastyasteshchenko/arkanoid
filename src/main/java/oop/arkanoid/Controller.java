@@ -4,6 +4,8 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -13,10 +15,10 @@ import oop.arkanoid.view.LevelView;
 import oop.arkanoid.view.SecondLevelView;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Properties;
 
 public class Controller {
@@ -31,7 +33,7 @@ public class Controller {
 
     private static LevelView gameView = new FirstLevelView();
 
-    private static final Model model = new Model(LevelView.SCENE_HEIGHT, LevelView.SCENE_WIDTH);
+    private static Model model;
 
     private void pause() {
         pauseTimeline = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
@@ -59,7 +61,7 @@ public class Controller {
                     gameView.moveBall(model.recountBallCoordinates());
                     gameView.changeScore(model.getScore());
                     if (model.getAmountOfBreakableBlocks() == 0) {
-                        Arkanoid.gameWin();
+                        gameWin();
                         setRecord();
                         ++numLevel;
                         animation.stop();
@@ -71,7 +73,7 @@ public class Controller {
                     }
                     gameView.movePlatform(model.recountPlatformX(gameView.getPlatformX()));
                     if (model.isGameOver()) {
-                        Arkanoid.gameOver();
+                        gameOver();
                         setRecord();
                         animation.stop();
                         if (pauseTimeline != null)
@@ -90,7 +92,10 @@ public class Controller {
     protected void restartGame() throws IOException {
         records.store(new FileOutputStream("src/main/resources/oop/arkanoid/records.properties"), null);
         gameView.clear();
-        startGame();
+        switch (numLevel) {
+            case 1 -> startFirstLevel();
+            case 2 -> startSecondLevel();
+        }
     }
 
     private void startFirstLevel() {
@@ -98,7 +103,7 @@ public class Controller {
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
         gameView.render();
 
-        model.restartModel(FirstLevelView.AMOUNT_OF_BLOCKS, FirstLevelView.AMOUNT_OF_BREAKABLE_BLOCKS);
+        model.restartModel(FirstLevelView.amountOfBlocks, FirstLevelView.amountOfBreakableBlocks);
         Rectangle platform = gameView.getPlatform();
         model.setPlatform(platform.getX(), platform.getY(), platform.getWidth(), platform.getHeight());
 
@@ -121,7 +126,7 @@ public class Controller {
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
         gameView.render();
 
-        model.restartModel(SecondLevelView.AMOUNT_OF_BLOCKS, SecondLevelView.AMOUNT_OF_BREAKABLE_BLOCKS);
+        model.restartModel(SecondLevelView.amountOfBlocks, SecondLevelView.amountOfBreakableBlocks);
         Rectangle platform = gameView.getPlatform();
         model.setPlatform(platform.getX(), platform.getY(), platform.getWidth(), platform.getHeight());
 
@@ -130,12 +135,12 @@ public class Controller {
 
         HashMap<String, Rectangle> blocks = gameView.getBlocks();
 
-        for (int i = 0; i < SecondLevelView.AMOUNT_OF_BREAKABLE_BLOCKS; i++) {
+        for (int i = 0; i < SecondLevelView.amountOfBreakableBlocks; i++) {
             Rectangle block = blocks.get(String.valueOf(i));
             model.addStandartBlock(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
         }
 
-        for (int i = SecondLevelView.AMOUNT_OF_BREAKABLE_BLOCKS; i < SecondLevelView.AMOUNT_OF_BLOCKS; i++) {
+        for (int i = SecondLevelView.amountOfBreakableBlocks; i < SecondLevelView.amountOfBlocks; i++) {
             Rectangle block = blocks.get(String.valueOf(i));
             model.addIndestructibleBlock(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
         }
@@ -155,11 +160,18 @@ public class Controller {
             records.load(new FileInputStream("src/main/resources/oop/arkanoid/records.properties"));
             numLevel++;
         }
-
-        switch (numLevel) {
-            case 1 -> startFirstLevel();
-            case 2 -> startSecondLevel();
-        }
+        LevelView.downloadField();
+        model = new Model(gameView.getSceneHeight(), gameView.getSceneWidth());
+        startFirstLevel();
     }
 
+    public static void gameOver() throws IOException {
+        Scene scene = new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("game-over-scene.fxml"))));
+        Arkanoid.changeScene(scene);
+    }
+
+    public static void gameWin() throws IOException {
+        Scene scene = new Scene(FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("game-win-scene.fxml"))));
+        Arkanoid.changeScene(scene);
+    }
 }

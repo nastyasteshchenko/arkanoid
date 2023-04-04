@@ -38,7 +38,7 @@ public class Model {
     }
 
     public void addStandartBlock(double x, double y, double width, double height, String id) {
-        blocks.put(id, new StandartBlock(x, y, width, height));
+        blocks.put(id, new StandardBlock(x, y, width, height));
     }
 
     public void addIndestructibleBlock(double x, double y, double width, double height, String id) {
@@ -59,27 +59,36 @@ public class Model {
     }
 
     public double recountPlatformX(double x) {
+
         if (x <= platform.getWidth() / 2) {
+
             platform.setX(0);
+
         } else if (x >= sceneWidth - platform.getWidth() / 2) {
+
             platform.setX(sceneWidth - platform.getWidth());
+
         } else {
+
             platform.setX(x - platform.getWidth() / 2);
+
         }
+
         return platform.getX();
     }
 
     private double countReboundingAngle() {
+
         if (ball.isCollisionWithPlatform(platform)) {
             return -90 - (platform.getX() + platform.getWidth() / 2 - ball.getCenterX());
         }
 
-        if (ball.getCenterX() > sceneWidth - ball.getRadius() || ball.getCenterX() < ball.getRadius() || ball.isToChangeXDirection()) {
+        if (ball.getCenterX() >= sceneWidth - ball.getRadius() || ball.getCenterX() < ball.getRadius() || ball.isToChangeXDirection()) {
             return -180 - ball.getAngle();
 
         }
 
-        if (ball.getCenterY() < ball.getRadius() || ball.isToChangeYDirection()) {
+        if (ball.getCenterY() <= ball.getRadius() || ball.isToChangeYDirection()) {
             return -ball.getAngle();
 
         }

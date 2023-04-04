@@ -3,47 +3,45 @@ package oop.arkanoid.view;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 public final class SecondLevelView extends LevelView {
-    public static final int AMOUNT_OF_BLOCKS = 18;
-    public static final int AMOUNT_OF_BREAKABLE_BLOCKS = 15;
+    public static int amountOfBlocks;
+    public static int amountOfBreakableBlocks;
 
     @Override
     public void render() {
 
-        pauseButton.setStyle("-fx-background-color: #a944ff");
+        amountOfBlocks = Integer.parseInt(params.getProperty("level2.amount.of.blocks"));
+        amountOfBreakableBlocks = Integer.parseInt(params.getProperty("level2.amount.of.breakable.blocks"));
 
-        platform = new Rectangle(PLATFORM_START_X, PLATFORM_START_Y, PLATFORM_WIDTH, PLATFORM_HEIGHT);
+        pauseButton.setStyle("-fx-background-color: " + params.getProperty("level2.pause.button.color"));
 
-        ball = new Circle(BALL_START_X, BALL_START_Y, BALL_RADIUS);
+        platform.setFill(Color.valueOf(params.getProperty("level2.platform.color")));
 
-        platform.setFill(Color.BLACK);
+        ball.setFill(Color.valueOf(params.getProperty("level2.ball.color")));
+        ball.setStroke(Color.valueOf(params.getProperty("level2.ball.stroke.color")));
+        ball.setStyle("-fx-stroke-width: "+ params.getProperty("level2.ball.stroke.width"));
 
-        ball.setFill(Color.MEDIUMPURPLE);
-        ball.setStroke(Color.MEDIUMPURPLE);
-        ball.setStyle("-fx-stroke-width: 3");
-
-        for (int i = 0, numLine = 0, numColumn = 0; i < AMOUNT_OF_BREAKABLE_BLOCKS; numColumn++, i++) {
+        for (int i = 0, numLine = 0, numColumn = 0; i < amountOfBreakableBlocks; numColumn++, i++) {
             if (i % 5 == 0 && i != 0) {
                 ++numLine;
                 numColumn = 0;
             }
-            Rectangle block = new Rectangle(START_OF_BLOCKS_X + numColumn * (BLOCK_WIDTH + DISTANCE_BETWEEN_BLOCKS), START_OF_BLOCKS_Y + numLine * (BLOCK_HEIGHT + DISTANCE_BETWEEN_BLOCKS), BLOCK_WIDTH, BLOCK_HEIGHT);
-            block.setFill(Color.BLUEVIOLET);
+            Rectangle block = new Rectangle(startOfBlocksX + numColumn * (blockWidth + distanceBetweenBlocks), startOfBlocksY + numLine * (blockHeight + distanceBetweenBlocks), blockWidth, blockHeight);
+            block.setFill(Color.valueOf(params.getProperty("level2.standard.block.color")));
+            block.setStroke(Color.valueOf(params.getProperty("level2.standard.block.stroke.color")));
+            block.setStyle("-fx-stroke-width: "+ params.getProperty("level2.standard.block.stroke.width"));
             block.setId(String.valueOf(i));
-            block.setStroke(Color.PURPLE);
-            block.setStyle("-fx-stroke-width: 3");
             blocks.put(block.getId(), block);
         }
 
-        for (int i = AMOUNT_OF_BREAKABLE_BLOCKS, numColumn = 1; i < AMOUNT_OF_BLOCKS; numColumn++, i++) {
-            Rectangle block = new Rectangle(START_OF_BLOCKS_X + numColumn * (BLOCK_WIDTH + DISTANCE_BETWEEN_BLOCKS), START_OF_BLOCKS_Y + 3 * (BLOCK_HEIGHT + DISTANCE_BETWEEN_BLOCKS), BLOCK_WIDTH, BLOCK_HEIGHT);
-            block.setFill(Color.GRAY);
+        for (int i = amountOfBreakableBlocks, numColumn = 1; i < amountOfBlocks; numColumn++, i++) {
+            Rectangle block = new Rectangle(startOfBlocksX + numColumn * (blockWidth + distanceBetweenBlocks), startOfBlocksY + 3 * (blockHeight + distanceBetweenBlocks), blockWidth, blockHeight);
+            block.setFill(Color.valueOf(params.getProperty("level2.indestructible.block.color")));
+            block.setStroke(Color.valueOf(params.getProperty("level2.indestructible.block.stroke.color")));
+            block.setStyle("-fx-stroke-width: "+ params.getProperty("level2.indestructible.block.stroke.width"));
             block.setId(String.valueOf(i));
-            block.setStroke(Color.DARKGRAY);
-            block.setStyle("-fx-stroke-width: 3");
             blocks.put(block.getId(), block);
         }
 
@@ -53,7 +51,7 @@ public final class SecondLevelView extends LevelView {
             root.getChildren().add(blocks.get(String.valueOf(i)));
         }
 
-        gameScene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT, Color.LIGHTCYAN);
+        gameScene = new Scene(root, sceneWidth, sceneHeight, Color.valueOf(params.getProperty("level2.scene.color")));
 
         gameScene.setOnMouseClicked(event -> {
 

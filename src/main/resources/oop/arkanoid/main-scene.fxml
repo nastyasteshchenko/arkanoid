@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane opacity="0.5" prefHeight="900.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="oop.arkanoid.Controller">
+<AnchorPane opacity="0.5" prefHeight="900.0" prefWidth="600.0"  style="-fx-background-color: #FFE4B5" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="oop.arkanoid.Controller">
     <Button contentDisplay="TOP" layoutX="226.0" layoutY="305.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#startGame" prefHeight="70.0" prefWidth="150.0" style="-fx-background-color: #ff0000; -fx-text-fill: #ffffff;" text="Start game" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS">
         <font>
             <Font name="Droid Sans Mono" size="19.0" />
