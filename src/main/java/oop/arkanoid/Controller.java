@@ -65,6 +65,7 @@ public class Controller {
         animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
             if (gameView.isStartMovingBall()) {
                 try {
+                    // TODO controller
                     gameView.moveBall(model.recountBallCoordinates());
                     gameView.deleteBrick(model.detectCollisionsWithBricks());
                     gameView.changeScore(model.getScore());
