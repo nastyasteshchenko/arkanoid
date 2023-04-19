@@ -24,15 +24,15 @@ public final class FirstLevelView extends LevelView {
     private static final Rectangle[][] reg = new Rectangle[0][];
 
     private void loadStandardBricksParameters() {
-        standardBrickColor = Color.valueOf(getStringProperty("standard.brick.color"));
-        standardBrickStrokeColor = Color.valueOf(getStringProperty("standard.brick.stroke.color"));
-        standardBrickStrokeWidth = "-fx-stroke-width: " + getStringProperty("standard.brick.stroke.width");
+        standardBrickColor = Color.valueOf(getPropertyInString("standard.brick.color"));
+        standardBrickStrokeColor = Color.valueOf(getPropertyInString("standard.brick.stroke.color"));
+        standardBrickStrokeWidth = "-fx-stroke-width: " + getPropertyInString("standard.brick.stroke.width");
     }
 
     private void loadDoubleHitBricksParameters() {
-        doubleHitBrickColor = Color.valueOf(getStringProperty("double.hit.brick.color"));
-        doubleHitBrickStrokeColor = Color.valueOf(getStringProperty("double.hit.brick.stroke.color"));
-        doubleHitBrickStrokeWidth = "-fx-stroke-width: " + getStringProperty("double.hit.brick.stroke.width");
+        doubleHitBrickColor = Color.valueOf(getPropertyInString("double.hit.brick.color"));
+        doubleHitBrickStrokeColor = Color.valueOf(getPropertyInString("double.hit.brick.stroke.color"));
+        doubleHitBrickStrokeWidth = "-fx-stroke-width: " + getPropertyInString("double.hit.brick.stroke.width");
     }
 
     private void setParametersForStandardBrick(Rectangle brick) {
@@ -52,11 +52,10 @@ public final class FirstLevelView extends LevelView {
 
         fieldParameters.load(new FileInputStream("src/main/resources/oop/arkanoid/level1-view.properties"));
 
-        loadStandardBricksParameters();
-
-        loadDoubleHitBricksParameters();
-
         setParametersForLevelView();
+
+        loadStandardBricksParameters();
+        loadDoubleHitBricksParameters();
 
         int numLine = 0;
         for (int i = 0, numColumn = 0; i < amountOfBricks - 5; numColumn++, i++) {
