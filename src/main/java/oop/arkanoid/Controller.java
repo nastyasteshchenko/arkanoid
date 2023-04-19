@@ -65,28 +65,19 @@ public class Controller {
         animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
             if (gameView.isStartMovingBall()) {
                 try {
-                    gameView.deleteBrick(model.detectCollisionsWithBricks());
                     gameView.moveBall(model.recountBallCoordinates());
+                    gameView.deleteBrick(model.detectCollisionsWithBricks());
                     gameView.changeScore(model.getScore());
                     if (model.getAmountOfBreakableBricks() == 0) {
-                        setRecord();
                         gameWin();
-                        ++numLevel;
-                        animation.stop();
-                        if (pauseTimeline != null)
-                            pauseTimeline.stop();
                     }
                     if (gameView.isPause()) {
                         pause();
                     }
-                    gameView.movePlatform(model.recountPlatformX(gameView.getPlatformX()));
                     if (model.isGameOver()) {
-                        setRecord();
                         gameOver();
-                        animation.stop();
-                        if (pauseTimeline != null)
-                            pauseTimeline.stop();
                     }
+                    gameView.movePlatform(model.recountPlatformX(gameView.getPlatformX()));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -106,6 +97,8 @@ public class Controller {
     }
 
     private void startFirstLevel() {
+
+        model = new Model(gameView.getSceneHeight(), gameView.getSceneWidth());
 
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
 
@@ -133,6 +126,8 @@ public class Controller {
     }
 
     private void startSecondLevel() {
+        model = new Model(gameView.getSceneHeight(), gameView.getSceneWidth());
+
         gameView = new SecondLevelView();
 
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
@@ -165,21 +160,19 @@ public class Controller {
         System.exit(0);
     }
 
-    private Scene loadNewScene(String fileName) throws IOException {
-        return new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fileName))));
+    private static Scene loadNewScene(String fileName) throws IOException {
+        return new Scene(FXMLLoader.load(Objects.requireNonNull(Controller.class.getResource(fileName))));
     }
 
-    private void loadScenes() throws IOException {
+    public static void loadScenes() throws IOException {
         mainScene = loadNewScene("main-scene.fxml");
         aboutScene = loadNewScene("about-scene.fxml");
         gameOverScene = loadNewScene("game-over-scene.fxml");
         gameWinScene = loadNewScene("game-win-scene.fxml");
     }
 
-    //TODO: подумать над загрузкой рекордов
     @FXML
-    protected void startGame() throws IOException {
-        loadScenes();
+    protected void startGame() {
 
         try (FileInputStream recordsInputStream = new FileInputStream("src/main/resources/oop/arkanoid/records.properties")) {
             records.load(recordsInputStream);
@@ -187,8 +180,6 @@ public class Controller {
 //тоже когда-нибудь обработать
         }
         LevelView.loadField();
-        //TODO: подумать над разными моделями для разных уровней
-        model = new Model(gameView.getSceneHeight(), gameView.getSceneWidth());
         startFirstLevel();
     }
 
@@ -219,7 +210,12 @@ public class Controller {
 
     }
 
-    private static void gameOver() throws IOException {
+    private void gameOver() throws IOException {
+        setRecord();
+        animation.stop();
+        if (pauseTimeline != null) {
+            pauseTimeline.stop();
+        }
         try (FileOutputStream recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties")) {
             records.store(recordsOutputStream, null);
         } catch (IOException e) {
@@ -228,7 +224,13 @@ public class Controller {
         Arkanoid.changeScene(gameOverScene);
     }
 
-    private static void gameWin() throws IOException {
+    private void gameWin() throws IOException {
+        setRecord();
+        ++numLevel;
+        animation.stop();
+        if (pauseTimeline != null) {
+            pauseTimeline.stop();
+        }
         try (FileOutputStream recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties")) {
             records.store(recordsOutputStream, null);
         } catch (IOException e) {
