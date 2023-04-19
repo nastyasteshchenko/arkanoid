@@ -5,20 +5,29 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 public final class SecondLevelView extends LevelView {
     @Override
-    public void render() {
+    public void render() throws IOException {
 
-        amountOfBricks = Integer.parseInt(fieldParameters.getProperty("level2.amount.of.bricks"));
-        amountOfBreakableBricks = Integer.parseInt(fieldParameters.getProperty("level2.amount.of.breakable.bricks"));
+        Properties fieldParameters = new Properties();
 
-        pauseButton.setStyle("-fx-background-color: " + fieldParameters.getProperty("level2.pause.button.color"));
+        fieldParameters.load(new FileInputStream("src/main/resources/oop/arkanoid/level2-view.properties"));
 
-        platform.setFill(Color.valueOf(fieldParameters.getProperty("level2.platform.color")));
+        amountOfBricks = Integer.parseInt(fieldParameters.getProperty("amount.of.bricks"));
+        amountOfBreakableBricks = Integer.parseInt(fieldParameters.getProperty("amount.of.breakable.bricks"));
 
-        ball.setFill(Color.valueOf(fieldParameters.getProperty("level2.ball.color")));
-        ball.setStroke(Color.valueOf(fieldParameters.getProperty("level2.ball.stroke.color")));
-        ball.setStyle("-fx-stroke-width: "+ fieldParameters.getProperty("level2.ball.stroke.width"));
+        pauseButton.setStyle("-fx-background-color: " + fieldParameters.getProperty("pause.button.color"));
+
+        platform.setFill(Color.valueOf(fieldParameters.getProperty("platform.color")));
+
+        ball.setFill(Color.valueOf(fieldParameters.getProperty("ball.color")));
+        ball.setStroke(Color.valueOf(fieldParameters.getProperty("ball.stroke.color")));
+        ball.setStyle("-fx-stroke-width: "+ fieldParameters.getProperty("ball.stroke.width"));
 
         for (int i = 0, numLine = 0, numColumn = 0; i < amountOfBreakableBricks; numColumn++, i++) {
             if (i % 5 == 0 && i != 0) {
@@ -26,18 +35,18 @@ public final class SecondLevelView extends LevelView {
                 numColumn = 0;
             }
             Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBricksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
-            brick.setFill(Color.valueOf(fieldParameters.getProperty("level2.standard.brick.color")));
-            brick.setStroke(Color.valueOf(fieldParameters.getProperty("level2.standard.brick.stroke.color")));
-            brick.setStyle("-fx-stroke-width: "+ fieldParameters.getProperty("level2.standard.brick.stroke.width"));
+            brick.setFill(Color.valueOf(fieldParameters.getProperty("standard.brick.color")));
+            brick.setStroke(Color.valueOf(fieldParameters.getProperty("standard.brick.stroke.color")));
+            brick.setStyle("-fx-stroke-width: "+ fieldParameters.getProperty("standard.brick.stroke.width"));
             brick.setId(String.valueOf(i));
             bricks.put(brick.getId(), brick);
         }
 
         for (int i = amountOfBreakableBricks, numColumn = 1; i < amountOfBricks; numColumn++, i++) {
             Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBricksY + 3 * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
-            brick.setFill(Color.valueOf(fieldParameters.getProperty("level2.indestructible.brick.color")));
-            brick.setStroke(Color.valueOf(fieldParameters.getProperty("level2.indestructible.brick.stroke.color")));
-            brick.setStyle("-fx-stroke-width: "+ fieldParameters.getProperty("level2.indestructible.brick.stroke.width"));
+            brick.setFill(Color.valueOf(fieldParameters.getProperty("indestructible.brick.color")));
+            brick.setStroke(Color.valueOf(fieldParameters.getProperty("indestructible.brick.stroke.color")));
+            brick.setStyle("-fx-stroke-width: "+ fieldParameters.getProperty("indestructible.brick.stroke.width"));
             brick.setId(String.valueOf(i));
             bricks.put(brick.getId(), brick);
         }
@@ -48,7 +57,7 @@ public final class SecondLevelView extends LevelView {
             root.getChildren().add(bricks.get(String.valueOf(i)));
         }
 
-        gameScene = new Scene(root, sceneWidth, sceneHeight, Color.valueOf(fieldParameters.getProperty("level2.scene.color")));
+        gameScene = new Scene(root, sceneWidth, sceneHeight, Color.valueOf(fieldParameters.getProperty("scene.color")));
 
         gameScene.setOnMouseClicked(event -> {
 

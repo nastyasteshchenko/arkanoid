@@ -12,6 +12,7 @@ import javafx.scene.text.Text;
 import oop.arkanoid.Point;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,10 +55,10 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     protected static Scene gameScene;
 
     protected static Pane root;
-    protected static Properties fieldParameters = new Properties();
+    private static Properties fieldParameters = new Properties();
     protected static final HashMap<String, Rectangle> bricks = new HashMap<>();
 
-    public void render() {
+    public void render() throws IOException {
     }
 
     public static void downloadField() throws IOException {

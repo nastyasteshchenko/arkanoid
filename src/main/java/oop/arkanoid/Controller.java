@@ -42,6 +42,8 @@ public class Controller {
     private static Scene gameOverScene;
     private static Scene gameWinScene;
 
+    private static FileInputStream hhh;
+
     private void pause() {
         pauseTimeline = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
             if (gameView.isPause()) {
@@ -97,7 +99,7 @@ public class Controller {
     }
 
     @FXML
-    protected void restartGame() {
+    protected void restartGame() throws IOException {
         gameView.clear();
         switch (numLevel) {
             case 1 -> startFirstLevel();
@@ -105,7 +107,7 @@ public class Controller {
         }
     }
 
-    private void startFirstLevel() {
+    private void startFirstLevel() throws IOException {
 
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
 
@@ -124,7 +126,7 @@ public class Controller {
             model.addStandardBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
         }
 
-        for (int i = bricks.size()-5; i < bricks.size(); i++) {
+        for (int i = bricks.size() - 5; i < bricks.size(); i++) {
             Rectangle block = bricks.get(String.valueOf(i));
             model.addDoubleHitBrickBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
         }
@@ -132,7 +134,7 @@ public class Controller {
         moveBall();
     }
 
-    private void startSecondLevel() {
+    private void startSecondLevel() throws IOException {
         gameView = new SecondLevelView();
 
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
@@ -177,7 +179,10 @@ public class Controller {
         gameOverScene = loadScene("game-over-scene.fxml");
         gameWinScene = loadScene("game-win-scene.fxml");
 
-        records.load(new FileInputStream("src/main/resources/oop/arkanoid/records.properties"));
+        //   recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties");
+
+        hhh = new FileInputStream("src/main/resources/oop/arkanoid/records.properties");
+        records.load(hhh);
         LevelView.downloadField();
         //TODO: подумать над разными моделями для разных уровней
         model = new Model(gameView.getSceneHeight(), gameView.getSceneWidth());
@@ -191,7 +196,7 @@ public class Controller {
     }
 
     @FXML
-    protected void watchAboutGame() throws IOException {
+    protected void watchAboutGame() {
         Arkanoid.changeScene(aboutScene);
     }
 
@@ -209,13 +214,17 @@ public class Controller {
 
     }
 
-    private static void gameOver() throws IOException{
-            records.store(new FileOutputStream("src/main/resources/oop/arkanoid/records.properties"), null);
-            Arkanoid.changeScene(gameOverScene);
+    private static void gameOver() throws IOException {
+        FileOutputStream recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties");
+        records.store(recordsOutputStream, null);
+        recordsOutputStream.close();
+        Arkanoid.changeScene(gameOverScene);
     }
 
     private static void gameWin() throws IOException {
-        records.store(new FileOutputStream("src/main/resources/oop/arkanoid/records.properties"), null);
+        FileOutputStream recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties");
+        records.store(recordsOutputStream, null);
+        recordsOutputStream.close();
         Arkanoid.changeScene(gameWinScene);
     }
 }
