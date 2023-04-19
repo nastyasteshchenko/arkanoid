@@ -7,34 +7,56 @@ import javafx.scene.shape.Rectangle;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Properties;
 
 public final class FirstLevelView extends LevelView {
 
-    private static final Integer amountOfLinesBricks=3;
-    private static final Integer amountOfBricksInLine=3;
+    private static final Integer amountOfLinesBricks = 3;
+    private static final Integer amountOfBricksInLine = 3;
+
+    private Color standardBrickColor;
+    private Color standardBrickStrokeColor;
+    private String standardBrickStrokeWidth;
+
+    private Color doubleHitBrickColor;
+    private Color doubleHitBrickStrokeColor;
+    private String doubleHitBrickStrokeWidth;
 
     private static final Rectangle[][] reg = new Rectangle[0][];
+
+    private void loadStandardBricksParameters() {
+        standardBrickColor = Color.valueOf(getStringProperty("standard.brick.color"));
+        standardBrickStrokeColor = Color.valueOf(getStringProperty("standard.brick.stroke.color"));
+        standardBrickStrokeWidth = "-fx-stroke-width: " + getStringProperty("standard.brick.stroke.width");
+    }
+
+    private void loadDoubleHitBricksParameters() {
+        doubleHitBrickColor = Color.valueOf(getStringProperty("double.hit.brick.color"));
+        doubleHitBrickStrokeColor = Color.valueOf(getStringProperty("double.hit.brick.stroke.color"));
+        doubleHitBrickStrokeWidth = "-fx-stroke-width: " + getStringProperty("double.hit.brick.stroke.width");
+    }
+
+    private void setParametersForStandardBrick(Rectangle brick) {
+        brick.setFill(standardBrickColor);
+        brick.setStroke(standardBrickStrokeColor);
+        brick.setStyle(standardBrickStrokeWidth);
+    }
+
+    private void setParametersForDoubleHitBrick(Rectangle brick) {
+        brick.setFill(doubleHitBrickColor);
+        brick.setStroke(doubleHitBrickStrokeColor);
+        brick.setStyle(doubleHitBrickStrokeWidth);
+    }
 
     @Override
     public void render() throws IOException {
 
-        Properties fieldParameters = new Properties();
-
         fieldParameters.load(new FileInputStream("src/main/resources/oop/arkanoid/level1-view.properties"));
 
-//TODO: разделить на методы
+        loadStandardBricksParameters();
 
-        amountOfBricks = Integer.parseInt(fieldParameters.getProperty("amount.of.bricks"));
-        amountOfBreakableBricks = Integer.parseInt(fieldParameters.getProperty("amount.of.breakable.bricks"));
+        loadDoubleHitBricksParameters();
 
-        pauseButton.setStyle("-fx-background-color: " + fieldParameters.getProperty("pause.button.color"));
-
-        platform.setFill(Color.valueOf(fieldParameters.getProperty("platform.color")));
-
-        ball.setFill(Color.valueOf(fieldParameters.getProperty("ball.color")));
-        ball.setStroke(Color.valueOf(fieldParameters.getProperty("ball.stroke.color")));
-        ball.setStyle("-fx-stroke-width: " + fieldParameters.getProperty("ball.stroke.width"));
+        setParametersForLevelView();
 
         int numLine = 0;
         for (int i = 0, numColumn = 0; i < amountOfBricks - 5; numColumn++, i++) {
@@ -43,9 +65,7 @@ public final class FirstLevelView extends LevelView {
                 numColumn = 0;
             }
             Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBricksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
-            brick.setFill(Color.valueOf(fieldParameters.getProperty("standard.brick.color")));
-            brick.setStroke(Color.valueOf(fieldParameters.getProperty("standard.brick.stroke.color")));
-            brick.setStyle("-fx-stroke-width: " + fieldParameters.getProperty("standard.brick.stroke.width"));
+            setParametersForStandardBrick(brick);
             brick.setId(String.valueOf(i));
             bricks.put(brick.getId(), brick);
         }
@@ -55,9 +75,7 @@ public final class FirstLevelView extends LevelView {
                 ++numLine;
             }
             Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBricksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
-            brick.setFill(Color.valueOf(fieldParameters.getProperty("double.hit.brick.color")));
-            brick.setStroke(Color.valueOf(fieldParameters.getProperty("double.hit.brick.stroke.color")));
-            brick.setStyle("-fx-stroke-width: " + fieldParameters.getProperty("double.hit.brick.stroke.width"));
+            setParametersForDoubleHitBrick(brick);
             brick.setId(String.valueOf(i));
             bricks.put(brick.getId(), brick);
         }

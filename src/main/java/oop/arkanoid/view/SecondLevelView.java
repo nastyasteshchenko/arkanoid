@@ -14,20 +14,9 @@ public final class SecondLevelView extends LevelView {
     @Override
     public void render() throws IOException {
 
-        Properties fieldParameters = new Properties();
-
         fieldParameters.load(new FileInputStream("src/main/resources/oop/arkanoid/level2-view.properties"));
 
-        amountOfBricks = Integer.parseInt(fieldParameters.getProperty("amount.of.bricks"));
-        amountOfBreakableBricks = Integer.parseInt(fieldParameters.getProperty("amount.of.breakable.bricks"));
-
-        pauseButton.setStyle("-fx-background-color: " + fieldParameters.getProperty("pause.button.color"));
-
-        platform.setFill(Color.valueOf(fieldParameters.getProperty("platform.color")));
-
-        ball.setFill(Color.valueOf(fieldParameters.getProperty("ball.color")));
-        ball.setStroke(Color.valueOf(fieldParameters.getProperty("ball.stroke.color")));
-        ball.setStyle("-fx-stroke-width: "+ fieldParameters.getProperty("ball.stroke.width"));
+       setParametersForLevelView();
 
         for (int i = 0, numLine = 0, numColumn = 0; i < amountOfBreakableBricks; numColumn++, i++) {
             if (i % 5 == 0 && i != 0) {

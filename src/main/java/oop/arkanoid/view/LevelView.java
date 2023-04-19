@@ -56,71 +56,89 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     protected static Pane root;
     protected static final HashMap<String, Rectangle> bricks = new HashMap<>();
 
-    private static final Properties fieldParameters = new Properties();
+    protected static final Properties fieldParameters = new Properties();
 
     public void render() throws IOException {
     }
 
-    private static Double getDigitProperty(String key) {
+    protected void setParametersForLevelView(){
+        amountOfBricks = getIntegerProperty("amount.of.bricks");
+        amountOfBreakableBricks = getIntegerProperty("amount.of.breakable.bricks");
+
+        pauseButton.setStyle("-fx-background-color: " + getStringProperty("pause.button.color"));
+
+        platform.setFill(Color.valueOf(getStringProperty("platform.color")));
+
+        ball.setFill(Color.valueOf(getStringProperty("ball.color")));
+        ball.setStroke(Color.valueOf(getStringProperty("ball.stroke.color")));
+        ball.setStyle("-fx-stroke-width: " + getStringProperty("ball.stroke.width"));
+    }
+
+    protected static Integer getIntegerProperty(String key) {
+        return Integer.parseInt(LevelView.fieldParameters.getProperty(key));
+    }
+
+    protected static Double getDoubleProperty(String key) {
         return Double.parseDouble(LevelView.fieldParameters.getProperty(key));
     }
 
-    private static String getStringProperty(String key) {
+    protected static String getStringProperty(String key) {
         return LevelView.fieldParameters.getProperty(key);
     }
+
     private static void loadPlatformParameters() {
-        platformWidth = getDigitProperty("platform.width");
-        platformHeight = getDigitProperty("platform.height");
-        platformStartX = getDigitProperty("platform.start.x");
-        platformStartY = getDigitProperty("platform.start.y");
+        platformWidth = getDoubleProperty("platform.width");
+        platformHeight = getDoubleProperty("platform.height");
+        platformStartX = getDoubleProperty("platform.start.x");
+        platformStartY = getDoubleProperty("platform.start.y");
     }
 
     private static void loadBallParameters() {
-        ballStartX = getDigitProperty("ball.start.x");
-        ballStartY = getDigitProperty("ball.start.y");
-        ballRadius = getDigitProperty("ball.radius");
+        ballStartX = getDoubleProperty("ball.start.x");
+        ballStartY = getDoubleProperty("ball.start.y");
+        ballRadius = getDoubleProperty("ball.radius");
     }
 
     private static void loadBricksParameters() {
-        brickHeight = getDigitProperty("brick.height");
-        brickWidth = getDigitProperty("brick.width");
-        distanceBetweenBricks = getDigitProperty("distance.between.bricks");
+        brickHeight = getDoubleProperty("brick.height");
+        brickWidth = getDoubleProperty("brick.width");
+        distanceBetweenBricks = getDoubleProperty("distance.between.bricks");
 
-        startOfBricksX = getDigitProperty("start.of.bricks.x");
-        startOfBricksY = getDigitProperty("start.of.bricks.y");
+        startOfBricksX = getDoubleProperty("start.of.bricks.x");
+        startOfBricksY = getDoubleProperty("start.of.bricks.y");
     }
 
     private static void loadPauseButtonParameters() {
         pauseButton.setOnMouseClicked(event -> isPause = !isPause);
 
-        pauseButton.setTranslateX(getDigitProperty("pause.button.x"));
-        pauseButton.setTranslateY(getDigitProperty("pause.button.y"));
-        pauseButton.setPrefSize(getDigitProperty("pause.button.pref.width"), getDigitProperty("pause.button.pref.height"));
+        pauseButton.setTranslateX(getDoubleProperty("pause.button.x"));
+        pauseButton.setTranslateY(getDoubleProperty("pause.button.y"));
+        pauseButton.setPrefSize(getDoubleProperty("pause.button.pref.width"), getDoubleProperty("pause.button.pref.height"));
         pauseButton.setStyle("-fx-font-size: " + getStringProperty("pause.button.font.size"));
         pauseButton.setFont(Font.font(getStringProperty("pause.button.font")));
         pauseButton.setTextFill(Color.valueOf(LevelView.fieldParameters.getProperty("pause.button.text.color")));
     }
 
     private static void loadHighScoreLabelParameters() {
-        highScoreLabel.setLayoutX(getDigitProperty("high.score.label.x"));
-        highScoreLabel.setLayoutY(getDigitProperty("high.score.label.y"));
+        highScoreLabel.setLayoutX(getDoubleProperty("high.score.label.x"));
+        highScoreLabel.setLayoutY(getDoubleProperty("high.score.label.y"));
         highScoreLabel.setFont(Font.font(getStringProperty("high.score.label.font")));
         highScoreLabel.setStyle("-fx-font-size: " + LevelView.fieldParameters.getProperty("high.score.label.font.size"));
 
-        highScoreCountLabel.setLayoutX(getDigitProperty("high.score.count.label.x"));
-        highScoreCountLabel.setLayoutY(getDigitProperty("high.score.count.label.y"));
+        highScoreCountLabel.setLayoutX(getDoubleProperty("high.score.count.label.x"));
+        highScoreCountLabel.setLayoutY(getDoubleProperty("high.score.count.label.y"));
         highScoreCountLabel.setFont(Font.font(getStringProperty("high.score.count.label.font")));
         highScoreCountLabel.setStyle("-fx-font-size: " + getStringProperty("high.score.count.label.font.size"));
     }
 
     private static void loadScoreLabelParameters() {
-        scoreLabel.setLayoutX(getDigitProperty("score.label.x"));
-        scoreLabel.setLayoutY(getDigitProperty("score.label.y"));
+        scoreLabel.setLayoutX(getDoubleProperty("score.label.x"));
+        scoreLabel.setLayoutY(getDoubleProperty("score.label.y"));
         scoreLabel.setFont(Font.font(getStringProperty("score.label.font")));
         scoreLabel.setStyle("-fx-font-size: " + getStringProperty("score.label.font.size"));
 
-        scoreCountLabel.setLayoutX(getDigitProperty("score.count.label.x"));
-        scoreCountLabel.setLayoutY(getDigitProperty("score.count.label.y"));
+        scoreCountLabel.setLayoutX(getDoubleProperty("score.count.label.x"));
+        scoreCountLabel.setLayoutY(getDoubleProperty("score.count.label.y"));
         scoreCountLabel.setFont(Font.font(getStringProperty("score.count.label.font")));
         scoreCountLabel.setStyle("-fx-font-size: " + getStringProperty("score.count.label.font.size"));
     }
@@ -129,8 +147,8 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
 
         fieldParameters.load(new FileInputStream("src/main/resources/oop/arkanoid/field-view.properties"));
 
-        sceneHeight = getDigitProperty("scene.height");
-        sceneWidth = getDigitProperty("scene.width");
+        sceneHeight = getDoubleProperty("scene.height");
+        sceneWidth = getDoubleProperty("scene.width");
 
         loadPlatformParameters();
 
@@ -140,12 +158,12 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
 
         loadPauseButtonParameters();
 
-        //TODO: вынести в отдельный метод и проверить на null
         loadHighScoreLabelParameters();
 
         loadScoreLabelParameters();
 
         platform = new Rectangle(platformStartX, platformStartY, platformWidth, platformHeight);
+
         ball = new Circle(ballStartX, ballStartY, ballRadius);
 
     }
@@ -180,8 +198,8 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
 
     public void setRecordText(Text text, String level) throws IOException {
         fieldParameters.load(new FileInputStream("src/main/resources/oop/arkanoid/field-view.properties"));
-        text.setX(getDigitProperty("level" + level + ".score.x"));
-        text.setY(getDigitProperty("level" + level + ".score.y"));
+        text.setX(getDoubleProperty("level" + level + ".score.x"));
+        text.setY(getDoubleProperty("level" + level + ".score.y"));
         text.setFont(Font.font(getStringProperty("level" + level + ".score.font")));
         text.setFill(Color.valueOf(getStringProperty("level" + level + ".score.color")));
         text.setStyle("-fx-font-size: " + getStringProperty("level" + level + ".score.font.size"));
