@@ -17,6 +17,7 @@ public class Model {
     private Platform platform;
     private Ball ball;
 
+
     public void restartModel(int amountOfBricks, int amountOfBreakableBricks) {
         this.amountOfBricks = amountOfBricks;
         this.amountOfBreakableBricks = amountOfBreakableBricks;

@@ -92,6 +92,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
         pauseButton.setFont(Font.font(fieldParameters.getProperty("pause.button.font")));
         pauseButton.setTextFill(Color.valueOf(fieldParameters.getProperty("pause.button.text.color")));
 
+        //TODO: вынести в отдельный метод и проверить на null
         highScoreLabel.setLayoutX(Double.parseDouble(fieldParameters.getProperty("high.score.label.x")));
         highScoreLabel.setLayoutY(Double.parseDouble(fieldParameters.getProperty("high.score.label.y")));
         highScoreLabel.setFont(Font.font(fieldParameters.getProperty("high.score.label.font")));

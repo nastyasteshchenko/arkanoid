@@ -11,7 +11,7 @@
             <Font name="Droid Sans Mono" size="19.0" />
         </font>
     </Button>
-    <Label layoutX="132.0" layoutY="128.0" text="Arcanoid" textAlignment="CENTER" textFill="RED">
+    <Label layoutX="132.0" layoutY="128.0" text="Arkanoid" textAlignment="CENTER" textFill="RED">
         <font>
             <Font name="Droid Sans Mono" size="70.0" />
         </font>

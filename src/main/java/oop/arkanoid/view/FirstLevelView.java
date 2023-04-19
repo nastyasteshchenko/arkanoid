@@ -9,7 +9,7 @@ public final class FirstLevelView extends LevelView {
 
     @Override
     public void render() {
-
+//TODO: разделить на методы
         amountOfBricks = Integer.parseInt(fieldParameters.getProperty("level1.amount.of.bricks"));
         amountOfBreakableBricks = Integer.parseInt(fieldParameters.getProperty("level1.amount.of.breakable.bricks"));
 
