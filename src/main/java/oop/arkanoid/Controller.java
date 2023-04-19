@@ -183,7 +183,7 @@ public class Controller {
 
         hhh = new FileInputStream("src/main/resources/oop/arkanoid/records.properties");
         records.load(hhh);
-        LevelView.downloadField();
+        LevelView.loadField();
         //TODO: подумать над разными моделями для разных уровней
         model = new Model(gameView.getSceneHeight(), gameView.getSceneWidth());
         startFirstLevel();

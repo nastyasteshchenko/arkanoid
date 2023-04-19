@@ -24,6 +24,7 @@ public final class FirstLevelView extends LevelView {
         fieldParameters.load(new FileInputStream("src/main/resources/oop/arkanoid/level1-view.properties"));
 
 //TODO: разделить на методы
+
         amountOfBricks = Integer.parseInt(fieldParameters.getProperty("amount.of.bricks"));
         amountOfBreakableBricks = Integer.parseInt(fieldParameters.getProperty("amount.of.breakable.bricks"));
 
