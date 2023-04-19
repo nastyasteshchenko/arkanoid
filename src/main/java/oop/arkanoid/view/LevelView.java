@@ -19,8 +19,10 @@ import java.util.Properties;
 
 public sealed class LevelView permits FirstLevelView, SecondLevelView {
 
-    protected static int amountOfBricks;
-    protected static int amountOfBreakableBricks;
+    protected int amountOfBricksLines;
+    protected int amountOfBricksInLine;
+    protected int amountOfBricks;
+    protected int amountOfBreakableBricks;
     protected double platformX = platformStartX + platformWidth / 2;
     protected boolean isStartMovingBall = false;
     protected static boolean isPause = false;
@@ -51,17 +53,21 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     protected static Button pauseButton = new Button("Pause");
     protected static Rectangle platform;
     protected static Circle ball;
-    protected static Scene gameScene;
+    protected Scene gameScene;
 
     protected static Pane root;
     protected static final HashMap<String, Rectangle> bricks = new HashMap<>();
 
     protected static final Properties fieldParameters = new Properties();
 
-    public void render() throws IOException {
+    public void render() {
     }
 
-    protected void setParametersForLevelView(){
+    protected void setParametersForLevelView() {
+
+        amountOfBricksLines = getPropertyInInt("amount.of.bricks.lines");
+        amountOfBricksInLine = getPropertyInInt("amount.of.bricks.in.line");
+
         amountOfBricks = getPropertyInInt("amount.of.bricks");
         amountOfBreakableBricks = getPropertyInInt("amount.of.breakable.bricks");
 
@@ -143,9 +149,13 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
         scoreCountLabel.setStyle("-fx-font-size: " + getPropertyInString("score.count.label.font.size"));
     }
 
-    public static void loadField() throws IOException {
+    public static void loadField() {
 
-        fieldParameters.load(new FileInputStream("src/main/resources/oop/arkanoid/field-view.properties"));
+        try (FileInputStream fieldView = new FileInputStream("src/main/resources/oop/arkanoid/field-view.properties")) {
+            fieldParameters.load(fieldView);
+        } catch (IOException e) {
+//надо что-то написать потом
+        }
 
         sceneHeight = getPropertyInDouble("scene.height");
         sceneWidth = getPropertyInDouble("scene.width");
@@ -196,13 +206,18 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
         return isStartMovingBall;
     }
 
-    public void setRecordText(Text text, String level) throws IOException {
-        fieldParameters.load(new FileInputStream("src/main/resources/oop/arkanoid/field-view.properties"));
-        text.setX(getPropertyInDouble("level" + level + ".score.x"));
-        text.setY(getPropertyInDouble("level" + level + ".score.y"));
-        text.setFont(Font.font(getPropertyInString("level" + level + ".score.font")));
-        text.setFill(Color.valueOf(getPropertyInString("level" + level + ".score.color")));
-        text.setStyle("-fx-font-size: " + getPropertyInString("level" + level + ".score.font.size"));
+    public void setRecordText(Text text, String level) {
+        try (FileInputStream fieldView = new FileInputStream("src/main/resources/oop/arkanoid/level" + level + "-view.properties")) {
+            fieldParameters.load(fieldView);
+        } catch (IOException e) {
+//надо что-то написать потом
+        }
+
+        text.setX(getPropertyInDouble("score.x"));
+        text.setY(getPropertyInDouble("score.y"));
+        text.setFont(Font.font(getPropertyInString("score.font")));
+        text.setFill(Color.valueOf(getPropertyInString("score.color")));
+        text.setStyle("-fx-font-size: " + getPropertyInString("score.font.size"));
     }
 
     public void clear() {
@@ -253,6 +268,14 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
 
     public int getAmountOfBreakableBricks() {
         return amountOfBreakableBricks;
+    }
+
+    public int getAmountOfBricksInLine() {
+        return amountOfBricksInLine;
+    }
+
+    public int getAmountOfBricksLines() {
+        return amountOfBricksLines;
     }
 
 }

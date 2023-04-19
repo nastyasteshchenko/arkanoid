@@ -38,7 +38,6 @@ public sealed class Brick permits StandardBrick, IndestructibleBrick, DoubleHitB
     public int getCountOfHits() {
         return countOfHits;
     }
-
     public void decreaseCountOfHits() {
         --countOfHits;
     }

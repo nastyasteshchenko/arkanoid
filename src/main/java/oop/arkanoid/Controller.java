@@ -42,8 +42,6 @@ public class Controller {
     private static Scene gameOverScene;
     private static Scene gameWinScene;
 
-    private static FileInputStream hhh;
-
     private void pause() {
         pauseTimeline = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
             if (gameView.isPause()) {
@@ -99,7 +97,7 @@ public class Controller {
     }
 
     @FXML
-    protected void restartGame() throws IOException {
+    protected void restartGame() {
         gameView.clear();
         switch (numLevel) {
             case 1 -> startFirstLevel();
@@ -107,7 +105,7 @@ public class Controller {
         }
     }
 
-    private void startFirstLevel() throws IOException {
+    private void startFirstLevel() {
 
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
 
@@ -121,12 +119,12 @@ public class Controller {
 
         HashMap<String, Rectangle> bricks = gameView.getBricks();
 
-        for (int i = 0; i < bricks.size() - 5; i++) {
+        for (int i = 0; i < gameView.getAmountOfBricksInLine() * (gameView.getAmountOfBricksLines() - 1); i++) {
             Rectangle block = bricks.get(String.valueOf(i));
             model.addStandardBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
         }
 
-        for (int i = bricks.size() - 5; i < bricks.size(); i++) {
+        for (int i = gameView.getAmountOfBricksInLine() * (gameView.getAmountOfBricksLines() - 1); i < gameView.getAmountOfBricksInLine() * gameView.getAmountOfBricksLines(); i++) {
             Rectangle block = bricks.get(String.valueOf(i));
             model.addDoubleHitBrickBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
         }
@@ -134,7 +132,7 @@ public class Controller {
         moveBall();
     }
 
-    private void startSecondLevel() throws IOException {
+    private void startSecondLevel() {
         gameView = new SecondLevelView();
 
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
@@ -157,7 +155,7 @@ public class Controller {
             Rectangle brick = bricks.get(String.valueOf(i));
             model.addIndestructibleBrick(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight(), brick.getId());
         }
-        //TODO: остаются блоки
+
         Arkanoid.changeScene(gameView.getGameScene());
         moveBall();
     }
@@ -167,22 +165,27 @@ public class Controller {
         System.exit(0);
     }
 
-    private Scene loadScene(String fileName) throws IOException {
+    private Scene loadNewScene(String fileName) throws IOException {
         return new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fileName))));
+    }
+
+    private void loadScenes() throws IOException {
+        mainScene = loadNewScene("main-scene.fxml");
+        aboutScene = loadNewScene("about-scene.fxml");
+        gameOverScene = loadNewScene("game-over-scene.fxml");
+        gameWinScene = loadNewScene("game-win-scene.fxml");
     }
 
     //TODO: подумать над загрузкой рекордов
     @FXML
     protected void startGame() throws IOException {
-        mainScene = loadScene("main-scene.fxml");
-        aboutScene = loadScene("about-scene.fxml");
-        gameOverScene = loadScene("game-over-scene.fxml");
-        gameWinScene = loadScene("game-win-scene.fxml");
+        loadScenes();
 
-        //   recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties");
-
-        hhh = new FileInputStream("src/main/resources/oop/arkanoid/records.properties");
-        records.load(hhh);
+        try (FileInputStream recordsInputStream = new FileInputStream("src/main/resources/oop/arkanoid/records.properties")) {
+            records.load(recordsInputStream);
+        } catch (IOException e) {
+//тоже когда-нибудь обработать
+        }
         LevelView.loadField();
         //TODO: подумать над разными моделями для разных уровней
         model = new Model(gameView.getSceneHeight(), gameView.getSceneWidth());
@@ -191,7 +194,6 @@ public class Controller {
 
     @FXML
     protected void backToMainScene() {
-        //TODO: подумать про лишние загрузки
         Arkanoid.changeScene(mainScene);
     }
 
@@ -202,8 +204,11 @@ public class Controller {
 
     @FXML
     protected void watchRecords() throws IOException {
-        //TODO: закрывать или нет
-        records.load(new FileInputStream("src/main/resources/oop/arkanoid/records.properties"));
+        try (FileInputStream recordsInputStream = new FileInputStream("src/main/resources/oop/arkanoid/records.properties")) {
+            records.load(recordsInputStream);
+        } catch (IOException e) {
+//тоже когда-нибудь обработать
+        }
         Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("records-scene.fxml")));
         Text level1Score = new Text(records.getProperty("1"));
         gameView.setRecordText(level1Score, "1");
@@ -215,16 +220,20 @@ public class Controller {
     }
 
     private static void gameOver() throws IOException {
-        FileOutputStream recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties");
-        records.store(recordsOutputStream, null);
-        recordsOutputStream.close();
+        try (FileOutputStream recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties")) {
+            records.store(recordsOutputStream, null);
+        } catch (IOException e) {
+//тоже
+        }
         Arkanoid.changeScene(gameOverScene);
     }
 
     private static void gameWin() throws IOException {
-        FileOutputStream recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties");
-        records.store(recordsOutputStream, null);
-        recordsOutputStream.close();
+        try (FileOutputStream recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties")) {
+            records.store(recordsOutputStream, null);
+        } catch (IOException e) {
+//тоже
+        }
         Arkanoid.changeScene(gameWinScene);
     }
 }

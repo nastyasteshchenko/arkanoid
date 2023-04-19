@@ -43,36 +43,36 @@ public final class SecondLevelView extends LevelView {
     }
 
     @Override
-    public void render() throws IOException {
-        fieldParameters.load(new FileInputStream("src/main/resources/oop/arkanoid/level2-view.properties"));
-
-       setParametersForLevelView();
-
-       loadIndestructibleBricksParameters();
-       loadStandardBricksParameters();
-
-        for (int i = 0, numLine = 0, numColumn = 0; i < amountOfBreakableBricks; numColumn++, i++) {
-            if (i % 5 == 0 && i != 0) {
-                ++numLine;
-                numColumn = 0;
-            }
-            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBricksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
-            setParametersForStandardBrick(brick);
-            brick.setId(String.valueOf(i));
-            bricks.put(brick.getId(), brick);
+    public void render() {
+        try (FileInputStream fieldView = new FileInputStream("src/main/resources/oop/arkanoid/level2-view.properties")) {
+            fieldParameters.load(fieldView);
+        } catch (IOException e) {
+//надо что-то написать потом
         }
 
-        for (int i = amountOfBreakableBricks, numColumn = 1; i < amountOfBricks; numColumn++, i++) {
-            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBricksY + 3 * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
-            setParametersForIndestructibleBrick(brick);
-            brick.setId(String.valueOf(i));
-            bricks.put(brick.getId(), brick);
-        }
+        setParametersForLevelView();
+
+        loadIndestructibleBricksParameters();
+        loadStandardBricksParameters();
 
         root = new Pane(platform, ball, scoreLabel, scoreCountLabel, pauseButton, highScoreLabel, highScoreCountLabel);
 
-        for (int i = 0; i < bricks.size(); i++) {
-            root.getChildren().add(bricks.get(String.valueOf(i)));
+        for (int i = 0; i < amountOfBricksLines - 1; i++) {
+            for (int j = 0; j < amountOfBricksInLine; j++) {
+                Rectangle brick = new Rectangle(startOfBricksX + j * (brickWidth + distanceBetweenBricks), startOfBricksY + i * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
+                setParametersForStandardBrick(brick);
+                brick.setId(String.valueOf(i * amountOfBricksInLine + j));
+                bricks.put(brick.getId(), brick);
+                root.getChildren().add(brick);
+            }
+        }
+
+        for (int i = 1; i < amountOfBricksInLine - 1; i++) {
+            Rectangle brick = new Rectangle(startOfBricksX + i * (brickWidth + distanceBetweenBricks), startOfBricksY + (amountOfBricksLines - 1) * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
+            setParametersForIndestructibleBrick(brick);
+            brick.setId(String.valueOf(amountOfBricksInLine * (amountOfBricksLines - 1) + i - 1));
+            bricks.put(brick.getId(), brick);
+            root.getChildren().add(brick);
         }
 
         gameScene = new Scene(root, sceneWidth, sceneHeight, Color.valueOf(fieldParameters.getProperty("scene.color")));

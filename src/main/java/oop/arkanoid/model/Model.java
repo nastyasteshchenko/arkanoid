@@ -23,6 +23,7 @@ public class Model {
         this.amountOfBreakableBricks = amountOfBreakableBricks;
         score = 0;
         isGameOver = false;
+        bricks.clear();
     }
 
     public Model(double sceneHeight, double sceneWidth) {
@@ -63,13 +64,21 @@ public class Model {
         return new Point(ball.getCenterX(), ball.getCenterY());
     }
 
+    private boolean isCollisionWithLeftSceneSide(double x){
+        return x <= platform.getWidth() / 2;
+    }
+
+    private boolean isCollisionWithRightSceneSide(double x){
+        return x >= sceneWidth - platform.getWidth() / 2;
+    }
+
     public double recountPlatformX(double x) {
 
-        if (x <= platform.getWidth() / 2) {
+        if (isCollisionWithLeftSceneSide(x)) {
 
             platform.setX(0);
 
-        } else if (x >= sceneWidth - platform.getWidth() / 2) {
+        } else if (isCollisionWithRightSceneSide(x)) {
 
             platform.setX(sceneWidth - platform.getWidth());
 
@@ -88,12 +97,12 @@ public class Model {
             return -90 - (platform.getX() + platform.getWidth() / 2 - ball.getCenterX());
         }
 
-        if (ball.getCenterX() >= sceneWidth - ball.getRadius() || ball.getCenterX() < ball.getRadius() || ball.isToChangeXDirection()) {
+        if (ball.isCollisionWithRightSceneSide(sceneWidth) || ball.isCollisionWithLeftSceneSide() || ball.isVerticalCollisionWithBrick()) {
             return -180 - ball.getAngle();
 
         }
 
-        if (ball.getCenterY() <= ball.getRadius() || ball.isToChangeYDirection()) {
+        if (ball.isCollisionWithUpperSceneSide() || ball.isHorizontalCollisionWithBrick()) {
             return -ball.getAngle();
 
         }
@@ -109,7 +118,7 @@ public class Model {
             Brick brick = bricks.get(String.valueOf(i));
             if (brick != null) {
                 if (ball.isCollisionWithBrickBottom(brick) || ball.isCollisionWithBrickTop(brick)) {
-                    ball.detectCollisionY();
+                    ball.detectHorizontalCollisionWithBrick();
                     brick.decreaseCountOfHits();
                     if (!(brick instanceof IndestructibleBrick) && brick.getCountOfHits() == 0) {
                         score += brick.getPoints();
@@ -117,7 +126,7 @@ public class Model {
                     }
                 } else {
                     if (ball.isCollisionWithBrickLeftSide(brick) || ball.isCollisionWithBrickRightSide(brick)) {
-                        ball.detectCollisionX();
+                        ball.detectVerticalCollisionWithBrick();
                         brick.decreaseCountOfHits();
                         if (!(brick instanceof IndestructibleBrick) && brick.getCountOfHits()==0) {
                             score += brick.getPoints();
@@ -127,9 +136,11 @@ public class Model {
                 }
             }
         }
+
         for (String i : indexesCollisionBricks) {
             bricks.remove(i);
         }
+
         amountOfBreakableBricks -= indexesCollisionBricks.size();
         return indexesCollisionBricks;
     }

@@ -9,10 +9,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public final class FirstLevelView extends LevelView {
-
-    private static final Integer amountOfLinesBricks = 3;
-    private static final Integer amountOfBricksInLine = 3;
-
     private Color standardBrickColor;
     private Color standardBrickStrokeColor;
     private String standardBrickStrokeWidth;
@@ -20,8 +16,6 @@ public final class FirstLevelView extends LevelView {
     private Color doubleHitBrickColor;
     private Color doubleHitBrickStrokeColor;
     private String doubleHitBrickStrokeWidth;
-
-    private static final Rectangle[][] reg = new Rectangle[0][];
 
     private void loadStandardBricksParameters() {
         standardBrickColor = Color.valueOf(getPropertyInString("standard.brick.color"));
@@ -48,41 +42,37 @@ public final class FirstLevelView extends LevelView {
     }
 
     @Override
-    public void render() throws IOException {
+    public void render() {
 
-        fieldParameters.load(new FileInputStream("src/main/resources/oop/arkanoid/level1-view.properties"));
+        try (FileInputStream fieldView = new FileInputStream("src/main/resources/oop/arkanoid/level1-view.properties")) {
+            fieldParameters.load(fieldView);
+        } catch (IOException e) {
+//надо что-то написать потом
+        }
 
         setParametersForLevelView();
 
         loadStandardBricksParameters();
         loadDoubleHitBricksParameters();
 
-        int numLine = 0;
-        for (int i = 0, numColumn = 0; i < amountOfBricks - 5; numColumn++, i++) {
-            if (i % 5 == 0 && i != 0) {
-                ++numLine;
-                numColumn = 0;
-            }
-            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBricksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
-            setParametersForStandardBrick(brick);
-            brick.setId(String.valueOf(i));
-            bricks.put(brick.getId(), brick);
-        }
-
-        for (int i = amountOfBricks - 5, numColumn = 0; i < amountOfBricks; numColumn++, i++) {
-            if (i % 5 == 0 && i != 0) {
-                ++numLine;
-            }
-            Rectangle brick = new Rectangle(startOfBricksX + numColumn * (brickWidth + distanceBetweenBricks), startOfBricksY + numLine * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
-            setParametersForDoubleHitBrick(brick);
-            brick.setId(String.valueOf(i));
-            bricks.put(brick.getId(), brick);
-        }
-
         root = new Pane(platform, ball, scoreLabel, scoreCountLabel, pauseButton, highScoreLabel, highScoreCountLabel);
 
-        for (int i = 0; i < bricks.size(); i++) {
-            root.getChildren().add(bricks.get(String.valueOf(i)));
+        for (int i = 0; i < amountOfBricksLines - 1; i++) {
+            for (int j = 0; j < amountOfBricksInLine; j++) {
+                Rectangle brick = new Rectangle(startOfBricksX + j * (brickWidth + distanceBetweenBricks), startOfBricksY + i * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
+                setParametersForStandardBrick(brick);
+                brick.setId(String.valueOf(i * amountOfBricksInLine + j));
+                bricks.put(brick.getId(), brick);
+                root.getChildren().add(brick);
+            }
+        }
+
+        for (int i = 0; i < amountOfBricksInLine; i++) {
+            Rectangle brick = new Rectangle(startOfBricksX + i * (brickWidth + distanceBetweenBricks), startOfBricksY + (amountOfBricksLines - 1) * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
+            setParametersForDoubleHitBrick(brick);
+            brick.setId(String.valueOf(amountOfBricksInLine * (amountOfBricksLines - 1) + i));
+            bricks.put(brick.getId(), brick);
+            root.getChildren().add(brick);
         }
 
         gameScene = new Scene(root, sceneWidth, sceneHeight, Color.valueOf(fieldParameters.getProperty("scene.color")));

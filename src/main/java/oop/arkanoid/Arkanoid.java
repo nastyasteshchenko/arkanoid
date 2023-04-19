@@ -17,6 +17,7 @@ public class Arkanoid extends Application {
         stage.setTitle("Arkanoid");
         stage.setScene(startScene);
         Arkanoid.stage = stage;
+        Arkanoid.stage.setResizable(false);
         stage.show();
     }
 

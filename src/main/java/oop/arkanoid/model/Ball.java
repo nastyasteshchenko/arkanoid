@@ -2,8 +2,8 @@ package oop.arkanoid.model;
 
 public class Ball {
 
-    private boolean isToChangeXDirection = false;
-    private boolean isToChangeYDirection = false;
+    private boolean isVerticalCollisionWithBrick = false;
+    private boolean isHorizontalCollisionWithBrick = false;
     private final double speed = 1.5;
     private double angle = Math.random() * 60 - 120;
     private final double radius;
@@ -16,20 +16,20 @@ public class Ball {
         this.centerY = centerY;
     }
 
-    public boolean isToChangeXDirection() {
-        return isToChangeXDirection;
+    public boolean isVerticalCollisionWithBrick() {
+        return isVerticalCollisionWithBrick;
     }
 
-    public void detectCollisionX() {
-        this.isToChangeXDirection = true;
+    public void detectVerticalCollisionWithBrick() {
+        this.isVerticalCollisionWithBrick = true;
     }
 
-    public boolean isToChangeYDirection() {
-        return isToChangeYDirection;
+    public boolean isHorizontalCollisionWithBrick() {
+        return isHorizontalCollisionWithBrick;
     }
 
-    public void detectCollisionY() {
-        this.isToChangeYDirection = true;
+    public void detectHorizontalCollisionWithBrick() {
+        this.isHorizontalCollisionWithBrick = true;
     }
 
     public boolean isCollisionWithPlatform(Platform platform) {
@@ -47,6 +47,18 @@ public class Ball {
                 && Math.abs(centerY + radius - brick.getY()) <= speed / 2;
     }
 
+    public boolean isCollisionWithUpperSceneSide() {
+        return centerY <= radius;
+    }
+
+    public boolean isCollisionWithRightSceneSide(double sceneWidth){
+        return centerX >= sceneWidth - radius;
+    }
+
+    public boolean isCollisionWithLeftSceneSide(){
+        return centerX <= radius;
+    }
+
     public boolean isCollisionWithBrickLeftSide(Brick brick) {
         return Math.abs(centerX + radius - brick.getX()) <= speed / 2
                 && centerY + radius > brick.getY() && centerY - radius < brick.getY() + brick.getHeight();
@@ -60,8 +72,8 @@ public class Ball {
     public void renewCoordinates() {
         centerX += speed * Math.cos(Math.toRadians(angle));
         centerY += speed * Math.sin(Math.toRadians(angle));
-        isToChangeYDirection = false;
-        isToChangeXDirection = false;
+        isHorizontalCollisionWithBrick = false;
+        isVerticalCollisionWithBrick = false;
     }
 
     public double getRadius() {
