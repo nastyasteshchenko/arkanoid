@@ -24,7 +24,7 @@ import java.util.Properties;
 
 //Я когда-нибудь нормально обработаю исключения
 
-public class Controller {
+public class Presenter {
 
     private static final Properties records = new Properties();
     private static int numLevel = 1;
@@ -165,7 +165,7 @@ public class Controller {
     }
 
     private static Scene loadNewScene(String fileName) throws IOException {
-        return new Scene(FXMLLoader.load(Objects.requireNonNull(Controller.class.getResource(fileName))));
+        return new Scene(FXMLLoader.load(Objects.requireNonNull(Presenter.class.getResource(fileName))));
     }
 
     public static void loadScenes() throws IOException {

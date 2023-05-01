@@ -8,7 +8,7 @@
 
 <AnchorPane opacity="0.5" prefHeight="900.0" prefWidth="600.0" style="-fx-background-color: #FFE4B5;"
             xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="oop.arkanoid.Controller">
+            fx:controller="oop.arkanoid.Presenter">
    <Text fill="#680707" layoutX="58.0" layoutY="284.0" strokeType="OUTSIDE" strokeWidth="0.0"
          text="The player controls the platform, which prevents a ball from falling from the playing field, and attempts to bounce the ball against a number of bricks. The ball striking a brick causes the brick to disappear. When all the bricks are gone, the player advances to the next level, where another pattern of bricks appears. &#10;"
          textAlignment="CENTER" wrappingWidth="484.748291015625">
