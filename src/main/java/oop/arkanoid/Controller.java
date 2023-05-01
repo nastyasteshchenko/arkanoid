@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import oop.arkanoid.model.Game;
 import oop.arkanoid.model.Model;
 import oop.arkanoid.view.FirstLevelView;
 import oop.arkanoid.view.LevelView;
@@ -35,7 +36,7 @@ public class Controller {
 
     private static LevelView gameView = new FirstLevelView();
 
-    private static Model model;
+    private static Game model;
 
     private static Scene mainScene;
     private static Scene aboutScene;
@@ -98,13 +99,13 @@ public class Controller {
 
     private void startFirstLevel() {
 
-        model = new Model(gameView.getSceneHeight(), gameView.getSceneWidth());
 
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
 
         gameView.render();
 
         model.restartModel(gameView.getAmountOfBricks(), gameView.getAmountOfBreakableBricks());
+
 
         model.setPlatform(gameView.getPlatform().getX(), gameView.getPlatform().getY(), gameView.getPlatform().getWidth(), gameView.getPlatform().getHeight());
 
