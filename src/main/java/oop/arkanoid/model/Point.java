@@ -1,7 +1,6 @@
 package oop.arkanoid.model;
 
 public class Point implements Comparable<Point> {
-
     private double x;
     private double y;
 
@@ -10,17 +9,16 @@ public class Point implements Comparable<Point> {
         this.y = y;
     }
 
-    double x() {
+    public double x() {
         return x;
     }
 
-    double y() {
+    public double y() {
         return y;
     }
 
     void setX(double x) {
         this.x = x;
-
     }
 
     void setY(double y) {

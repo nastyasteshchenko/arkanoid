@@ -68,7 +68,7 @@ class Ball {
 
     Motion motion;
 
-    double speed;
+    double speed = 1.5;
 
     Ball(double radius, Point position) {
         this.radius = radius;
@@ -85,12 +85,12 @@ class Ball {
             }
 
             motion.angle = countReboundingAngle(barrier);
-            motion.move(speed);
 
             if (barrier instanceof Destroyable d) {
-                d.onHit();
+              //  d.onHit();
             }
         }
+
         return motion.position;
     }
 
@@ -153,11 +153,13 @@ class Motion {
 
     Motion(Point startPosition, double angle) {
         this.position = startPosition;
-        this.angle= angle;
+        this.angle = angle;
     }
 
     void move(double speed) {
+
         position.setX(position.x() + speed * Math.cos(Math.toRadians(angle)));
         position.setY(position.y() + speed * Math.sin(Math.toRadians(angle)));
+
     }
 }

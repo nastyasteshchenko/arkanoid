@@ -9,7 +9,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import oop.arkanoid.Point;
+import oop.arkanoid.model.Point;
 
 import java.io.FileInputStream;
 import java.io.IOException;

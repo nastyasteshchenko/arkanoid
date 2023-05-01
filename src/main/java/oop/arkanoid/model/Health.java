@@ -1,9 +1,9 @@
 package oop.arkanoid.model;
 
 class Health {
-    private byte value;
+    private int value;
 
-    private Health(byte value) {
+    Health(int value) {
         this.value = value;
     }
 
@@ -25,7 +25,7 @@ class Health {
     }
 
     static class Immortal extends Health {
-        private Immortal() {
+        Immortal() {
             super((byte) 1);
         }
 

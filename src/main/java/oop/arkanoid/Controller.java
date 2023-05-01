@@ -11,7 +11,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import oop.arkanoid.model.Game;
-import oop.arkanoid.model.Model;
 import oop.arkanoid.view.FirstLevelView;
 import oop.arkanoid.view.LevelView;
 import oop.arkanoid.view.SecondLevelView;
@@ -56,29 +55,29 @@ public class Controller {
         pauseTimeline.play();
     }
 
-    private void setRecord() {
-        if (model.getScore() > Integer.parseInt(records.getProperty(String.valueOf(numLevel)))) {
-            records.setProperty(String.valueOf(numLevel), String.valueOf(model.getScore()));
-        }
-    }
+//    private void setRecord() {
+//        if (model.getScore() > Integer.parseInt(records.getProperty(String.valueOf(numLevel)))) {
+//            records.setProperty(String.valueOf(numLevel), String.valueOf(model.getScore()));
+//        }
+//    }
 
     private void moveBall() {
         animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
             if (gameView.isStartMovingBall()) {
                 try {
-                    gameView.moveBall(model.recountBallCoordinates());
-                    gameView.deleteBrick(model.detectCollisionsWithBricks());
-                    gameView.changeScore(model.getScore());
-                    if (model.getAmountOfBreakableBricks() == 0) {
-                        gameWin();
-                    }
+                    gameView.moveBall(model.nextBallPosition());
+//                    gameView.deleteBrick(model.detectCollisionsWithBricks());
+//                    gameView.changeScore(model.getScore());
+//                    if (model.getAmountOfBreakableBricks() == 0) {
+//                        gameWin();
+//                    }
                     if (gameView.isPause()) {
                         pause();
                     }
-                    if (model.isGameOver()) {
+                    if (model.gameOver()) {
                         gameOver();
                     }
-                    gameView.movePlatform(model.recountPlatformX(gameView.getPlatformX()));
+                    gameView.movePlatform(model.updatePlatformPosition(gameView.getPlatformX()));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -99,61 +98,65 @@ public class Controller {
 
     private void startFirstLevel() {
 
+        Game.Builder builder = new Game.Builder();
 
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
 
         gameView.render();
 
-        model.restartModel(gameView.getAmountOfBricks(), gameView.getAmountOfBreakableBricks());
+        builder.platform(gameView.getPlatform().getX(), gameView.getPlatform().getY(), gameView.getPlatform().getWidth(), gameView.getPlatform().getHeight());
 
-
-        model.setPlatform(gameView.getPlatform().getX(), gameView.getPlatform().getY(), gameView.getPlatform().getWidth(), gameView.getPlatform().getHeight());
-
-        model.setBall(gameView.getBall().getRadius(), gameView.getBall().getCenterX(), gameView.getBall().getCenterY());
+        builder.ball(gameView.getBall().getRadius(), gameView.getBall().getCenterX(), gameView.getBall().getCenterY());
 
         HashMap<String, Rectangle> bricks = gameView.getBricks();
 
         for (int i = 0; i < gameView.getAmountOfBricksInLine() * (gameView.getAmountOfBricksLines() - 1); i++) {
             Rectangle block = bricks.get(String.valueOf(i));
-            model.addStandardBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
+            builder.addDestroyableBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), 5);
         }
 
         for (int i = gameView.getAmountOfBricksInLine() * (gameView.getAmountOfBricksLines() - 1); i < gameView.getAmountOfBricksInLine() * gameView.getAmountOfBricksLines(); i++) {
             Rectangle block = bricks.get(String.valueOf(i));
-            model.addDoubleHitBrickBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), block.getId());
+            builder.addDestroyableBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), 10);
         }
+        addWalls(builder);
+    }
+
+    private void addWalls(Game.Builder builder) {
+        builder.addWall(0, 0, 2, gameView.getSceneHeight());
+        builder.addWall(gameView.getSceneWidth() - 2, 0, 2, gameView.getSceneHeight());
+        builder.addWall(0, 0, gameView.getSceneWidth(), 2);
         Arkanoid.changeScene(gameView.getGameScene());
+        model = builder.build();
         moveBall();
     }
 
     private void startSecondLevel() {
-        model = new Model(gameView.getSceneHeight(), gameView.getSceneWidth());
+        Game.Builder builder = new Game.Builder();
 
         gameView = new SecondLevelView();
 
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
         gameView.render();
 
-        model.restartModel(gameView.getAmountOfBricks(), gameView.getAmountOfBreakableBricks());
         Rectangle platform = gameView.getPlatform();
-        model.setPlatform(platform.getX(), platform.getY(), platform.getWidth(), platform.getHeight());
+        builder.platform(platform.getX(), platform.getY(), platform.getWidth(), platform.getHeight());
 
-        model.setBall(gameView.getBall().getRadius(), gameView.getBall().getCenterX(), gameView.getBall().getCenterY());
+        builder.ball(gameView.getBall().getRadius(), gameView.getBall().getCenterX(), gameView.getBall().getCenterY());
 
         HashMap<String, Rectangle> bricks = gameView.getBricks();
 
         for (int i = 0; i < gameView.getAmountOfBreakableBricks(); i++) {
             Rectangle brick = bricks.get(String.valueOf(i));
-            model.addStandardBrick(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight(), brick.getId());
+            builder.addDestroyableBrick(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight(), 5);
         }
 
         for (int i = gameView.getAmountOfBreakableBricks(); i < gameView.getAmountOfBricks(); i++) {
             Rectangle brick = bricks.get(String.valueOf(i));
-            model.addIndestructibleBrick(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight(), brick.getId());
+            builder.addImmortalBrick(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight());
         }
 
-        Arkanoid.changeScene(gameView.getGameScene());
-        moveBall();
+        addWalls(builder);
     }
 
     @FXML
@@ -212,7 +215,7 @@ public class Controller {
     }
 
     private void gameOver() throws IOException {
-        setRecord();
+        //  setRecord();
         animation.stop();
         if (pauseTimeline != null) {
             pauseTimeline.stop();
@@ -226,7 +229,7 @@ public class Controller {
     }
 
     private void gameWin() throws IOException {
-        setRecord();
+        // setRecord();
         ++numLevel;
         animation.stop();
         if (pauseTimeline != null) {

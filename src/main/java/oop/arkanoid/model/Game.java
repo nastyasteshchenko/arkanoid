@@ -36,12 +36,12 @@
 
 package oop.arkanoid.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // TODO the model should be self-sufficient, no need tons of API for controller/presenter
 // TODO use custom event notifications, if possible, e.g. for destroying the bricks
 public class Game {
-    private List<Wall> walls;
     private List<Brick> bricks;
     private Platform platform;
 
@@ -49,26 +49,31 @@ public class Game {
 
     private Ball ball;
 
-    Game(Ball ball, Platform platform, List<Brick> bricks, List<Barrier> barriers, List<Wall> walls) {
+    Game(Ball ball, Platform platform, List<Brick> bricks, List<Barrier> barriers) {
         this.ball = ball;
         this.platform = platform;
         this.bricks = bricks;
         this.barriers = barriers;
-        this.walls = walls;
+    //    this.walls = walls;
     }
 
     int score;
 
-    Point nextBallPosition() {
+    public Point nextBallPosition() {
         return ball.nextPosition(barriers);
     }
 
     // TODO proper synchronization if two timers are initialized
-    void updatePlatformPosition(int newX) {
- platform.position.setX(newX);
+    public double updatePlatformPosition(double x) {
+
+
+            platform.position.setX(x - platform.size.x() / 2);
+
+
+        return platform.position.x();
     }
 
-    boolean gameOver() {
+   public boolean gameOver() {
         return bricks.isEmpty();
     }
 
@@ -76,42 +81,53 @@ public class Game {
         ball.speed = speed;
     }
 
-    static class Builder {
+    public static class Builder {
 
-        private List<Wall> walls;
-        private List<Brick> bricks;
+        private final List<Wall> walls = new ArrayList<>();
+        private final List<Brick> bricks = new ArrayList<>();
         private Platform platform;
 
-        private List<Barrier> barriers;
+        private final List<Barrier> barriers = new ArrayList<>();
 
         private Ball ball;
 
-        Builder platform(double x, double y, double width, double height) {
+        public Builder() {
+        }
 
+        public Builder platform(double x, double y, double width, double height) {
             platform = new Platform(createPoint(x, y), createPoint(width, height));
-
+            barriers.add(platform);
             return this;
         }
 
-        Builder ball(double radius, double centerX, double centerY) {
+        public Builder ball(double radius, double centerX, double centerY) {
             ball = new Ball(radius, createPoint(centerX, centerY));
             return this;
         }
 
-        Builder addBrick(Point position, Point size, Health health) {
+        public Builder addDestroyableBrick(double x, double y, double width, double height, int health) {
+            Brick barrier = new Brick(createPoint(x,y), createPoint(width, height), new Health(health));
+            bricks.add(barrier);
+            barriers.add(barrier);
+            return this;
+        }
+
+        public Builder addImmortalBrick(double x, double y, double width, double height) {
+            Barrier barrier = new Brick(createPoint(x,y), createPoint(width, height), new Health.Immortal());
+            barriers.add(barrier);
             // TODO check collisions
             return this;
         }
 
-        Builder addWall(double x, double y, double width, double height) {
-            walls.add(new Wall(createPoint(x, y), createPoint(width, height)));
+        public Builder addWall(double x, double y, double width, double height) {
+            barriers.add(new Wall(createPoint(x, y), createPoint(width, height)));
             return this;
         }
 
-        Game build() {
+        public Game build() {
             // TODO check that ball in on the platform
             // TODO check if Game is correctly set up
-            return new Game(ball, platform, bricks, barriers, walls);
+            return new Game(ball, platform, bricks, barriers);
         }
 
         private Point createPoint(double x, double y) {
