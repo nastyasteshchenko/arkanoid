@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Properties;
 
 public sealed class LevelView permits FirstLevelView, SecondLevelView {
@@ -67,8 +66,8 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
 
     protected void setParametersForLevelView() {
 
-        amountOfBricksLines = getPropertyInInt("amount.of.bricks.lines");
-        amountOfBricksInLine = getPropertyInInt("amount.of.bricks.in.line");
+        amountOfBricksLines = getPropertyInInt("amount.of.lines");
+        amountOfBricksInLine = getPropertyInInt("amount.of.columns");
 
         amountOfBricks = getPropertyInInt("amount.of.bricks");
         amountOfBreakableBricks = getPropertyInInt("amount.of.breakable.bricks");

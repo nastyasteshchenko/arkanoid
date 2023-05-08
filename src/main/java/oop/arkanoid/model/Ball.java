@@ -1,55 +1,3 @@
-//package oop.arkanoid.model;
-//
-//public class Ball {
-//
-//    private boolean isVerticalCollisionWithBrick = false;
-//    private boolean isHorizontalCollisionWithBrick = false;
-//    private final double speed = 1.5;
-//    private double angle = Math.random() * 60 - 120;
-//    private final double radius;
-//    private double centerX;
-//    private double centerY;
-//
-//
-//    public boolean isCollisionWithBrickLeftSide(Brick brick) {
-//        return Math.abs(centerX + radius - brick.getX()) <= speed / 2
-//                && centerY + radius > brick.getY() && centerY - radius < brick.getY() + brick.getHeight();
-//    }
-//
-//    public boolean isCollisionWithBrickRightSide(Brick brick) {
-//        return Math.abs(centerX - radius - brick.getX() - brick.getWidth()) <= speed / 2
-//                && centerY + radius > brick.getY() && centerY - radius < brick.getY() + brick.getHeight();
-//    }
-//
-//    public void renewCoordinates() {
-//        centerX += speed * Math.cos(Math.toRadians(angle));
-//        centerY += speed * Math.sin(Math.toRadians(angle));
-//        isHorizontalCollisionWithBrick = false;
-//        isVerticalCollisionWithBrick = false;
-//    }
-//
-//    public double getRadius() {
-//        return radius;
-//    }
-//
-//    public double getCenterX() {
-//        return centerX;
-//    }
-//
-//    public double getCenterY() {
-//        return centerY;
-//    }
-//
-//    public double getAngle() {
-//        return angle;
-//    }
-//
-//    public void setAngle(double angle) {
-//        this.angle = angle;
-//    }
-//
-//}
-
 package oop.arkanoid.model;
 
 import java.util.ArrayList;
@@ -71,7 +19,7 @@ class Ball {
 
     double speed = 1.5;
 
-    Ball(double radius, Point position) {
+    Ball(Point position, double radius) {
         this.radius = radius;
         this.position = position;
         motion = new Motion(position, Math.random() * 60 - 120);

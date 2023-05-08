@@ -31,21 +31,14 @@ public class Notifications {
     }
 
     public void subscribe(EventType eventType, Consumer<Destroyable> handler) {
-        List<Subscriber> subscribers = this.subscribers.computeIfAbsent(EventType.DESTROY, v -> new ArrayList<>());
+        List<Subscriber> subscribers = this.subscribers.computeIfAbsent(eventType, v -> new ArrayList<>());
         subscribers.add(new Subscriber(handler));
     }
 
-    public void unsubscribe(EventType eventType, Object subscriber) {
-
-    }
-
     static class Subscriber {
-
-
         private final Consumer<Destroyable> handler;
 
         public Subscriber(Consumer<Destroyable> handler) {
-
             this.handler = handler;
         }
     }

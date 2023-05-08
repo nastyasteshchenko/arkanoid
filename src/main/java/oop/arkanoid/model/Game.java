@@ -1,60 +1,26 @@
-
-//
-//    public void addDoubleHitBrickBrick(double x, double y, double width, double height, String id) {
-//        bricks.put(id, new DoubleHitBrick(x, y, width, height));
-//    }
-//
-//    public void addIndestructibleBrick(double x, double y, double width, double height, String id) {
-//        bricks.put(id, new IndestructibleBrick(x, y, width, height));
-//    }
-//
-//    public Point recountBallCoordinates() {
-//
-//        if (ball.getCenterY() >= sceneHeight + 2 * ball.getRadius()) {
-//            isGameOver = true;
-//        }
-//
-//        ball.setAngle(countReboundingAngle());
-//
-//        ball.renewCoordinates();
-//
-//        return new Point(ball.getCenterX(), ball.getCenterY());
-//    }
-//
-//    public int getAmountOfBreakableBricks() {
-//        return amountOfBreakableBricks;
-//    }
-//
-//    public int getScore() {
-//        return score;
-//    }
-//
-//    public boolean isGameOver() {
-//        return isGameOver;
-//    }
-//}
-
 package oop.arkanoid.model;
+
+import oop.arkanoid.view.LevelView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 // TODO the model should be self-sufficient, no need tons of API for controller/presenter
 // TODO use custom event notifications, if possible, e.g. for destroying the bricks
 public class Game {
     private final List<Brick> bricks;
     private final Platform platform;
-
     private final List<Barrier> barriers;
 
-    private Ball ball;
+    private boolean gameOver = false;
+    private final Ball ball;
 
     Game(Ball ball, Platform platform, List<Brick> bricks, List<Barrier> barriers) {
         this.ball = ball;
         this.platform = platform;
         this.bricks = bricks;
         this.barriers = barriers;
-    //    this.walls = walls;
     }
 
     int score;
@@ -66,24 +32,36 @@ public class Game {
     // TODO proper synchronization if two timers are initialized
     public double updatePlatformPosition(double x) {
 
-
-            platform.position.setX(x - platform.size.x() / 2);
-
+        platform.position.setX(x - platform.size.x() / 2);
 
         return platform.position.x();
     }
 
-   public boolean gameOver() {
+    public boolean gameWin() {
         return bricks.isEmpty();
+    }
+
+    public boolean gameOver() {
+        return gameOver;
+    }
+
+    protected static Double getPropertyInDouble(String key, Properties properties) {
+        return Double.parseDouble(properties.getProperty(key));
+    }
+
+    public static Game initLevel(Properties properties) {
+        return new LevelInitor(properties).initLevel();
     }
 
     private void updateSpeed(int speed) {
         ball.speed = speed;
     }
 
-    public static class Builder {
+    private Point createPoint(double x, double y) {
+        return new Point(x, y);
+    }
 
-        private final List<Wall> walls = new ArrayList<>();
+    public static class Builder {
         private final List<Brick> bricks = new ArrayList<>();
         private Platform platform;
 
@@ -91,36 +69,33 @@ public class Game {
 
         private Ball ball;
 
-        public Builder() {
-        }
-
-        public Builder platform(double x, double y, double width, double height) {
-            platform = new Platform(createPoint(x, y), createPoint(width, height));
+        public Builder platform(Point position, Point size) {
+            platform = new Platform(position, size);
             barriers.add(platform);
             return this;
         }
 
-        public Builder ball(double radius, double centerX, double centerY) {
-            ball = new Ball(radius, createPoint(centerX, centerY));
+        public Builder ball(Point position, double radius) {
+            ball = new Ball(position, radius);
             return this;
         }
 
-        public Builder addDestroyableBrick(double x, double y, double width, double height, int health) {
-            Brick barrier = new Brick(createPoint(x,y), createPoint(width, height), new Health(health));
+        public Builder addDestroyableBrick(Point position, Point size, int health) {
+            Brick barrier = new Brick(position, size, new Health(health));
             bricks.add(barrier);
             barriers.add(barrier);
             return this;
         }
 
-        public Builder addImmortalBrick(double x, double y, double width, double height) {
-            Barrier barrier = new Brick(createPoint(x,y), createPoint(width, height), Health.createImmortal());
+        public Builder addImmortalBrick(Point position, Point size) {
+            Barrier barrier = new Brick(position, size, Health.createImmortal());
             barriers.add(barrier);
             // TODO check collisions
             return this;
         }
 
-        public Builder addWall(double x, double y, double width, double height) {
-            barriers.add(new Wall(createPoint(x, y), createPoint(width, height)));
+        public Builder addWall(Point position, Point size) {
+            barriers.add(new Wall(position, size));
             return this;
         }
 
@@ -128,10 +103,6 @@ public class Game {
             // TODO check that ball in on the platform
             // TODO check if Game is correctly set up
             return new Game(ball, platform, bricks, barriers);
-        }
-
-        private Point createPoint(double x, double y) {
-            return new Point(x, y);
         }
     }
 

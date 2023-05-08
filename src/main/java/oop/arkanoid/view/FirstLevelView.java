@@ -44,7 +44,7 @@ public final class FirstLevelView extends LevelView {
     @Override
     public void render() {
 
-        try (FileInputStream fieldView = new FileInputStream("src/main/resources/oop/arkanoid/level1-view.properties")) {
+        try (FileInputStream fieldView = new FileInputStream("src/main/resources/oop/arkanoid/level1.properties")) {
             fieldParameters.load(fieldView);
         } catch (IOException e) {
 //надо что-то написать потом

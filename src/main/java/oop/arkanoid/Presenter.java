@@ -10,7 +10,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import oop.arkanoid.model.Destroyable;
 import oop.arkanoid.model.Game;
 import oop.arkanoid.view.FirstLevelView;
 import oop.arkanoid.view.LevelView;
@@ -20,7 +19,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Consumer;
 
 //Я когда-нибудь нормально обработаю исключения
 
@@ -55,7 +53,7 @@ public class Presenter {
         pauseTimeline.play();
     }
 
-//    private void setRecord() {
+    //    private void setRecord() {
 //        if (model.getScore() > Integer.parseInt(records.getProperty(String.valueOf(numLevel)))) {
 //            records.setProperty(String.valueOf(numLevel), String.valueOf(model.getScore()));
 //        }
@@ -98,38 +96,24 @@ public class Presenter {
 
     private void startFirstLevel() {
 
-        Game.Builder builder = new Game.Builder();
+        try (FileInputStream recordsInputStream = new FileInputStream("src/main/resources/oop/arkanoid/level1.properties")) {
+            Properties properties = new Properties();
+            properties.load(recordsInputStream);
+            model = Game.initLevel(properties);
+        } catch (IOException e) {
+//тоже когда-нибудь обработать
+        }
 
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
 
         gameView.render();
 
-        builder.platform(gameView.getPlatform().getX(), gameView.getPlatform().getY(), gameView.getPlatform().getWidth(), gameView.getPlatform().getHeight());
-
-        builder.ball(gameView.getBall().getRadius(), gameView.getBall().getCenterX(), gameView.getBall().getCenterY());
-
-        List<Rectangle> bricks = gameView.getBricks();
-
-        for (int i = 0; i < gameView.getAmountOfBricksInLine() * (gameView.getAmountOfBricksLines() - 1); i++) {
-            Rectangle block = bricks.get(i);
-            builder.addDestroyableBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), 1);
-        }
-
-        for (int i = gameView.getAmountOfBricksInLine() * (gameView.getAmountOfBricksLines() - 1); i < gameView.getAmountOfBricksInLine() * gameView.getAmountOfBricksLines(); i++) {
-            Rectangle block = bricks.get(i);
-            builder.addDestroyableBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), 2);
-        }
-        addWalls(builder);
-    }
-
-    private void addWalls(Game.Builder builder) {
-        builder.addWall(0, 0, 2, gameView.getSceneHeight());
-        builder.addWall(gameView.getSceneWidth() - 2, 0, 2, gameView.getSceneHeight());
-        builder.addWall(0, 0, gameView.getSceneWidth(), 2);
         Arkanoid.changeScene(gameView.getGameScene());
-        model = builder.build();
+
         moveBall();
+
     }
+
 
     private void startSecondLevel() {
         Game.Builder builder = new Game.Builder();
@@ -138,25 +122,9 @@ public class Presenter {
 
         gameView.setHighScoreCountLabel(records.getProperty(String.valueOf(numLevel)));
         gameView.render();
+        Arkanoid.changeScene(gameView.getGameScene());
 
-        Rectangle platform = gameView.getPlatform();
-        builder.platform(platform.getX(), platform.getY(), platform.getWidth(), platform.getHeight());
-
-        builder.ball(gameView.getBall().getRadius(), gameView.getBall().getCenterX(), gameView.getBall().getCenterY());
-
-        List<Rectangle> bricks = gameView.getBricks();
-
-        for (int i = 0; i < gameView.getAmountOfBreakableBricks(); i++) {
-            Rectangle brick = bricks.get(i);
-            builder.addDestroyableBrick(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight(), 5);
-        }
-
-        for (int i = gameView.getAmountOfBreakableBricks(); i < gameView.getAmountOfBricks(); i++) {
-            Rectangle brick = bricks.get(i);
-            builder.addImmortalBrick(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight());
-        }
-
-        addWalls(builder);
+        moveBall();
     }
 
     @FXML
