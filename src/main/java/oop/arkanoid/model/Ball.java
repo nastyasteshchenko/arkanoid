@@ -52,6 +52,7 @@
 
 package oop.arkanoid.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class Ball {
@@ -77,6 +78,7 @@ class Ball {
     }
 
     Point nextPosition(List<Barrier> barriers) {
+        List<Destroyable> toRemoveBarriers = new ArrayList<>();
         motion.move(speed);
         int count = 0;
         // TODO don't need to check all barriers every time, just need it once after changing the trajectory or direction
@@ -92,8 +94,15 @@ class Ball {
             ++count;
 
             if (barrier instanceof Destroyable d) {
-                //  d.onHit();
+                d.onHit();
+                if (!d.isAlive()) {
+                    toRemoveBarriers.add(d);
+                }
             }
+        }
+
+        for (Destroyable brick : toRemoveBarriers) {
+            barriers.remove(brick);
         }
 
         return motion.position;

@@ -19,14 +19,12 @@ import oop.arkanoid.view.SecondLevelView;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Consumer;
 
 //Я когда-нибудь нормально обработаю исключения
 
-public class Presenter implements Consumer<Destroyable> {
+public class Presenter {
 
     private static final Properties records = new Properties();
     private static int numLevel = 1;
@@ -69,7 +67,6 @@ public class Presenter implements Consumer<Destroyable> {
             if (gameView.isStartMovingBall()) {
                 try {
                     gameView.moveBall(model.nextBallPosition());
-//                    gameView.deleteBrick(model.detectCollisionsWithBricks());
 //                    gameView.changeScore(model.getScore());
 //                    if (model.getAmountOfBreakableBricks() == 0) {
 //                        gameWin();
@@ -111,16 +108,16 @@ public class Presenter implements Consumer<Destroyable> {
 
         builder.ball(gameView.getBall().getRadius(), gameView.getBall().getCenterX(), gameView.getBall().getCenterY());
 
-        HashMap<String, Rectangle> bricks = gameView.getBricks();
+        List<Rectangle> bricks = gameView.getBricks();
 
         for (int i = 0; i < gameView.getAmountOfBricksInLine() * (gameView.getAmountOfBricksLines() - 1); i++) {
-            Rectangle block = bricks.get(String.valueOf(i));
-            builder.addDestroyableBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), 5);
+            Rectangle block = bricks.get(i);
+            builder.addDestroyableBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), 1);
         }
 
         for (int i = gameView.getAmountOfBricksInLine() * (gameView.getAmountOfBricksLines() - 1); i < gameView.getAmountOfBricksInLine() * gameView.getAmountOfBricksLines(); i++) {
-            Rectangle block = bricks.get(String.valueOf(i));
-            builder.addDestroyableBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), 10);
+            Rectangle block = bricks.get(i);
+            builder.addDestroyableBrick(block.getX(), block.getY(), block.getWidth(), block.getHeight(), 2);
         }
         addWalls(builder);
     }
@@ -147,15 +144,15 @@ public class Presenter implements Consumer<Destroyable> {
 
         builder.ball(gameView.getBall().getRadius(), gameView.getBall().getCenterX(), gameView.getBall().getCenterY());
 
-        HashMap<String, Rectangle> bricks = gameView.getBricks();
+        List<Rectangle> bricks = gameView.getBricks();
 
         for (int i = 0; i < gameView.getAmountOfBreakableBricks(); i++) {
-            Rectangle brick = bricks.get(String.valueOf(i));
+            Rectangle brick = bricks.get(i);
             builder.addDestroyableBrick(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight(), 5);
         }
 
         for (int i = gameView.getAmountOfBreakableBricks(); i < gameView.getAmountOfBricks(); i++) {
-            Rectangle brick = bricks.get(String.valueOf(i));
+            Rectangle brick = bricks.get(i);
             builder.addImmortalBrick(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight());
         }
 
@@ -181,6 +178,7 @@ public class Presenter implements Consumer<Destroyable> {
     @FXML
     protected void startGame() {
 
+        Notifications.getInstance().subscribe(Notifications.EventType.DESTROY, destroyable -> gameView.deleteBrick(destroyable.position()));
         try (FileInputStream recordsInputStream = new FileInputStream("src/main/resources/oop/arkanoid/records.properties")) {
             records.load(recordsInputStream);
         } catch (IOException e) {
@@ -188,7 +186,6 @@ public class Presenter implements Consumer<Destroyable> {
         }
         LevelView.loadField();
         startFirstLevel();
-        Notifications.getInstance().subscribe(Notifications.EventType.DESTROY, this);
     }
 
     @FXML
@@ -247,8 +244,4 @@ public class Presenter implements Consumer<Destroyable> {
         Arkanoid.changeScene(gameWinScene);
     }
 
-    @Override
-    public void accept(Destroyable destroyable) {
-        gameView.deleteBrick(destroyable.position());
-    }
 }

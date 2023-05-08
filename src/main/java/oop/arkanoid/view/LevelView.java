@@ -14,7 +14,8 @@ import oop.arkanoid.model.Point;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 public sealed class LevelView permits FirstLevelView, SecondLevelView {
@@ -57,7 +58,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     protected Scene gameScene;
 
     protected static Pane root;
-    protected static final HashMap<String, Rectangle> bricks = new HashMap<>();
+    protected static final List<Rectangle> bricks = new ArrayList<>();
 
     protected static final Properties fieldParameters = new Properties();
 
@@ -196,11 +197,20 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
         scoreCountLabel.setText(String.valueOf(points));
     }
 
-    public void deleteBrick(ArrayList<String> indexes) {
-        for (String index : indexes) {
-            root.getChildren().remove(bricks.get(index));
-            bricks.remove(index);
-        }
+//    public void deleteBrick(ArrayList<String> indexes) {
+//        for (String index : indexes) {
+//            root.getChildren().remove(bricks.get(index));
+//            bricks.remove(index);
+//        }
+//    }
+
+    private static void remove(Rectangle brick) {
+        root.getChildren().remove(brick);
+        bricks.remove(brick);
+    }
+
+    public void deleteBrick(Point point) {
+        remove(bricks.stream().filter(i -> point.x() == i.getX() && point.y() == i.getY()).findFirst().get());
     }
 
     public boolean isStartMovingBall() {
@@ -243,7 +253,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
         return ball;
     }
 
-    public HashMap<String, Rectangle> getBricks() {
+    public List<Rectangle> getBricks() {
         return bricks;
     }
 

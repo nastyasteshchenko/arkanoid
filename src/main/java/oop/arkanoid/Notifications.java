@@ -12,12 +12,15 @@ import java.util.function.Consumer;
 //TODO почитать про наблюдателя
 public class Notifications {
 
+    private static Notifications instance;
 
     final EnumMap<EventType, List<Subscriber>> subscribers = new EnumMap<>(EventType.class);
 
-    // TODO singleton
     public static Notifications getInstance() {
-        return new Notifications();
+        if (instance == null) {
+            instance = new Notifications();
+        }
+        return instance;
     }
 
     public void publish(EventType et, Destroyable destroyable) {

@@ -61,8 +61,7 @@ public final class SecondLevelView extends LevelView {
             for (int j = 0; j < amountOfBricksInLine; j++) {
                 Rectangle brick = new Rectangle(startOfBricksX + j * (brickWidth + distanceBetweenBricks), startOfBricksY + i * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
                 setParametersForStandardBrick(brick);
-                brick.setId(String.valueOf(i * amountOfBricksInLine + j));
-                bricks.put(brick.getId(), brick);
+                bricks.add( brick);
                 root.getChildren().add(brick);
             }
         }
@@ -70,8 +69,7 @@ public final class SecondLevelView extends LevelView {
         for (int i = 1; i < amountOfBricksInLine - 1; i++) {
             Rectangle brick = new Rectangle(startOfBricksX + i * (brickWidth + distanceBetweenBricks), startOfBricksY + (amountOfBricksLines - 1) * (brickHeight + distanceBetweenBricks), brickWidth, brickHeight);
             setParametersForIndestructibleBrick(brick);
-            brick.setId(String.valueOf(amountOfBricksInLine * (amountOfBricksLines - 1) + i - 1));
-            bricks.put(brick.getId(), brick);
+            bricks.add(brick);
             root.getChildren().add(brick);
         }
 

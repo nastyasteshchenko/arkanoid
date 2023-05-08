@@ -56,18 +56,18 @@ class Brick extends Barrier implements Destroyable {
         this.health = health;
     }
 
-    boolean isAlive() {
+    @Override
+    public boolean isAlive() {
         return health.isAlive();
     }
 
     @Override
     public Point position() {
-        return null;
+        return position;
     }
 
     @Override
     public void onHit() {
-        assert health.isAlive();
         health.decrease();
         if (!isAlive()) {
             Notifications.getInstance().publish(Notifications.EventType.DESTROY, this);
