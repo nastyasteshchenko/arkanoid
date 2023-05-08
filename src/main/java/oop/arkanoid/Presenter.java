@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import oop.arkanoid.model.Destroyable;
 import oop.arkanoid.model.Game;
 import oop.arkanoid.view.FirstLevelView;
 import oop.arkanoid.view.LevelView;
@@ -21,10 +22,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 //Я когда-нибудь нормально обработаю исключения
 
-public class Presenter {
+public class Presenter implements Consumer<Destroyable> {
 
     private static final Properties records = new Properties();
     private static int numLevel = 1;
@@ -60,8 +62,9 @@ public class Presenter {
 //            records.setProperty(String.valueOf(numLevel), String.valueOf(model.getScore()));
 //        }
 //    }
-
+    //TODO подумать над названием
     private void moveBall() {
+
         animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
             if (gameView.isStartMovingBall()) {
                 try {
@@ -185,6 +188,7 @@ public class Presenter {
         }
         LevelView.loadField();
         startFirstLevel();
+        Notifications.getInstance().subscribe(Notifications.EventType.DESTROY, this);
     }
 
     @FXML
@@ -241,5 +245,10 @@ public class Presenter {
 //тоже
         }
         Arkanoid.changeScene(gameWinScene);
+    }
+
+    @Override
+    public void accept(Destroyable destroyable) {
+        gameView.deleteBrick(destroyable.position());
     }
 }

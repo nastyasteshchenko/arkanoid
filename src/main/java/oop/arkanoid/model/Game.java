@@ -42,10 +42,10 @@ import java.util.List;
 // TODO the model should be self-sufficient, no need tons of API for controller/presenter
 // TODO use custom event notifications, if possible, e.g. for destroying the bricks
 public class Game {
-    private List<Brick> bricks;
-    private Platform platform;
+    private final List<Brick> bricks;
+    private final Platform platform;
 
-    private List<Barrier> barriers;
+    private final List<Barrier> barriers;
 
     private Ball ball;
 
@@ -113,7 +113,7 @@ public class Game {
         }
 
         public Builder addImmortalBrick(double x, double y, double width, double height) {
-            Barrier barrier = new Brick(createPoint(x,y), createPoint(width, height), new Health.Immortal());
+            Barrier barrier = new Brick(createPoint(x,y), createPoint(width, height), Health.createImmortal());
             barriers.add(barrier);
             // TODO check collisions
             return this;

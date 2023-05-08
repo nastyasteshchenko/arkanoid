@@ -78,16 +78,21 @@ class Ball {
 
     Point nextPosition(List<Barrier> barriers) {
         motion.move(speed);
+        int count = 0;
         // TODO don't need to check all barriers every time, just need it once after changing the trajectory or direction
         for (Barrier barrier : barriers) {
             if (!hasCollision(barrier)) {
                 continue;
             }
 
-            motion.angle = countReboundingAngle(barrier);
+            if (count == 0) {
+                motion.angle = countReboundingAngle(barrier);
+            }
+
+            ++count;
 
             if (barrier instanceof Destroyable d) {
-              //  d.onHit();
+                //  d.onHit();
             }
         }
 
@@ -125,22 +130,22 @@ class Ball {
 
     }
 
-    public boolean isCollisionWithBottom(Barrier barrier) {
+    private boolean isCollisionWithBottom(Barrier barrier) {
         return position.x() - radius < barrier.position.x() + barrier.size.x() && position.x() + radius > barrier.position.x()
                 && Math.abs(position.y() - radius - barrier.position.y() - barrier.size.y()) <= speed / 2;
     }
 
-    public boolean isCollisionWithTop(Barrier barrier) {
+    private boolean isCollisionWithTop(Barrier barrier) {
         return position.x() - radius < barrier.position.x() + barrier.size.x() && position.x() + radius > barrier.position.x()
                 && Math.abs(position.y() + radius - barrier.position.y()) <= speed / 2;
     }
 
-    public boolean isCollisionWithLeftSide(Barrier barrier) {
+    private boolean isCollisionWithLeftSide(Barrier barrier) {
         return Math.abs(position.x() + radius - barrier.position.x()) <= speed / 2
                 && position.y() + radius > barrier.position.y() && position.y() - radius < barrier.position.y() + barrier.size.y();
     }
 
-    public boolean isCollisionWithRightSide(Barrier barrier) {
+    private boolean isCollisionWithRightSide(Barrier barrier) {
         return Math.abs(position.x() - radius - barrier.position.x() - barrier.size.x()) <= speed / 2
                 && position.y() + radius > barrier.position.y() && position.y() - radius < barrier.position.y() + barrier.size.y();
     }

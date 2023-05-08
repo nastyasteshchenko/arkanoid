@@ -24,6 +24,7 @@ public sealed class LevelView permits FirstLevelView, SecondLevelView {
     protected int amountOfBricks;
     protected int amountOfBreakableBricks;
     protected double platformX = platformStartX + platformWidth / 2;
+    //TODO посмотреть как сделать без отдельного поля
     protected boolean isStartMovingBall = false;
     protected static boolean isPause = false;
     protected static double sceneWidth;
