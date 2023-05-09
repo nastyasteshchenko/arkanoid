@@ -3,7 +3,6 @@ package oop.arkanoid.view;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -52,7 +51,7 @@ public class LevelView {
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        public Builder highScoreLabel(int score) {
+        public Builder highScore(int score) {
             highScore = score;
             return this;
         }
@@ -61,17 +60,13 @@ public class LevelView {
         public Builder gameScene(Point size) {
             gamePane.setOpacity(0.5);
             gameScene = new Scene(gamePane, size.x(), size.y(), Color.valueOf(properties.getProperty("scene.color")));
-            score = new Label("Score: 0");
-            score.setTranslateX(200);
-            score.setTranslateY(size.y() - 40);
-            setScoreParams();
-            gamePane.getChildren().add(score);
+
             return this;
         }
 
         public Builder platform(Point position, Point size) {
             platform = new Rectangle(position.x(), position.y(), size.x(), size.y());
-            platform.setFill(Color.valueOf(getPropertyInString("platform.color")));
+            setPlatformParams();
             gamePane.getChildren().add(platform);
             return this;
         }
@@ -111,11 +106,15 @@ public class LevelView {
         }
 
         public LevelView build() {
+            score = new Label("Score: 0");
+            setScoreParams();
+            gamePane.getChildren().add(score);
+
             Label highScoreLabel = new Label("High score: " + highScore);
             setHighScoreLabelParams(highScoreLabel);
             gamePane.getChildren().add(highScoreLabel);
 
-            Labeled pauseButton = new Button();
+            Button pauseButton = new Button();
             setPauseButtonParams(pauseButton);
             gamePane.getChildren().add(pauseButton);
 
@@ -126,6 +125,10 @@ public class LevelView {
 
         }
 
+        private void setPlatformParams() {
+            platform.setFill(Color.valueOf(getPropertyInString("platform.color")));
+        }
+
         private void setHighScoreLabelParams(Label highScoreLabel) {
             highScoreLabel.setTranslateX(10);
             highScoreLabel.setTranslateY(gameScene.getHeight() - 40);
@@ -133,12 +136,12 @@ public class LevelView {
             highScoreLabel.setStyle("-fx-font-size: " + getPropertyInString("score.font.size"));
         }
 
-        private void setPauseButtonParams(Labeled pauseButton) {
+        private void setPauseButtonParams(Button pauseButton) {
             pauseButton.setOnMouseClicked(event -> Presenter.setPause());
             pauseButton.setText("Pause");
             pauseButton.setTranslateX(gameScene.getWidth() - 75);
             pauseButton.setTranslateY(gameScene.getHeight() - 50);
-            pauseButton.setPrefSize(getPropertyInDouble("pause.button.pref.width"), getPropertyInDouble("pause.button.pref.height"));
+            pauseButton.setPrefSize(60, 40);
             pauseButton.setStyle("-fx-font-size: " + getPropertyInString("pause.button.font.size"));
             pauseButton.setFont(Font.font(getPropertyInString("pause.button.font")));
             pauseButton.setTextFill(Color.valueOf(properties.getProperty("pause.button.text.color")));
@@ -170,12 +173,10 @@ public class LevelView {
         }
 
         private void setScoreParams() {
+            score.setTranslateX(200);
+            score.setTranslateY(gameScene.getHeight() - 40);
             score.setFont(Font.font(getPropertyInString("score.font")));
             score.setStyle("-fx-font-size: " + getPropertyInString("score.font.size"));
-        }
-
-        private Double getPropertyInDouble(String key) {
-            return Double.parseDouble(properties.getProperty(key));
         }
 
         private String getPropertyInString(String key) {
@@ -197,11 +198,6 @@ public class LevelView {
         ball.setCenterY(point.y());
     }
 
-    private void removeBrick(Rectangle brick) {
-        gamePane.getChildren().remove(brick);
-        bricks.remove(brick);
-    }
-
     public void deleteBrick(Point point) {
         removeBrick(bricks.stream().filter(i -> point.x() == i.getX() && point.y() == i.getY()).findFirst().get());
     }
@@ -213,7 +209,6 @@ public class LevelView {
         } catch (IOException e) {
 //надо что-то написать потом
         }
-
         text.setX(Double.parseDouble(properties.getProperty("score.x")));
         text.setY(Double.parseDouble(properties.getProperty("score.y")));
         text.setFont(Font.font(properties.getProperty("score.font")));
@@ -223,6 +218,11 @@ public class LevelView {
 
     public Scene getGameScene() {
         return gameScene;
+    }
+
+    private void removeBrick(Rectangle brick) {
+        gamePane.getChildren().remove(brick);
+        bricks.remove(brick);
     }
 
 }

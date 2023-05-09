@@ -21,29 +21,26 @@ public class Game {
         score = 0;
     }
 
-    public static class Builder {
+    static class Builder {
         private final List<Brick> bricks = new ArrayList<>();
         private Platform platform;
-
         private final List<Barrier> barriers = new ArrayList<>();
-
         private Ball ball;
-
         private Point scene;
 
-        public Builder platform(Point position, Point size) {
+        Builder platform(Point position, Point size) {
             platform = new Platform(position, size);
             barriers.add(platform);
             return this;
         }
 
-        public Builder ball(Point position, double radius) {
+        Builder ball(Point position, double radius) {
             ball = new Ball(position, radius);
             return this;
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        public Builder addDestroyableBrick(Point position, Point size, int health) {
+        Builder addDestroyableBrick(Point position, Point size, int health) {
             Brick brick = new Brick(position, size, new Health(health));
             if (bricks.stream().anyMatch(b -> hasCollision(brick, b))) {
                 //TODO think about
@@ -55,7 +52,7 @@ public class Game {
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        public Builder addImmortalBrick(Point position, Point size) {
+        Builder addImmortalBrick(Point position, Point size) {
             Brick brick = new Brick(position, size, Health.createImmortal());
             if (bricks.stream().anyMatch(b -> hasCollision(brick, b))) {
                 //TODO the same
@@ -66,17 +63,18 @@ public class Game {
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        public Builder addWall(Point position, Point size) {
+        Builder addWall(Point position, Point size) {
             barriers.add(new Wall(position, size));
             return this;
         }
 
-        public Builder scene(Point size) {
+        @SuppressWarnings("UnusedReturnValue")
+        Builder scene(Point size) {
             scene = size;
             return this;
         }
 
-        public Game build() {
+        Game build() {
             // TODO check that ball in on the platform
             // TODO check if Game is correctly set up
             return new Game(ball, platform, bricks, barriers, scene);
@@ -92,7 +90,7 @@ public class Game {
         }
     }
 
-    public static void increaseScore(int value) {
+    static void increaseScore(int value) {
         score += value;
     }
 
@@ -105,17 +103,15 @@ public class Game {
     }
 
     public double updatePlatformPosition(double x) {
-
         platform.position.setX(x - platform.size.x() / 2);
         return platform.position.x();
     }
-
 
     public boolean gameWin() {
         return bricks.isEmpty();
     }
 
-    public boolean gameOver() {
+    public boolean gameLose() {
         return ball.position.y() > scene.y();
     }
 
@@ -125,10 +121,6 @@ public class Game {
 
     private void updateSpeed(int speed) {
         ball.speed = speed;
-    }
-
-    private Point createPoint(double x, double y) {
-        return new Point(x, y);
     }
 
     public ArrayList<Point> getStandardBricks() {

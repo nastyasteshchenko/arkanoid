@@ -7,8 +7,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-// TODO probably there is some internal implementation of subscribers in JavaFX.
-// TODO if not we can implement our own like this
 //TODO почитать про наблюдателя
 public class Notifications {
 

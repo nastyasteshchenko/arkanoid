@@ -12,12 +12,9 @@ class Ball {
 
     private Collisions collision;
     final double radius;
-
     final Point position;
-
-    Motion motion;
-
     double speed = 1.5;
+    private final Motion motion;
 
     Ball(Point position, double radius) {
         this.radius = radius;
@@ -26,31 +23,29 @@ class Ball {
     }
 
     Point nextPosition(List<Barrier> barriers) {
-        ArrayList<Destroyable> collisionBricks = new ArrayList<>();
+        ArrayList<Brick> collisionBricks = new ArrayList<>();
         motion.move(speed);
-        int count = 0;
+        boolean isChangedAngle = false;
         // TODO don't need to check all barriers every time, just need it once after changing the trajectory or direction
         for (Barrier barrier : barriers) {
             if (!hasCollision(barrier)) {
                 continue;
             }
 
-            if (count == 0) {
+            if (!isChangedAngle) {
                 motion.angle = countReboundingAngle(barrier);
+                isChangedAngle = true;
             }
-
-            ++count;
 
             if (barrier instanceof Destroyable d) {
                 d.onHit();
                 if (!d.isAlive()) {
-                    collisionBricks.add(d);
+                    collisionBricks.add((Brick) barrier);
                 }
             }
         }
 
         collisionBricks.forEach(barriers::remove);
-
         return motion.position;
     }
 
@@ -74,15 +69,12 @@ class Ball {
 
         if (collision == Collisions.VERTICAL) {
             return -180 - motion.angle;
-
         }
 
         if (collision == Collisions.HORIZONTAL) {
             return -motion.angle;
-
         }
         return motion.angle;
-
     }
 
     private boolean isCollisionWithBottom(Barrier barrier) {
@@ -117,7 +109,6 @@ class Motion {
     }
 
     void move(double speed) {
-
         position.setX(position.x() + speed * Math.cos(Math.toRadians(angle)));
         position.setY(position.y() + speed * Math.sin(Math.toRadians(angle)));
 

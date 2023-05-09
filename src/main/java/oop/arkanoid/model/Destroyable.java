@@ -4,8 +4,6 @@ public interface Destroyable {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean isAlive();
-
     Point position();
-
     void onHit();
 }

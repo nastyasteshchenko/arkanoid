@@ -24,7 +24,6 @@ public class Presenter {
 
     private static final Properties records = new Properties();
     private static int numLevel = 1;
-
     private static Timeline animation;
     private static Timeline pauseTimeline;
     private static LevelView gameView;
@@ -36,7 +35,7 @@ public class Presenter {
     private static Scene gameOverScene;
     private static Scene gameWinScene;
 
-    private void pause() {
+    private static void pause() {
         pauseTimeline = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
             if (isPause) {
                 animation.pause();
@@ -65,10 +64,7 @@ public class Presenter {
                     if (model.gameWin()) {
                         gameWin();
                     }
-                    if (isPause) {
-                        pause();
-                    }
-                    if (model.gameOver()) {
+                    if (model.gameLose()) {
                         gameOver();
                     }
                 } catch (IOException e) {
@@ -124,7 +120,7 @@ public class Presenter {
         ArrayList<Point> doubleHitBricks = model.getDoubleHitBricks();
         doubleHitBricks.forEach(b -> builder.addDoubleHitBrick(b, brickSize));
 
-        builder.highScoreLabel(Integer.parseInt(records.getProperty(Integer.toString(numLevel))));
+        builder.highScore(Integer.parseInt(records.getProperty(Integer.toString(numLevel))));
 
         gameView = builder.build();
         Arkanoid.changeScene(gameView.getGameScene());
@@ -139,6 +135,9 @@ public class Presenter {
 
     public static void setPause() {
         isPause = !isPause;
+        if (isPause) {
+            pause();
+        }
     }
 
     @FXML
@@ -204,8 +203,8 @@ public class Presenter {
     }
 
     private void gameWin() throws IOException {
-        ++numLevel;
         prepareForGameOver(gameWinScene);
+        ++numLevel;
     }
 
     private void prepareForGameOver(Scene gameWinScene) {
