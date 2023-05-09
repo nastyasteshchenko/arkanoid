@@ -115,19 +115,17 @@ public class Presenter {
                 .platform(model.getPlatformPosition(), model.getPlatformSize())
                 .gameScene(model.getSceneSize());
 
-        ArrayList<Point> standardBricks = model.getStandardBricks();
         Point brickSize = model.getBrickSize();
-        for (Point brick : standardBricks) {
-            builder.addStandardBrick(brick, brickSize);
-        }
+        ArrayList<Point> standardBricks = model.getStandardBricks();
+
+        standardBricks.forEach(b -> builder.addStandardBrick(b, brickSize));
+
         ArrayList<Point> immortalBricks = model.getImmortalBricks();
-        for (Point brick : immortalBricks) {
-            builder.addImmortalBrick(brick, brickSize);
-        }
+        immortalBricks.forEach(b -> builder.addImmortalBrick(b, brickSize));
+
         ArrayList<Point> doubleHitBricks = model.getDoubleHitBricks();
-        for (Point brick : doubleHitBricks) {
-            builder.addDoubleHitBrick(brick, brickSize);
-        }
+        doubleHitBricks.forEach(b -> builder.addDoubleHitBrick(b, brickSize));
+
         gameView = builder.build();
         Arkanoid.changeScene(gameView.getGameScene());
 
@@ -196,6 +194,7 @@ public class Presenter {
 
     private void gameOver() throws IOException {
         //  setRecord();
+        //TODO extract
         animation.stop();
         gameIsStarted = false;
         if (pauseTimeline != null) {

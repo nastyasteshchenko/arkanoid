@@ -40,6 +40,7 @@ public class LevelView {
             this.properties = properties;
         }
 
+        @SuppressWarnings("UnusedReturnValue")
         public Builder gameScene(Point size) {
             gamePane.setOpacity(0.5);
             gameScene = new Scene(gamePane, size.x(), size.y(), Color.valueOf(properties.getProperty("scene.color")));
@@ -60,6 +61,7 @@ public class LevelView {
             return this;
         }
 
+        @SuppressWarnings("UnusedReturnValue")
         public Builder addStandardBrick(Point position, Point size) {
             Rectangle brick = new Rectangle(position.x(), position.y(), size.x(), size.y());
             setStandardBrickParams(brick);
@@ -68,6 +70,7 @@ public class LevelView {
             return this;
         }
 
+        @SuppressWarnings("UnusedReturnValue")
         public Builder addDoubleHitBrick(Point position, Point size) {
             Rectangle brick = new Rectangle(position.x(), position.y(), size.x(), size.y());
             setDoubleHitBrickParams(brick);
@@ -76,6 +79,7 @@ public class LevelView {
             return this;
         }
 
+        @SuppressWarnings("UnusedReturnValue")
         public Builder addImmortalBrick(Point position, Point size) {
             Rectangle brick = new Rectangle(position.x(), position.y(), size.x(), size.y());
             setIndestructibleBrickParams(brick);
@@ -131,8 +135,6 @@ public class LevelView {
 
     }
 
-    //protected double platformX = platformStartX + platformWidth / 2;
-    //TODO посмотреть как сделать без отдельного поля
     protected static boolean isPause = false;
 
 

@@ -1,6 +1,6 @@
 package oop.arkanoid.model;
 
-public class Point implements Comparable<Point> {
+public class Point {
     private double x;
     private double y;
 
@@ -25,15 +25,4 @@ public class Point implements Comparable<Point> {
         this.y = y;
     }
 
-    @Override
-    public int compareTo(Point o) {
-        int yRes = Double.compare(y, o.y);
-        if (yRes == -1) {
-            return -1;
-        }
-        if (yRes == 1) {
-            return 1;
-        }
-        return 0;
-    }
 }

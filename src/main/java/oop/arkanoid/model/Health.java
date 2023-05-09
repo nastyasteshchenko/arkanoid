@@ -7,11 +7,6 @@ class Health {
         this.value = value;
     }
 
-//    static Health create(byte value) {
-//        assert value > 0 && value < 5;
-//        return new Health(value);
-//    }
-
     static Health createImmortal() {
         return new Immortal();
     }
