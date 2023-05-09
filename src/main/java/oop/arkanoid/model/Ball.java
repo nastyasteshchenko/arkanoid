@@ -20,6 +20,15 @@ class Ball {
         this.radius = radius;
         this.position = position;
         motion = new Motion(position, Math.random() * 60 - 120);
+        double i = 180 - 2;
+        while (i < 180 + 2) {
+            System.out.println("Start:" + countX(i + radius + 30) + " " + (i + radius + 30));
+            i += speed / 2;
+        }
+    }
+
+    public double countX(double y) {
+        return (y - position.y()) / Math.tan(Math.toRadians(motion.angle)) + position.x();
     }
 
     Point nextPosition(List<Barrier> barriers) {
@@ -31,6 +40,7 @@ class Ball {
             if (!hasCollision(barrier)) {
                 continue;
             }
+            System.out.println("Collision: " + position.x() + " " + position.y());
 
             if (!isChangedAngle) {
                 motion.angle = countReboundingAngle(barrier);

@@ -75,9 +75,19 @@ public class Game {
         }
 
         Game build() {
-            // TODO check that ball in on the platform
-            // TODO check if Game is correctly set up
+            //TODO added exceptions(?)
+            if (!isBallOnPlatform()) {
+                System.out.println("Ball is not on the platform");
+            }
+            if (ball == null || platform == null || scene == null || bricks.isEmpty() || barriers.isEmpty()) {
+                System.out.println("Game can't start");
+            }
             return new Game(ball, platform, bricks, barriers, scene);
+        }
+
+        private boolean isBallOnPlatform() {
+            return inSegment(platform.position.y() - ball.radius - 2, platform.position.y() - ball.radius, ball.position.y()) &&
+                    platform.position.x() + platform.size.x() / 2 == ball.position.x();
         }
 
         private boolean inSegment(double a, double b, double x) {
