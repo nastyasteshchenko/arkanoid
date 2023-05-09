@@ -9,8 +9,8 @@ public class Game {
     private final Platform platform;
     private final List<Barrier> barriers;
     private final Ball ball;
-
     private final Point scene;
+    private static int score;
 
     Game(Ball ball, Platform platform, List<Brick> bricks, List<Barrier> barriers, Point scene) {
         this.ball = ball;
@@ -18,9 +18,8 @@ public class Game {
         this.bricks = bricks;
         this.barriers = barriers;
         this.scene = scene;
+        score = 0;
     }
-
-    int score;
 
     public static class Builder {
         private final List<Brick> bricks = new ArrayList<>();
@@ -93,6 +92,10 @@ public class Game {
         }
     }
 
+    public static void increaseScore(int value) {
+        score += value;
+    }
+
     public Point nextBallPosition() {
         Point newBallPos = ball.nextPosition(barriers);
         ArrayList<Brick> toRemove = new ArrayList<>();
@@ -104,9 +107,9 @@ public class Game {
     public double updatePlatformPosition(double x) {
 
         platform.position.setX(x - platform.size.x() / 2);
-
         return platform.position.x();
     }
+
 
     public boolean gameWin() {
         return bricks.isEmpty();
@@ -144,6 +147,10 @@ public class Game {
         ArrayList<Point> bricks = new ArrayList<>();
         barriers.stream().filter(barrier -> barrier instanceof Brick && ((Brick) barrier).health instanceof Health.Immortal).forEach(brick -> bricks.add(brick.position));
         return bricks;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     public Point getBrickSize() {

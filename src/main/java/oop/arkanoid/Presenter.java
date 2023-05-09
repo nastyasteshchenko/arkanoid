@@ -6,6 +6,8 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import oop.arkanoid.model.Game;
 import oop.arkanoid.model.Point;
@@ -24,14 +26,11 @@ public class Presenter {
     private static int numLevel = 1;
 
     private static Timeline animation;
-
     private static Timeline pauseTimeline;
-
     private static LevelView gameView;
-
     private static Game model;
-
     private static boolean gameIsStarted;
+    private static boolean isPause = false;
     private static Scene mainScene;
     private static Scene aboutScene;
     private static Scene gameOverScene;
@@ -39,7 +38,7 @@ public class Presenter {
 
     private void pause() {
         pauseTimeline = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
-            if (gameView.isPause()) {
+            if (isPause) {
                 animation.pause();
             } else {
                 animation.play();
@@ -50,11 +49,12 @@ public class Presenter {
         pauseTimeline.play();
     }
 
-    //    private void setRecord() {
-//        if (model.getScore() > Integer.parseInt(records.getProperty(String.valueOf(numLevel)))) {
-//            records.setProperty(String.valueOf(numLevel), String.valueOf(model.getScore()));
-//        }
-//    }
+    private void setRecord() {
+        if (model.getScore() > Integer.parseInt(records.getProperty(String.valueOf(numLevel)))) {
+            records.setProperty(String.valueOf(numLevel), String.valueOf(model.getScore()));
+        }
+    }
+
     //TODO подумать над названием
     private void moveBall() {
 
@@ -62,11 +62,10 @@ public class Presenter {
             if (gameIsStarted) {
                 try {
                     gameView.drawBall(model.nextBallPosition());
-//                    gameView.changeScore(model.getScore());
                     if (model.gameWin()) {
                         gameWin();
                     }
-                    if (gameView.isPause()) {
+                    if (isPause) {
                         pause();
                     }
                     if (model.gameOver()) {
@@ -94,11 +93,10 @@ public class Presenter {
 
     private void startLevel() {
 
-        String propertyFileName;
+        String propertyFileName = "";
         switch (numLevel) {
             case 1 -> propertyFileName = "src/main/resources/oop/arkanoid/level1.properties";
             case 2 -> propertyFileName = "src/main/resources/oop/arkanoid/level2.properties";
-            default -> propertyFileName = "src/main/resources/oop/arkanoid/level1.properties";
         }
 
         Properties properties = new Properties();
@@ -126,6 +124,8 @@ public class Presenter {
         ArrayList<Point> doubleHitBricks = model.getDoubleHitBricks();
         doubleHitBricks.forEach(b -> builder.addDoubleHitBrick(b, brickSize));
 
+        builder.highScoreLabel(Integer.parseInt(records.getProperty(Integer.toString(numLevel))));
+
         gameView = builder.build();
         Arkanoid.changeScene(gameView.getGameScene());
 
@@ -135,6 +135,10 @@ public class Presenter {
 
     public static void startPlayingGame() {
         gameIsStarted = true;
+    }
+
+    public static void setPause() {
+        isPause = !isPause;
     }
 
     @FXML
@@ -156,7 +160,10 @@ public class Presenter {
     @FXML
     protected void startGame() {
 
-        Notifications.getInstance().subscribe(Notifications.EventType.DESTROY, destroyable -> gameView.deleteBrick(destroyable.position()));
+        Notifications.getInstance().subscribe(Notifications.EventType.DESTROY, destroyable -> {
+            gameView.deleteBrick(destroyable.position());
+            gameView.drawScore(model.getScore());
+        });
         try (FileInputStream recordsInputStream = new FileInputStream("src/main/resources/oop/arkanoid/records.properties")) {
             records.load(recordsInputStream);
         } catch (IOException e) {
@@ -177,40 +184,32 @@ public class Presenter {
 
     @FXML
     protected void watchRecords() throws IOException {
-//        try (FileInputStream recordsInputStream = new FileInputStream("src/main/resources/oop/arkanoid/records.properties")) {
-//            records.load(recordsInputStream);
-//        } catch (IOException e) {
-////тоже когда-нибудь обработать
-//        }
-//        Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("records-scene.fxml")));
-//        Text level1Score = new Text(records.getProperty("1"));
-//        gameView.setRecordText(level1Score, "1");
-//        Text level2Score = new Text(records.getProperty("2"));
-//        gameView.setRecordText(level2Score, "2");
-//        root.getChildren().addAll(level1Score, level2Score);
-//        Arkanoid.changeScene(new Scene(root));
+        try (FileInputStream recordsInputStream = new FileInputStream("src/main/resources/oop/arkanoid/records.properties")) {
+            records.load(recordsInputStream);
+        } catch (IOException e) {
+//тоже когда-нибудь обработать
+        }
+        Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("records-scene.fxml")));
+        Text level1Score = new Text(records.getProperty("1"));
+        LevelView.setRecordText(level1Score, "1");
+        Text level2Score = new Text(records.getProperty("2"));
+        LevelView.setRecordText(level2Score, "2");
+        root.getChildren().addAll(level1Score, level2Score);
+        Arkanoid.changeScene(new Scene(root));
 
     }
 
     private void gameOver() throws IOException {
-        //  setRecord();
-        //TODO extract
-        animation.stop();
-        gameIsStarted = false;
-        if (pauseTimeline != null) {
-            pauseTimeline.stop();
-        }
-        try (FileOutputStream recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties")) {
-            records.store(recordsOutputStream, null);
-        } catch (IOException e) {
-//тоже
-        }
-        Arkanoid.changeScene(gameOverScene);
+        prepareForGameOver(gameOverScene);
     }
 
     private void gameWin() throws IOException {
-        // setRecord();
         ++numLevel;
+        prepareForGameOver(gameWinScene);
+    }
+
+    private void prepareForGameOver(Scene gameWinScene) {
+        setRecord();
         animation.stop();
         gameIsStarted = false;
         if (pauseTimeline != null) {

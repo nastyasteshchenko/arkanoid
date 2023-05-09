@@ -1,15 +1,20 @@
 package oop.arkanoid.view;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import oop.arkanoid.Presenter;
 import oop.arkanoid.model.*;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -37,13 +42,19 @@ public class LevelView {
         private Rectangle platform;
         private Circle ball;
         private final Properties properties;
-        private Pane gamePane = new Pane();
+        private final Pane gamePane = new Pane();
         private Scene gameScene;
-
         private Label score;
+        private int highScore;
 
         public Builder(Properties properties) {
             this.properties = properties;
+        }
+
+        @SuppressWarnings("UnusedReturnValue")
+        public Builder highScoreLabel(int score) {
+            highScore = score;
+            return this;
         }
 
         @SuppressWarnings("UnusedReturnValue")
@@ -51,7 +62,7 @@ public class LevelView {
             gamePane.setOpacity(0.5);
             gameScene = new Scene(gamePane, size.x(), size.y(), Color.valueOf(properties.getProperty("scene.color")));
             score = new Label("Score: 0");
-            score.setTranslateX(150);
+            score.setTranslateX(200);
             score.setTranslateY(size.y() - 40);
             setScoreParams();
             gamePane.getChildren().add(score);
@@ -100,12 +111,38 @@ public class LevelView {
         }
 
         public LevelView build() {
+            Label highScoreLabel = new Label("High score: " + highScore);
+            setHighScoreLabelParams(highScoreLabel);
+            gamePane.getChildren().add(highScoreLabel);
+
+            Labeled pauseButton = new Button();
+            setPauseButtonParams(pauseButton);
+            gamePane.getChildren().add(pauseButton);
 
             gameScene.setOnMouseClicked(event -> Presenter.startPlayingGame());
             gameScene.setOnMouseMoved(event -> Presenter.movePlatform(event.getX()));
 
             return new LevelView(bricks, platform, ball, gameScene, gamePane, score);
 
+        }
+
+        private void setHighScoreLabelParams(Label highScoreLabel) {
+            highScoreLabel.setTranslateX(10);
+            highScoreLabel.setTranslateY(gameScene.getHeight() - 40);
+            highScoreLabel.setFont(Font.font(getPropertyInString("score.font")));
+            highScoreLabel.setStyle("-fx-font-size: " + getPropertyInString("score.font.size"));
+        }
+
+        private void setPauseButtonParams(Labeled pauseButton) {
+            pauseButton.setOnMouseClicked(event -> Presenter.setPause());
+            pauseButton.setText("Pause");
+            pauseButton.setTranslateX(gameScene.getWidth() - 75);
+            pauseButton.setTranslateY(gameScene.getHeight() - 50);
+            pauseButton.setPrefSize(getPropertyInDouble("pause.button.pref.width"), getPropertyInDouble("pause.button.pref.height"));
+            pauseButton.setStyle("-fx-font-size: " + getPropertyInString("pause.button.font.size"));
+            pauseButton.setFont(Font.font(getPropertyInString("pause.button.font")));
+            pauseButton.setTextFill(Color.valueOf(properties.getProperty("pause.button.text.color")));
+            pauseButton.setStyle("-fx-background-color: " + getPropertyInString("pause.button.color"));
         }
 
         private void setIndestructibleBrickParams(Rectangle brick) {
@@ -141,30 +178,15 @@ public class LevelView {
             return Double.parseDouble(properties.getProperty(key));
         }
 
-        private Integer getPropertyInInt(String key) {
-            return Integer.parseInt(properties.getProperty(key));
-        }
-
         private String getPropertyInString(String key) {
             return properties.getProperty(key);
         }
 
     }
 
-    protected static boolean isPause = false;
-
-
-//    private static void loadPauseButtonParameters() {
-//        pauseButton.setOnMouseClicked(event -> isPause = !isPause);
-//
-//        pauseButton.setTranslateX(getPropertyInDouble("pause.button.x"));
-//        pauseButton.setTranslateY(getPropertyInDouble("pause.button.y"));
-//        pauseButton.setPrefSize(getPropertyInDouble("pause.button.pref.width"), getPropertyInDouble("pause.button.pref.height"));
-//        pauseButton.setStyle("-fx-font-size: " + getPropertyInString("pause.button.font.size"));
-//        pauseButton.setFont(Font.font(getPropertyInString("pause.button.font")));
-//        pauseButton.setTextFill(Color.valueOf(LevelView.fieldParameters.getProperty("pause.button.text.color")));
-//    }
-//
+    public void drawScore(int value) {
+        score.setText("Score: " + value);
+    }
 
     public void drawPlatform(double x) {
         platform.setX(x);
@@ -175,10 +197,6 @@ public class LevelView {
         ball.setCenterY(point.y());
     }
 
-//    public void changeScore(int points) {
-//        scoreCountLabel.setText(String.valueOf(points));
-//    }
-
     private void removeBrick(Rectangle brick) {
         gamePane.getChildren().remove(brick);
         bricks.remove(brick);
@@ -188,31 +206,23 @@ public class LevelView {
         removeBrick(bricks.stream().filter(i -> point.x() == i.getX() && point.y() == i.getY()).findFirst().get());
     }
 
-//    public void setRecordText(Text text, String level) {
-//        try (FileInputStream fieldView = new FileInputStream("src/main/resources/oop/arkanoid/level" + level + "-view.properties")) {
-//            fieldParameters.load(fieldView);
-//        } catch (IOException e) {
-////надо что-то написать потом
-//        }
-//
-//        text.setX(getPropertyInDouble("score.x"));
-//        text.setY(getPropertyInDouble("score.y"));
-//        text.setFont(Font.font(getPropertyInString("score.font")));
-//        text.setFill(Color.valueOf(getPropertyInString("score.color")));
-//        text.setStyle("-fx-font-size: " + getPropertyInString("score.font.size"));
-//    }
-//
+    public static void setRecordText(Text text, String level) {
+        Properties properties = new Properties();
+        try (FileInputStream fieldView = new FileInputStream("src/main/resources/oop/arkanoid/level" + level + ".properties")) {
+            properties.load(fieldView);
+        } catch (IOException e) {
+//надо что-то написать потом
+        }
+
+        text.setX(Double.parseDouble(properties.getProperty("score.x")));
+        text.setY(Double.parseDouble(properties.getProperty("score.y")));
+        text.setFont(Font.font(properties.getProperty("score.font")));
+        text.setFill(Color.valueOf(properties.getProperty("score.color")));
+        text.setStyle("-fx-font-size: " + properties.getProperty("score.font.size"));
+    }
 
     public Scene getGameScene() {
         return gameScene;
     }
-
-    public boolean isPause() {
-        return isPause;
-    }
-
-//    public void setHighScoreCountLabel(String num) {
-//        highScoreCountLabel.setText(num);
-//    }
 
 }
