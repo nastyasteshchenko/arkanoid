@@ -133,16 +133,24 @@ public class Game {
         }
 
         public Builder addDestroyableBrick(Point position, Point size, int health) {
-            Brick barrier = new Brick(position, size, new Health(health));
-            bricks.add(barrier);
-            barriers.add(barrier);
+            Brick brick = new Brick(position, size, new Health(health));
+            if (bricks.stream().anyMatch(b -> hasCollision(brick, b))) {
+                //TODO think about
+                System.out.println("Collision");
+            }
+            bricks.add(brick);
+            barriers.add(brick);
             return this;
         }
 
+        @SuppressWarnings("UnusedReturnValue")
         public Builder addImmortalBrick(Point position, Point size) {
-            Barrier barrier = new Brick(position, size, Health.createImmortal());
-            barriers.add(barrier);
-            // TODO check collisions
+            Brick brick = new Brick(position, size, Health.createImmortal());
+            if (bricks.stream().anyMatch(b -> hasCollision(brick, b))) {
+                //TODO the same
+                System.out.println("Collision");
+            }
+            barriers.add(brick);
             return this;
         }
 
@@ -160,6 +168,15 @@ public class Game {
             // TODO check that ball in on the platform
             // TODO check if Game is correctly set up
             return new Game(ball, platform, bricks, barriers, scene);
+        }
+
+        private boolean inSegment(double a, double b, double x) {
+            return a <= x && x <= b;
+        }
+
+        private boolean hasCollision(Brick b1, Brick b2) {
+            return (inSegment(b2.position.x(), b2.position.x() + b2.size.x(), b1.position.x()) || inSegment(b2.position.x(), b2.position.x() + b2.size.x(), b1.position.x() + b1.size.x()))
+                    && (inSegment(b2.position.y(), b2.position.y() + b2.size.y(), b1.position.y()) || inSegment(b2.position.y(), b2.position.y() + b2.size.y(), b1.position.y() + b1.size.y()));
         }
     }
 

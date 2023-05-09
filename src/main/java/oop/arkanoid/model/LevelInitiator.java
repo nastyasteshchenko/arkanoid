@@ -42,7 +42,7 @@ public class LevelInitiator {
                     case "dh" ->
                             builder.addDestroyableBrick(createPoint(getPropertyInDouble(brick + ".x"), getPropertyInDouble(brick + ".y")),
                                     createPoint(brickWidth, brickHeight), 2);
-                    case "d" ->
+                    case "s" ->
                             builder.addDestroyableBrick(createPoint(getPropertyInDouble(brick + ".x"), getPropertyInDouble(brick + ".y")),
                                     createPoint(brickWidth, brickHeight), 1);
                     case "im" ->
