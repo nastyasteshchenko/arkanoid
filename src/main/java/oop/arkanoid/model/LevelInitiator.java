@@ -1,14 +1,12 @@
 package oop.arkanoid.model;
 
-import oop.arkanoid.view.LevelView;
-
 import java.util.Properties;
 
-public class LevelInitor {
+public class LevelInitiator {
 
     private final Properties properties;
 
-    LevelInitor(Properties properties) {
+    LevelInitiator(Properties properties) {
         this.properties = properties;
     }
 
@@ -35,11 +33,11 @@ public class LevelInitor {
         double brickHeight = getPropertyInDouble("brick.height");
         double sceneWidth = getPropertyInDouble("scene.width");
         double sceneHeight = getPropertyInDouble("scene.height");
+        builder.scene(new Point(sceneWidth, sceneHeight));
         for (int i = 0; i < amountOfLines; i++) {
             for (int j = 0; j < amountOfColumns; j++) {
                 String brick = "b[" + i + "," + j + "]";
                 String type = getPropertyInString(brick + ".type");
-                System.out.println(type);
                 switch (type) {
                     case "dh" ->
                             builder.addDestroyableBrick(createPoint(getPropertyInDouble(brick + ".x"), getPropertyInDouble(brick + ".y")),

@@ -33,4 +33,8 @@ class Health {
         void decrease() {
         }
     }
+
+    public int getValue(){
+        return value;
+    }
 }

@@ -1,291 +1,232 @@
 package oop.arkanoid.view;
 
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import oop.arkanoid.model.Point;
+import oop.arkanoid.Presenter;
+import oop.arkanoid.model.*;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public sealed class LevelView permits FirstLevelView, SecondLevelView {
+public class LevelView {
 
-    protected int amountOfBricksLines;
-    protected int amountOfBricksInLine;
-    protected int amountOfBricks;
-    protected int amountOfBreakableBricks;
-    protected double platformX = platformStartX + platformWidth / 2;
-    //TODO посмотреть как сделать без отдельного поля
-    protected boolean isStartMovingBall = false;
-    protected static boolean isPause = false;
-    protected static double sceneWidth;
-    protected static double sceneHeight;
+    private final List<Rectangle> bricks;
+    private final Rectangle platform;
+    private final Circle ball;
+    private final Scene gameScene;
+    Pane gamePane;
 
-    protected static double platformWidth;
-    protected static double platformHeight;
-    protected static double platformStartX;
-    protected static double platformStartY;
-
-    protected static double ballStartX;
-    protected static double ballStartY;
-    protected static double ballRadius;
-
-    protected static double brickWidth;
-    protected static double brickHeight;
-    protected static double distanceBetweenBricks;
-
-    protected static double startOfBricksX;
-    protected static double startOfBricksY;
-
-    protected static Label scoreCountLabel = new Label(String.valueOf(0));
-    protected static Label scoreLabel = new Label("Score:");
-
-    protected static Label highScoreCountLabel = new Label();
-    protected static Label highScoreLabel = new Label("High Score:");
-    protected static Button pauseButton = new Button("Pause");
-    protected static Rectangle platform;
-    protected static Circle ball;
-    protected Scene gameScene;
-
-    protected static Pane root;
-    protected static final List<Rectangle> bricks = new ArrayList<>();
-
-    protected static final Properties fieldParameters = new Properties();
-
-    public void render() {
+    LevelView(List<Rectangle> bricks, Rectangle platform, Circle ball, Scene gameScene, Pane gamePane) {
+        this.ball = ball;
+        this.bricks = bricks;
+        this.platform = platform;
+        this.gameScene = gameScene;
+        this.gamePane = gamePane;
     }
 
-    protected void setParametersForLevelView() {
+    public static class Builder {
+        private final List<Rectangle> bricks = new ArrayList<>();
+        private Rectangle platform;
+        private Circle ball;
+        private final Properties properties;
+        Pane gamePane = new Pane();
+        private Scene gameScene;
 
-        amountOfBricksLines = getPropertyInInt("amount.of.lines");
-        amountOfBricksInLine = getPropertyInInt("amount.of.columns");
-
-        amountOfBricks = getPropertyInInt("amount.of.bricks");
-        amountOfBreakableBricks = getPropertyInInt("amount.of.breakable.bricks");
-
-        pauseButton.setStyle("-fx-background-color: " + getPropertyInString("pause.button.color"));
-
-        platform.setFill(Color.valueOf(getPropertyInString("platform.color")));
-
-        ball.setFill(Color.valueOf(getPropertyInString("ball.color")));
-        ball.setStroke(Color.valueOf(getPropertyInString("ball.stroke.color")));
-        ball.setStyle("-fx-stroke-width: " + getPropertyInString("ball.stroke.width"));
-    }
-
-    protected static Integer getPropertyInInt(String key) {
-        return Integer.parseInt(LevelView.fieldParameters.getProperty(key));
-    }
-
-    protected static Double getPropertyInDouble(String key) {
-        return Double.parseDouble(LevelView.fieldParameters.getProperty(key));
-    }
-
-    protected static String getPropertyInString(String key) {
-        return LevelView.fieldParameters.getProperty(key);
-    }
-
-    private static void loadPlatformParameters() {
-        platformWidth = getPropertyInDouble("platform.width");
-        platformHeight = getPropertyInDouble("platform.height");
-        platformStartX = getPropertyInDouble("platform.start.x");
-        platformStartY = getPropertyInDouble("platform.start.y");
-    }
-
-    private static void loadBallParameters() {
-        ballStartX = getPropertyInDouble("ball.start.x");
-        ballStartY = getPropertyInDouble("ball.start.y");
-        ballRadius = getPropertyInDouble("ball.radius");
-    }
-
-    private static void loadBricksParameters() {
-        brickHeight = getPropertyInDouble("brick.height");
-        brickWidth = getPropertyInDouble("brick.width");
-        distanceBetweenBricks = getPropertyInDouble("distance.between.bricks");
-
-        startOfBricksX = getPropertyInDouble("start.of.bricks.x");
-        startOfBricksY = getPropertyInDouble("start.of.bricks.y");
-    }
-
-    private static void loadPauseButtonParameters() {
-        pauseButton.setOnMouseClicked(event -> isPause = !isPause);
-
-        pauseButton.setTranslateX(getPropertyInDouble("pause.button.x"));
-        pauseButton.setTranslateY(getPropertyInDouble("pause.button.y"));
-        pauseButton.setPrefSize(getPropertyInDouble("pause.button.pref.width"), getPropertyInDouble("pause.button.pref.height"));
-        pauseButton.setStyle("-fx-font-size: " + getPropertyInString("pause.button.font.size"));
-        pauseButton.setFont(Font.font(getPropertyInString("pause.button.font")));
-        pauseButton.setTextFill(Color.valueOf(LevelView.fieldParameters.getProperty("pause.button.text.color")));
-    }
-
-    private static void loadHighScoreLabelParameters() {
-        highScoreLabel.setLayoutX(getPropertyInDouble("high.score.label.x"));
-        highScoreLabel.setLayoutY(getPropertyInDouble("high.score.label.y"));
-        highScoreLabel.setFont(Font.font(getPropertyInString("high.score.label.font")));
-        highScoreLabel.setStyle("-fx-font-size: " + LevelView.fieldParameters.getProperty("high.score.label.font.size"));
-
-        highScoreCountLabel.setLayoutX(getPropertyInDouble("high.score.count.label.x"));
-        highScoreCountLabel.setLayoutY(getPropertyInDouble("high.score.count.label.y"));
-        highScoreCountLabel.setFont(Font.font(getPropertyInString("high.score.count.label.font")));
-        highScoreCountLabel.setStyle("-fx-font-size: " + getPropertyInString("high.score.count.label.font.size"));
-    }
-
-    private static void loadScoreLabelParameters() {
-        scoreLabel.setLayoutX(getPropertyInDouble("score.label.x"));
-        scoreLabel.setLayoutY(getPropertyInDouble("score.label.y"));
-        scoreLabel.setFont(Font.font(getPropertyInString("score.label.font")));
-        scoreLabel.setStyle("-fx-font-size: " + getPropertyInString("score.label.font.size"));
-
-        scoreCountLabel.setLayoutX(getPropertyInDouble("score.count.label.x"));
-        scoreCountLabel.setLayoutY(getPropertyInDouble("score.count.label.y"));
-        scoreCountLabel.setFont(Font.font(getPropertyInString("score.count.label.font")));
-        scoreCountLabel.setStyle("-fx-font-size: " + getPropertyInString("score.count.label.font.size"));
-    }
-
-    public static void loadField() {
-
-        try (FileInputStream fieldView = new FileInputStream("src/main/resources/oop/arkanoid/field-view.properties")) {
-            fieldParameters.load(fieldView);
-        } catch (IOException e) {
-//надо что-то написать потом
+        public Builder(Properties properties) {
+            this.properties = properties;
         }
 
-        sceneHeight = getPropertyInDouble("scene.height");
-        sceneWidth = getPropertyInDouble("scene.width");
+        public Builder gameScene(Point size) {
+            gamePane.setOpacity(0.5);
+            gameScene = new Scene(gamePane, size.x(), size.y(), Color.valueOf(properties.getProperty("scene.color")));
+            return this;
+        }
 
-        loadPlatformParameters();
+        public Builder platform(Point position, Point size) {
+            platform = new Rectangle(position.x(), position.y(), size.x(), size.y());
+            platform.setFill(Color.valueOf(getPropertyInString("platform.color")));
+            gamePane.getChildren().add(platform);
+            return this;
+        }
 
-        loadBallParameters();
+        public Builder ball(Point position, double radius) {
+            ball = new Circle(position.x(), position.y(), radius);
+            setBallParams();
+            gamePane.getChildren().add(ball);
+            return this;
+        }
 
-        loadBricksParameters();
+        public Builder addStandardBrick(Point position, Point size) {
+            Rectangle brick = new Rectangle(position.x(), position.y(), size.x(), size.y());
+            setStandardBrickParams(brick);
+            bricks.add(brick);
+            gamePane.getChildren().add(brick);
+            return this;
+        }
 
-        loadPauseButtonParameters();
+        public Builder addDoubleHitBrick(Point position, Point size) {
+            Rectangle brick = new Rectangle(position.x(), position.y(), size.x(), size.y());
+            setDoubleHitBrickParams(brick);
+            bricks.add(brick);
+            gamePane.getChildren().add(brick);
+            return this;
+        }
 
-        loadHighScoreLabelParameters();
+        public Builder addImmortalBrick(Point position, Point size) {
+            Rectangle brick = new Rectangle(position.x(), position.y(), size.x(), size.y());
+            setIndestructibleBrickParams(brick);
+            bricks.add(brick);
+            gamePane.getChildren().add(brick);
+            return this;
+        }
 
-        loadScoreLabelParameters();
+        public LevelView build() {
 
-        platform = new Rectangle(platformStartX, platformStartY, platformWidth, platformHeight);
+            gameScene.setOnMouseClicked(event -> Presenter.startPlayingGame());
+            gameScene.setOnMouseMoved(event -> Presenter.movePlatform(event.getX()));
 
-        ball = new Circle(ballStartX, ballStartY, ballRadius);
+            return new LevelView(bricks, platform, ball, gameScene, gamePane);
+
+        }
+
+        private void setIndestructibleBrickParams(Rectangle brick) {
+            brick.setFill(Color.valueOf(getPropertyInString("indestructible.brick.color")));
+            brick.setStroke(Color.valueOf(getPropertyInString("indestructible.brick.stroke.color")));
+            brick.setStyle("-fx-stroke-width: " + getPropertyInString("indestructible.brick.stroke.width"));
+        }
+
+        private void setDoubleHitBrickParams(Rectangle brick) {
+            brick.setFill(Color.valueOf(getPropertyInString("double.hit.brick.color")));
+            brick.setStroke(Color.valueOf(getPropertyInString("double.hit.brick.stroke.color")));
+            brick.setStyle("-fx-stroke-width: " + getPropertyInString("double.hit.brick.stroke.width"));
+        }
+
+        private void setStandardBrickParams(Rectangle brick) {
+            brick.setFill(Color.valueOf(getPropertyInString("standard.brick.color")));
+            brick.setStroke(Color.valueOf(getPropertyInString("standard.brick.stroke.color")));
+            brick.setStyle("-fx-stroke-width: " + getPropertyInString("standard.brick.stroke.width"));
+        }
+
+        private void setBallParams() {
+            ball.setFill(Color.valueOf(getPropertyInString("ball.color")));
+            ball.setStroke(Color.valueOf(getPropertyInString("ball.stroke.color")));
+            ball.setStyle("-fx-stroke-width: " + getPropertyInString("ball.stroke.width"));
+        }
+
+        private Double getPropertyInDouble(String key) {
+            return Double.parseDouble(properties.getProperty(key));
+        }
+
+        private Integer getPropertyInInt(String key) {
+            return Integer.parseInt(properties.getProperty(key));
+        }
+
+        private String getPropertyInString(String key) {
+            return properties.getProperty(key);
+        }
 
     }
 
-    public double getPlatformX() {
-        return platformX;
-    }
+    //protected double platformX = platformStartX + platformWidth / 2;
+    //TODO посмотреть как сделать без отдельного поля
+    protected static boolean isPause = false;
 
-    public void movePlatform(double x) {
+
+//    private static void loadPauseButtonParameters() {
+//        pauseButton.setOnMouseClicked(event -> isPause = !isPause);
+//
+//        pauseButton.setTranslateX(getPropertyInDouble("pause.button.x"));
+//        pauseButton.setTranslateY(getPropertyInDouble("pause.button.y"));
+//        pauseButton.setPrefSize(getPropertyInDouble("pause.button.pref.width"), getPropertyInDouble("pause.button.pref.height"));
+//        pauseButton.setStyle("-fx-font-size: " + getPropertyInString("pause.button.font.size"));
+//        pauseButton.setFont(Font.font(getPropertyInString("pause.button.font")));
+//        pauseButton.setTextFill(Color.valueOf(LevelView.fieldParameters.getProperty("pause.button.text.color")));
+//    }
+//
+//    private static void loadHighScoreLabelParameters() {
+//        highScoreLabel.setLayoutX(getPropertyInDouble("high.score.label.x"));
+//        highScoreLabel.setLayoutY(getPropertyInDouble("high.score.label.y"));
+//        highScoreLabel.setFont(Font.font(getPropertyInString("high.score.label.font")));
+//        highScoreLabel.setStyle("-fx-font-size: " + LevelView.fieldParameters.getProperty("high.score.label.font.size"));
+//
+//        highScoreCountLabel.setLayoutX(getPropertyInDouble("high.score.count.label.x"));
+//        highScoreCountLabel.setLayoutY(getPropertyInDouble("high.score.count.label.y"));
+//        highScoreCountLabel.setFont(Font.font(getPropertyInString("high.score.count.label.font")));
+//        highScoreCountLabel.setStyle("-fx-font-size: " + getPropertyInString("high.score.count.label.font.size"));
+//    }
+//
+//    private static void loadScoreLabelParameters() {
+//        scoreLabel.setLayoutX(getPropertyInDouble("score.label.x"));
+//        scoreLabel.setLayoutY(getPropertyInDouble("score.label.y"));
+//        scoreLabel.setFont(Font.font(getPropertyInString("score.label.font")));
+//        scoreLabel.setStyle("-fx-font-size: " + getPropertyInString("score.label.font.size"));
+//
+//        scoreCountLabel.setLayoutX(getPropertyInDouble("score.count.label.x"));
+//        scoreCountLabel.setLayoutY(getPropertyInDouble("score.count.label.y"));
+//        scoreCountLabel.setFont(Font.font(getPropertyInString("score.count.label.font")));
+//        scoreCountLabel.setStyle("-fx-font-size: " + getPropertyInString("score.count.label.font.size"));
+//    }
+
+    public void drawPlatform(double x) {
         platform.setX(x);
     }
 
-    public void moveBall(Point point) {
+    public void drawBall(Point point) {
         ball.setCenterX(point.x());
         ball.setCenterY(point.y());
     }
 
-    public void changeScore(int points) {
-        scoreCountLabel.setText(String.valueOf(points));
-    }
-
-//    public void deleteBrick(ArrayList<String> indexes) {
-//        for (String index : indexes) {
-//            root.getChildren().remove(bricks.get(index));
-//            bricks.remove(index);
-//        }
+//    public void changeScore(int points) {
+//        scoreCountLabel.setText(String.valueOf(points));
 //    }
 
-    private static void remove(Rectangle brick) {
-        root.getChildren().remove(brick);
+    private void removeBrick(Rectangle brick) {
+        gamePane.getChildren().remove(brick);
         bricks.remove(brick);
     }
 
     public void deleteBrick(Point point) {
-        remove(bricks.stream().filter(i -> point.x() == i.getX() && point.y() == i.getY()).findFirst().get());
+        removeBrick(bricks.stream().filter(i -> point.x() == i.getX() && point.y() == i.getY()).findFirst().get());
     }
 
-    public boolean isStartMovingBall() {
-        return isStartMovingBall;
-    }
-
-    public void setRecordText(Text text, String level) {
-        try (FileInputStream fieldView = new FileInputStream("src/main/resources/oop/arkanoid/level" + level + "-view.properties")) {
-            fieldParameters.load(fieldView);
-        } catch (IOException e) {
-//надо что-то написать потом
-        }
-
-        text.setX(getPropertyInDouble("score.x"));
-        text.setY(getPropertyInDouble("score.y"));
-        text.setFont(Font.font(getPropertyInString("score.font")));
-        text.setFill(Color.valueOf(getPropertyInString("score.color")));
-        text.setStyle("-fx-font-size: " + getPropertyInString("score.font.size"));
-    }
-
-    public void clear() {
-        ball.setCenterX(ballStartX);
-        ball.setCenterY(ballStartY);
-        scoreCountLabel.setText("0");
-        isStartMovingBall = false;
-        platformX = platformStartX + platformWidth / 2;
-        platform.setX(platformStartX);
-        bricks.clear();
-    }
-
-    public Rectangle getPlatform() {
-        return platform;
-    }
+//    public void setRecordText(Text text, String level) {
+//        try (FileInputStream fieldView = new FileInputStream("src/main/resources/oop/arkanoid/level" + level + "-view.properties")) {
+//            fieldParameters.load(fieldView);
+//        } catch (IOException e) {
+////надо что-то написать потом
+//        }
+//
+//        text.setX(getPropertyInDouble("score.x"));
+//        text.setY(getPropertyInDouble("score.y"));
+//        text.setFont(Font.font(getPropertyInString("score.font")));
+//        text.setFill(Color.valueOf(getPropertyInString("score.color")));
+//        text.setStyle("-fx-font-size: " + getPropertyInString("score.font.size"));
+//    }
+//
+//    public void clear() {
+//        ball.setCenterX(ballStartX);
+//        ball.setCenterY(ballStartY);
+//        scoreCountLabel.setText("0");
+//        isStartMovingBall = false;
+//        platformX = platformStartX + platformWidth / 2;
+//        platform.setX(platformStartX);
+//        bricks.clear();
+//    }
 
     public Scene getGameScene() {
         return gameScene;
-    }
-
-    public Circle getBall() {
-        return ball;
-    }
-
-    public List<Rectangle> getBricks() {
-        return bricks;
     }
 
     public boolean isPause() {
         return isPause;
     }
 
-    public void setHighScoreCountLabel(String num) {
-        highScoreCountLabel.setText(num);
-    }
-
-    public double getSceneWidth() {
-        return sceneWidth;
-    }
-
-    public double getSceneHeight() {
-        return sceneHeight;
-    }
-
-    public int getAmountOfBricks() {
-        return amountOfBricks;
-    }
-
-    public int getAmountOfBreakableBricks() {
-        return amountOfBreakableBricks;
-    }
-
-    public int getAmountOfBricksInLine() {
-        return amountOfBricksInLine;
-    }
-
-    public int getAmountOfBricksLines() {
-        return amountOfBricksLines;
-    }
+//    public void setHighScoreCountLabel(String num) {
+//        highScoreCountLabel.setText(num);
+//    }
 
 }

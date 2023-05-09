@@ -26,7 +26,7 @@ class Ball {
     }
 
     Point nextPosition(List<Barrier> barriers) {
-        List<Destroyable> toRemoveBarriers = new ArrayList<>();
+        ArrayList<Destroyable> collisionBricks = new ArrayList<>();
         motion.move(speed);
         int count = 0;
         // TODO don't need to check all barriers every time, just need it once after changing the trajectory or direction
@@ -44,14 +44,12 @@ class Ball {
             if (barrier instanceof Destroyable d) {
                 d.onHit();
                 if (!d.isAlive()) {
-                    toRemoveBarriers.add(d);
+                    collisionBricks.add(d);
                 }
             }
         }
 
-        for (Destroyable brick : toRemoveBarriers) {
-            barriers.remove(brick);
-        }
+        collisionBricks.forEach(barriers::remove);
 
         return motion.position;
     }
