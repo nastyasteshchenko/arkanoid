@@ -22,13 +22,17 @@ class Ball {
         motion = new Motion(position, Math.random() * 60 - 120);
         double i = 180 - 2;
         while (i < 180 + 2) {
-            System.out.println("Start:" + countX(i + radius + 30) + " " + (i + radius + 30));
+            System.out.println("Start:" + predictX(i + radius + 30) + " " + (i + radius + 30));
             i += speed / 2;
         }
     }
 
-    public double countX(double y) {
+    public double predictX(double y) {
         return (y - position.y()) / Math.tan(Math.toRadians(motion.angle)) + position.x();
+    }
+
+    public double predictY(double x) {
+        return (x - position.x()) * Math.tan(Math.toRadians(motion.angle)) + position.y();
     }
 
     Point nextPosition(List<Barrier> barriers) {
