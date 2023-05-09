@@ -1,10 +1,12 @@
 package oop.arkanoid.view;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import oop.arkanoid.Presenter;
 import oop.arkanoid.model.*;
 
@@ -18,14 +20,16 @@ public class LevelView {
     private final Rectangle platform;
     private final Circle ball;
     private final Scene gameScene;
-    Pane gamePane;
+    private final Pane gamePane;
+    private final Label score;
 
-    LevelView(List<Rectangle> bricks, Rectangle platform, Circle ball, Scene gameScene, Pane gamePane) {
+    LevelView(List<Rectangle> bricks, Rectangle platform, Circle ball, Scene gameScene, Pane gamePane, Label score) {
         this.ball = ball;
         this.bricks = bricks;
         this.platform = platform;
         this.gameScene = gameScene;
         this.gamePane = gamePane;
+        this.score = score;
     }
 
     public static class Builder {
@@ -33,8 +37,10 @@ public class LevelView {
         private Rectangle platform;
         private Circle ball;
         private final Properties properties;
-        Pane gamePane = new Pane();
+        private Pane gamePane = new Pane();
         private Scene gameScene;
+
+        private Label score;
 
         public Builder(Properties properties) {
             this.properties = properties;
@@ -44,6 +50,11 @@ public class LevelView {
         public Builder gameScene(Point size) {
             gamePane.setOpacity(0.5);
             gameScene = new Scene(gamePane, size.x(), size.y(), Color.valueOf(properties.getProperty("scene.color")));
+            score = new Label("Score: 0");
+            score.setTranslateX(150);
+            score.setTranslateY(size.y() - 40);
+            setScoreParams();
+            gamePane.getChildren().add(score);
             return this;
         }
 
@@ -93,7 +104,7 @@ public class LevelView {
             gameScene.setOnMouseClicked(event -> Presenter.startPlayingGame());
             gameScene.setOnMouseMoved(event -> Presenter.movePlatform(event.getX()));
 
-            return new LevelView(bricks, platform, ball, gameScene, gamePane);
+            return new LevelView(bricks, platform, ball, gameScene, gamePane, score);
 
         }
 
@@ -119,6 +130,11 @@ public class LevelView {
             ball.setFill(Color.valueOf(getPropertyInString("ball.color")));
             ball.setStroke(Color.valueOf(getPropertyInString("ball.stroke.color")));
             ball.setStyle("-fx-stroke-width: " + getPropertyInString("ball.stroke.width"));
+        }
+
+        private void setScoreParams() {
+            score.setFont(Font.font(getPropertyInString("score.font")));
+            score.setStyle("-fx-font-size: " + getPropertyInString("score.font.size"));
         }
 
         private Double getPropertyInDouble(String key) {
@@ -149,29 +165,6 @@ public class LevelView {
 //        pauseButton.setTextFill(Color.valueOf(LevelView.fieldParameters.getProperty("pause.button.text.color")));
 //    }
 //
-//    private static void loadHighScoreLabelParameters() {
-//        highScoreLabel.setLayoutX(getPropertyInDouble("high.score.label.x"));
-//        highScoreLabel.setLayoutY(getPropertyInDouble("high.score.label.y"));
-//        highScoreLabel.setFont(Font.font(getPropertyInString("high.score.label.font")));
-//        highScoreLabel.setStyle("-fx-font-size: " + LevelView.fieldParameters.getProperty("high.score.label.font.size"));
-//
-//        highScoreCountLabel.setLayoutX(getPropertyInDouble("high.score.count.label.x"));
-//        highScoreCountLabel.setLayoutY(getPropertyInDouble("high.score.count.label.y"));
-//        highScoreCountLabel.setFont(Font.font(getPropertyInString("high.score.count.label.font")));
-//        highScoreCountLabel.setStyle("-fx-font-size: " + getPropertyInString("high.score.count.label.font.size"));
-//    }
-//
-//    private static void loadScoreLabelParameters() {
-//        scoreLabel.setLayoutX(getPropertyInDouble("score.label.x"));
-//        scoreLabel.setLayoutY(getPropertyInDouble("score.label.y"));
-//        scoreLabel.setFont(Font.font(getPropertyInString("score.label.font")));
-//        scoreLabel.setStyle("-fx-font-size: " + getPropertyInString("score.label.font.size"));
-//
-//        scoreCountLabel.setLayoutX(getPropertyInDouble("score.count.label.x"));
-//        scoreCountLabel.setLayoutY(getPropertyInDouble("score.count.label.y"));
-//        scoreCountLabel.setFont(Font.font(getPropertyInString("score.count.label.font")));
-//        scoreCountLabel.setStyle("-fx-font-size: " + getPropertyInString("score.count.label.font.size"));
-//    }
 
     public void drawPlatform(double x) {
         platform.setX(x);
@@ -209,15 +202,6 @@ public class LevelView {
 //        text.setStyle("-fx-font-size: " + getPropertyInString("score.font.size"));
 //    }
 //
-//    public void clear() {
-//        ball.setCenterX(ballStartX);
-//        ball.setCenterY(ballStartY);
-//        scoreCountLabel.setText("0");
-//        isStartMovingBall = false;
-//        platformX = platformStartX + platformWidth / 2;
-//        platform.setX(platformStartX);
-//        bricks.clear();
-//    }
 
     public Scene getGameScene() {
         return gameScene;

@@ -5,12 +5,13 @@ import oop.arkanoid.Notifications;
 
 class Brick extends Barrier implements Destroyable {
 
-    //final int score;
+    private final int score;
     final Health health;
 
     Brick(Point position, Point size, Health health) {
         super(position, size);
         this.health = health;
+        score = health.getValue() * 2;
     }
 
     @Override
