@@ -21,32 +21,17 @@ import java.util.*;
 //Я когда-нибудь нормально обработаю исключения
 
 public class Presenter {
-
     private static final Properties records = new Properties();
     private static int numLevel = 1;
     private static Timeline animation;
-    private static Timeline pauseTimeline;
     private static LevelView gameView;
     private static Game model;
     private static boolean gameIsStarted;
     private static boolean isPause = false;
     private static Scene mainScene;
     private static Scene aboutScene;
-    private static Scene gameOverScene;
+    private static Scene gameLoseScene;
     private static Scene gameWinScene;
-
-    private static void pause() {
-        pauseTimeline = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
-            if (isPause) {
-                animation.pause();
-            } else {
-                animation.play();
-                pauseTimeline.stop();
-            }
-        }));
-        pauseTimeline.setCycleCount(Animation.INDEFINITE);
-        pauseTimeline.play();
-    }
 
     private void setRecord() {
         if (model.getScore() > Integer.parseInt(records.getProperty(String.valueOf(numLevel)))) {
@@ -65,7 +50,7 @@ public class Presenter {
                         gameWin();
                     }
                     if (model.gameLose()) {
-                        gameOver();
+                        gameLose();
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -136,7 +121,9 @@ public class Presenter {
     public static void setPause() {
         isPause = !isPause;
         if (isPause) {
-            pause();
+            animation.stop();
+        } else {
+            animation.play();
         }
     }
 
@@ -152,7 +139,7 @@ public class Presenter {
     public static void loadScenes() throws IOException {
         mainScene = loadNewScene("main-scene.fxml");
         aboutScene = loadNewScene("about-scene.fxml");
-        gameOverScene = loadNewScene("game-over-scene.fxml");
+        gameLoseScene = loadNewScene("game-over-scene.fxml");
         gameWinScene = loadNewScene("game-win-scene.fxml");
     }
 
@@ -198,8 +185,8 @@ public class Presenter {
 
     }
 
-    private void gameOver() throws IOException {
-        prepareForGameOver(gameOverScene);
+    private void gameLose() throws IOException {
+        prepareForGameOver(gameLoseScene);
     }
 
     private void gameWin() throws IOException {
@@ -211,9 +198,9 @@ public class Presenter {
         setRecord();
         animation.stop();
         gameIsStarted = false;
-        if (pauseTimeline != null) {
-            pauseTimeline.stop();
-        }
+//        if (pauseTimeline != null) {
+//            pauseTimeline.stop();
+//        }
         try (FileOutputStream recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties")) {
             records.store(recordsOutputStream, null);
         } catch (IOException e) {
