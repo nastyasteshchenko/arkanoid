@@ -23,8 +23,8 @@ public class Game {
 
     static class Builder {
         private final List<Brick> bricks = new ArrayList<>();
-        private Platform platform;
         private final List<Barrier> barriers = new ArrayList<>();
+        private Platform platform;
         private Ball ball;
         private Point scene;
 

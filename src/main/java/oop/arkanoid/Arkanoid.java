@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Arkanoid extends Application {
-    static private Stage stage;
+    private static Stage stage;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -22,7 +22,7 @@ public class Arkanoid extends Application {
         stage.show();
     }
 
-    public static void changeScene(Scene scene) {
+    static void changeScene(Scene scene) {
         stage.setScene(scene);
     }
 

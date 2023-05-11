@@ -20,7 +20,7 @@ class Ball {
         if (motion.predictedCollisions.isEmpty()) {
             predictCollisions(barriers);
         } else {
-            detectAndHandleCollision().stream().filter(brick -> !brick.isAlive()).forEach(barriers::remove);
+            detectAndHandleCollisions().stream().filter(brick -> !brick.isAlive()).forEach(barriers::remove);
         }
         return motion.position;
     }
@@ -29,14 +29,15 @@ class Ball {
         for (Barrier barrier : barriers) {
             if (barrier instanceof Platform p) {
                 motion.predictedCollisions.add(p);
-            }
-            if (willBeCollision(barrier)) {
-                motion.predictedCollisions.add(barrier);
+            } else {
+                if (willBeCollision(barrier)) {
+                    motion.predictedCollisions.add(barrier);
+                }
             }
         }
     }
 
-    private ArrayList<Destroyable> detectAndHandleCollision() {
+    private ArrayList<Destroyable> detectAndHandleCollisions() {
         ArrayList<Destroyable> collisionBricks = new ArrayList<>();
         boolean isChangedAngle = false;
         for (Barrier barrier : motion.predictedCollisions) {
@@ -47,7 +48,6 @@ class Ball {
                 motion.countReboundingAngle(barrier);
                 isChangedAngle = true;
             }
-
             if (barrier instanceof Destroyable d) {
                 d.onHit();
                 collisionBricks.add(d);
@@ -64,19 +64,23 @@ class Ball {
     }
 
     private boolean willBeCollisionWithBottom(Barrier barrier) {
-        return motion.countX(barrier.position.y() + barrier.size.y() + radius) - radius < barrier.position.x() + barrier.size.x() && motion.countX(barrier.position.y() + barrier.size.y() + radius) + radius > barrier.position.x();
+        return motion.countX(barrier.position.y() + barrier.size.y() + radius) - radius < barrier.position.x() + barrier.size.x()
+                && motion.countX(barrier.position.y() + barrier.size.y() + radius) + radius > barrier.position.x();
     }
 
     private boolean willBeCollisionWithTop(Barrier barrier) {
-        return motion.countX(barrier.position.y() - radius) - radius < barrier.position.x() + barrier.size.x() && motion.countX(barrier.position.y() - radius) + radius > barrier.position.x();
+        return motion.countX(barrier.position.y() - radius) - radius < barrier.position.x() + barrier.size.x()
+                && motion.countX(barrier.position.y() - radius) + radius > barrier.position.x();
     }
 
     private boolean willBeCollisionWithLeftSide(Barrier barrier) {
-        return motion.countY(barrier.position.x() - radius) + radius > barrier.position.y() && motion.countY(barrier.position.x() - radius) - radius < barrier.position.y() + barrier.size.y();
+        return motion.countY(barrier.position.x() - radius) + radius > barrier.position.y()
+                && motion.countY(barrier.position.x() - radius) - radius < barrier.position.y() + barrier.size.y();
     }
 
     private boolean willBeCollisionWithRightSide(Barrier barrier) {
-        return motion.countY(barrier.position.x() + radius + barrier.size.x()) + barrier.size.x() + radius > barrier.position.y() && motion.countY(barrier.position.x() + radius + barrier.size.x()) + barrier.size.x() - radius < barrier.position.y() + barrier.size.y();
+        return motion.countY(barrier.position.x() + radius + barrier.size.x()) + barrier.size.x() + radius > barrier.position.y()
+                && motion.countY(barrier.position.x() + radius + barrier.size.x()) + barrier.size.x() - radius < barrier.position.y() + barrier.size.y();
     }
 
     private boolean hasCollision(Barrier barrier) {
@@ -114,7 +118,7 @@ class Ball {
 
 class Motion {
 
-    enum Collisions {
+    private enum Collisions {
         HORIZONTAL,
         VERTICAL
     }

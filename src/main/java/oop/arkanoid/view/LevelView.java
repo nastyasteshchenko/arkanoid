@@ -149,9 +149,9 @@ public class LevelView {
         }
 
         private void setIndestructibleBrickParams(Rectangle brick) {
-            brick.setFill(Color.valueOf(getPropertyInString("indestructible.brick.color")));
-            brick.setStroke(Color.valueOf(getPropertyInString("indestructible.brick.stroke.color")));
-            brick.setStyle("-fx-stroke-width: " + getPropertyInString("indestructible.brick.stroke.width"));
+            brick.setFill(Color.valueOf(getPropertyInString("immortal.brick.color")));
+            brick.setStroke(Color.valueOf(getPropertyInString("immortal.brick.stroke.color")));
+            brick.setStyle("-fx-stroke-width: " + getPropertyInString("immortal.brick.stroke.width"));
         }
 
         private void setDoubleHitBrickParams(Rectangle brick) {
