@@ -198,9 +198,6 @@ public class Presenter {
         setRecord();
         animation.stop();
         gameIsStarted = false;
-//        if (pauseTimeline != null) {
-//            pauseTimeline.stop();
-//        }
         try (FileOutputStream recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties")) {
             records.store(recordsOutputStream, null);
         } catch (IOException e) {
