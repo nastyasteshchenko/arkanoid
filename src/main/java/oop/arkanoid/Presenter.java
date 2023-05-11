@@ -33,32 +33,17 @@ public class Presenter {
     private static Scene gameLoseScene;
     private static Scene gameWinScene;
 
-    private void setRecord() {
-        if (model.getScore() > Integer.parseInt(records.getProperty(String.valueOf(numLevel)))) {
-            records.setProperty(String.valueOf(numLevel), String.valueOf(model.getScore()));
-        }
+    public static void startPlayingGame() {
+        gameIsStarted = true;
     }
 
-    //TODO подумать над названием
-    private void moveBall() {
-
-        animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
-            if (gameIsStarted) {
-                try {
-                    gameView.drawBall(model.nextBallPosition());
-                    if (model.gameWin()) {
-                        gameWin();
-                    }
-                    if (model.gameLose()) {
-                        gameLose();
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }));
-        animation.setCycleCount(Animation.INDEFINITE);
-        animation.play();
+    public static void setPause() {
+        isPause = !isPause;
+        if (isPause) {
+            animation.pause();
+        } else {
+            animation.play();
+        }
     }
 
     public static void movePlatform(double x) {
@@ -67,80 +52,21 @@ public class Presenter {
         }
     }
 
+    static void loadScenes() throws IOException {
+        mainScene = loadNewScene("main-scene.fxml");
+        aboutScene = loadNewScene("about-scene.fxml");
+        gameLoseScene = loadNewScene("game-over-scene.fxml");
+        gameWinScene = loadNewScene("game-win-scene.fxml");
+    }
+
     @FXML
     protected void restartGame() {
         startLevel();
     }
 
-    private void startLevel() {
-
-        String propertyFileName = "";
-        switch (numLevel) {
-            case 1 -> propertyFileName = "src/main/resources/oop/arkanoid/level1.properties";
-            case 2 -> propertyFileName = "src/main/resources/oop/arkanoid/level2.properties";
-        }
-
-        Properties properties = new Properties();
-        try (FileInputStream recordsInputStream = new FileInputStream(propertyFileName)) {
-            properties.load(recordsInputStream);
-            model = Game.initLevel(properties);
-        } catch (IOException e) {
-//тоже когда-нибудь обработать
-        }
-
-        LevelView.Builder builder = new LevelView.Builder(properties);
-
-        builder.ball(model.getBallPosition(), model.getBallRadius())
-                .platform(model.getPlatformPosition(), model.getPlatformSize())
-                .gameScene(model.getSceneSize());
-
-        Point brickSize = model.getBrickSize();
-        ArrayList<Point> standardBricks = model.getStandardBricks();
-
-        standardBricks.forEach(b -> builder.addStandardBrick(b, brickSize));
-
-        ArrayList<Point> immortalBricks = model.getImmortalBricks();
-        immortalBricks.forEach(b -> builder.addImmortalBrick(b, brickSize));
-
-        ArrayList<Point> doubleHitBricks = model.getDoubleHitBricks();
-        doubleHitBricks.forEach(b -> builder.addDoubleHitBrick(b, brickSize));
-
-        builder.highScore(Integer.parseInt(records.getProperty(Integer.toString(numLevel))));
-
-        gameView = builder.build();
-        Arkanoid.changeScene(gameView.getGameScene());
-
-        moveBall();
-
-    }
-
-    public static void startPlayingGame() {
-        gameIsStarted = true;
-    }
-
-    public static void setPause() {
-        isPause = !isPause;
-        if (isPause) {
-            animation.stop();
-        } else {
-            animation.play();
-        }
-    }
-
     @FXML
     protected void endGame() {
         System.exit(0);
-    }
-
-    private static Scene loadNewScene(String fileName) throws IOException {
-        return new Scene(FXMLLoader.load(Objects.requireNonNull(Presenter.class.getResource(fileName))));
-    }
-
-    public static void loadScenes() throws IOException {
-        mainScene = loadNewScene("main-scene.fxml");
-        aboutScene = loadNewScene("about-scene.fxml");
-        gameLoseScene = loadNewScene("game-over-scene.fxml");
-        gameWinScene = loadNewScene("game-win-scene.fxml");
     }
 
     @FXML
@@ -191,12 +117,12 @@ public class Presenter {
 
     private void gameWin() throws IOException {
         prepareForGameOver(gameWinScene);
-        ++numLevel;
+        numLevel++;
     }
 
     private void prepareForGameOver(Scene gameWinScene) {
-        setRecord();
         animation.stop();
+        setRecord();
         gameIsStarted = false;
         try (FileOutputStream recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties")) {
             records.store(recordsOutputStream, null);
@@ -206,4 +132,70 @@ public class Presenter {
         Arkanoid.changeScene(gameWinScene);
     }
 
+    private void setRecord() {
+        if (model.getScore() > Integer.parseInt(records.getProperty(String.valueOf(numLevel)))) {
+            records.setProperty(String.valueOf(numLevel), String.valueOf(model.getScore()));
+        }
+    }
+
+    private void startLevel() {
+        String propertyFileName = "src/main/resources/oop/arkanoid/level" + numLevel + ".properties";
+        Properties properties = new Properties();
+        try (FileInputStream recordsInputStream = new FileInputStream(propertyFileName)) {
+            properties.load(recordsInputStream);
+        } catch (IOException e) {
+//тоже когда-нибудь обработать
+        }
+
+        model = Game.initLevel(properties);
+        LevelView.Builder builder = new LevelView.Builder(properties);
+
+        builder.ball(model.getBallPosition(), model.getBallRadius())
+                .platform(model.getPlatformPosition(), model.getPlatformSize())
+                .gameScene(model.getSceneSize());
+
+        Point brickSize = model.getBrickSize();
+        ArrayList<Point> standardBricks = model.getStandardBricks();
+
+        standardBricks.forEach(b -> builder.addStandardBrick(b, brickSize));
+
+        ArrayList<Point> immortalBricks = model.getImmortalBricks();
+        immortalBricks.forEach(b -> builder.addImmortalBrick(b, brickSize));
+
+        ArrayList<Point> doubleHitBricks = model.getDoubleHitBricks();
+        doubleHitBricks.forEach(b -> builder.addDoubleHitBrick(b, brickSize));
+
+        builder.highScore(Integer.parseInt(records.getProperty(Integer.toString(numLevel))));
+
+        gameView = builder.build();
+        Arkanoid.changeScene(gameView.getGameScene());
+
+        startAnimation();
+
+    }
+
+    //TODO подумать над названием
+    private void startAnimation() {
+        animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
+            if (gameIsStarted) {
+                try {
+                    gameView.drawBall(model.nextBallPosition());
+                    if (model.gameWin()) {
+                        gameWin();
+                    }
+                    if (model.gameLose()) {
+                        gameLose();
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }));
+        animation.setCycleCount(Animation.INDEFINITE);
+        animation.play();
+    }
+
+    private static Scene loadNewScene(String fileName) throws IOException {
+        return new Scene(FXMLLoader.load(Objects.requireNonNull(Presenter.class.getResource(fileName))));
+    }
 }
