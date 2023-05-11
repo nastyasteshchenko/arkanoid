@@ -4,13 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Ball {
-
-    private enum Collisions {
-        HORIZONTAL,
-        VERTICAL
-    }
-
-    private Collisions collision;
     final double radius;
     final Point position;
     double speed = 1.5;
@@ -20,75 +13,82 @@ class Ball {
         this.radius = radius;
         this.position = position;
         motion = new Motion(position, Math.random() * 60 - 120);
-        double i = 180 - 2;
-        while (i < 180 + 2) {
-            System.out.println("Start:" + predictX(i + radius + 30) + " " + (i + radius + 30));
-            i += speed / 2;
-        }
-    }
-
-    public double predictX(double y) {
-        return (y - position.y()) / Math.tan(Math.toRadians(motion.angle)) + position.x();
-    }
-
-    public double predictY(double x) {
-        return (x - position.x()) * Math.tan(Math.toRadians(motion.angle)) + position.y();
     }
 
     Point nextPosition(List<Barrier> barriers) {
-        ArrayList<Brick> collisionBricks = new ArrayList<>();
         motion.move(speed);
-        boolean isChangedAngle = false;
-        // TODO don't need to check all barriers every time, just need it once after changing the trajectory or direction
+        if (motion.predictedCollisions.isEmpty()) {
+            predictCollisions(barriers);
+        } else {
+            detectAndHandleCollision().stream().filter(brick -> !brick.isAlive()).forEach(barriers::remove);
+        }
+        return motion.position;
+    }
+
+    private void predictCollisions(List<Barrier> barriers) {
         for (Barrier barrier : barriers) {
+            if (barrier instanceof Platform p) {
+                motion.predictedCollisions.add(p);
+            }
+            if (willBeCollision(barrier)) {
+                motion.predictedCollisions.add(barrier);
+            }
+        }
+    }
+
+    private ArrayList<Destroyable> detectAndHandleCollision() {
+        ArrayList<Destroyable> collisionBricks = new ArrayList<>();
+        boolean isChangedAngle = false;
+        for (Barrier barrier : motion.predictedCollisions) {
             if (!hasCollision(barrier)) {
                 continue;
             }
-            System.out.println("Collision: " + position.x() + " " + position.y());
-
             if (!isChangedAngle) {
-                motion.angle = countReboundingAngle(barrier);
+                motion.countReboundingAngle(barrier);
                 isChangedAngle = true;
             }
 
             if (barrier instanceof Destroyable d) {
                 d.onHit();
-                if (!d.isAlive()) {
-                    collisionBricks.add((Brick) barrier);
-                }
+                collisionBricks.add(d);
             }
         }
+        if (isChangedAngle) {
+            motion.predictedCollisions.clear();
+        }
+        return collisionBricks;
+    }
 
-        collisionBricks.forEach(barriers::remove);
-        return motion.position;
+    private boolean willBeCollision(Barrier barrier) {
+        return willBeCollisionWithBottom(barrier) || willBeCollisionWithTop(barrier) || willBeCollisionWithRightSide(barrier) || willBeCollisionWithLeftSide(barrier);
+    }
+
+    private boolean willBeCollisionWithBottom(Barrier barrier) {
+        return motion.countX(barrier.position.y() + barrier.size.y() + radius) - radius < barrier.position.x() + barrier.size.x() && motion.countX(barrier.position.y() + barrier.size.y() + radius) + radius > barrier.position.x();
+    }
+
+    private boolean willBeCollisionWithTop(Barrier barrier) {
+        return motion.countX(barrier.position.y() - radius) - radius < barrier.position.x() + barrier.size.x() && motion.countX(barrier.position.y() - radius) + radius > barrier.position.x();
+    }
+
+    private boolean willBeCollisionWithLeftSide(Barrier barrier) {
+        return motion.countY(barrier.position.x() - radius) + radius > barrier.position.y() && motion.countY(barrier.position.x() - radius) - radius < barrier.position.y() + barrier.size.y();
+    }
+
+    private boolean willBeCollisionWithRightSide(Barrier barrier) {
+        return motion.countY(barrier.position.x() + radius + barrier.size.x()) + barrier.size.x() + radius > barrier.position.y() && motion.countY(barrier.position.x() + radius + barrier.size.x()) + barrier.size.x() - radius < barrier.position.y() + barrier.size.y();
     }
 
     private boolean hasCollision(Barrier barrier) {
         if (isCollisionWithBottom(barrier) || isCollisionWithTop(barrier)) {
-            collision = Collisions.HORIZONTAL;
+            motion.setHorizontalCollision();
             return true;
         }
         if (isCollisionWithLeftSide(barrier) || isCollisionWithRightSide(barrier)) {
-            collision = Collisions.VERTICAL;
+            motion.setVerticalCollision();
             return true;
         }
         return false;
-    }
-
-    private double countReboundingAngle(Barrier barrier) {
-
-        if (barrier instanceof Platform) {
-            return -90 - (barrier.position.x() + barrier.size.x() / 2 - position.x());
-        }
-
-        if (collision == Collisions.VERTICAL) {
-            return -180 - motion.angle;
-        }
-
-        if (collision == Collisions.HORIZONTAL) {
-            return -motion.angle;
-        }
-        return motion.angle;
     }
 
     private boolean isCollisionWithBottom(Barrier barrier) {
@@ -112,8 +112,15 @@ class Ball {
     }
 }
 
-// TODO think about naming
 class Motion {
+
+    enum Collisions {
+        HORIZONTAL,
+        VERTICAL
+    }
+
+    private Collisions collision;
+    final ArrayList<Barrier> predictedCollisions = new ArrayList<>();
     Point position;
     double angle;
 
@@ -122,9 +129,41 @@ class Motion {
         this.angle = angle;
     }
 
+    void setVerticalCollision() {
+        collision = Collisions.VERTICAL;
+    }
+
+    void setHorizontalCollision() {
+        collision = Collisions.HORIZONTAL;
+    }
+
     void move(double speed) {
         position.setX(position.x() + speed * Math.cos(Math.toRadians(angle)));
         position.setY(position.y() + speed * Math.sin(Math.toRadians(angle)));
 
+    }
+
+    void countReboundingAngle(Barrier barrier) {
+        if (barrier instanceof Platform) {
+            angle = -90 - (barrier.position.x() + barrier.size.x() / 2 - position.x());
+            return;
+        }
+
+        if (collision == Collisions.VERTICAL) {
+            angle = -180 - angle;
+            return;
+        }
+
+        if (collision == Collisions.HORIZONTAL) {
+            angle = -angle;
+        }
+    }
+
+    double countX(double y) {
+        return (y - position.y()) / Math.tan(Math.toRadians(angle)) + position.x();
+    }
+
+    double countY(double x) {
+        return (x - position.x()) * Math.tan(Math.toRadians(angle)) + position.y();
     }
 }
