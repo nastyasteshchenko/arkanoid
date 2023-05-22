@@ -1,8 +1,11 @@
 package oop.arkanoid;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -16,10 +19,7 @@ import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.Point;
 import oop.arkanoid.view.LevelView;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 //TODO использовать json
@@ -27,7 +27,7 @@ import java.util.*;
 
 public class Presenter {
     private static final Gson gson = new Gson();
-    private static final Properties records = new Properties();
+    private static JsonObject records = new JsonObject();
     private static int numLevel = 1;
     private static Timeline animation;
     private static LevelView gameView;
@@ -82,11 +82,13 @@ public class Presenter {
             gameView.deleteBrick(destroyable.position());
             gameView.drawScore(model.getScore());
         });
-        try (FileInputStream recordsInputStream = new FileInputStream("src/main/resources/oop/arkanoid/records.properties")) {
-            records.load(recordsInputStream);
+
+        try (JsonReader reader = new JsonReader(new FileReader("src/main/resources/oop/arkanoid/records.json"))) {
+            records = gson.fromJson(reader, JsonObject.class);
         } catch (IOException e) {
 //тоже когда-нибудь обработать
         }
+
         startLevel();
     }
 
@@ -102,15 +104,15 @@ public class Presenter {
 
     @FXML
     protected void watchRecords() throws IOException {
-        try (FileInputStream recordsInputStream = new FileInputStream("src/main/resources/oop/arkanoid/records.properties")) {
-            records.load(recordsInputStream);
+        try (JsonReader reader = new JsonReader(new FileReader("src/main/resources/oop/arkanoid/records.json"))) {
+            records = gson.fromJson(reader, JsonObject.class);
         } catch (IOException e) {
 //тоже когда-нибудь обработать
         }
         Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("records-scene.fxml")));
-        Text level1Score = new Text(records.getProperty("1"));
+        Text level1Score = new Text(records.getAsJsonObject("records").get("level1").getAsString());
         LevelView.setRecordText(level1Score, "1");
-        Text level2Score = new Text(records.getProperty("2"));
+        Text level2Score = new Text(records.getAsJsonObject("records").get("level2").getAsString());
         LevelView.setRecordText(level2Score, "2");
         root.getChildren().addAll(level1Score, level2Score);
         Arkanoid.changeScene(new Scene(root));
@@ -130,17 +132,18 @@ public class Presenter {
         animation.stop();
         setRecord();
         gameIsStarted = false;
-        try (FileOutputStream recordsOutputStream = new FileOutputStream("src/main/resources/oop/arkanoid/records.properties")) {
-            records.store(recordsOutputStream, null);
+
+        try (JsonWriter writer = new JsonWriter(new FileWriter("src/main/resources/oop/arkanoid/records.json"))) {
+            gson.toJson(records, writer);
         } catch (IOException e) {
-//тоже
+//тоже когда-нибудь обработать
         }
         Arkanoid.changeScene(gameWinScene);
     }
 
     private void setRecord() {
-        if (model.getScore() > Integer.parseInt(records.getProperty(String.valueOf(numLevel)))) {
-            records.setProperty(String.valueOf(numLevel), String.valueOf(model.getScore()));
+        if (model.getScore() > records.getAsJsonObject("records").get("level" + numLevel).getAsInt()) {
+            records.getAsJsonObject("records").addProperty("level1", model.getScore());
         }
     }
 
@@ -171,7 +174,7 @@ public class Presenter {
         ArrayList<Point> doubleHitBricks = model.getDoubleHitBricks();
         doubleHitBricks.forEach(b -> builder.addDoubleHitBrick(b, brickSize));
 
-        builder.highScore(Integer.parseInt(records.getProperty(Integer.toString(numLevel))));
+        builder.highScore(records.getAsJsonObject("records").get("level" + numLevel).getAsInt());
 
         gameView = builder.build();
         Arkanoid.changeScene(gameView.getGameScene());

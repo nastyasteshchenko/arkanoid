@@ -1,6 +1,8 @@
 package oop.arkanoid.view;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,10 +16,10 @@ import oop.arkanoid.Presenter;
 import oop.arkanoid.model.*;
 
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class LevelView {
 
@@ -208,17 +210,19 @@ public class LevelView {
     }
 
     public static void setRecordText(Text text, String level) {
-        Properties properties = new Properties();
-        try (FileInputStream fieldView = new FileInputStream("src/main/resources/oop/arkanoid/level" + level + ".properties")) {
-            properties.load(fieldView);
+        Gson gson = new Gson();
+        JsonObject scoreText = new JsonObject();
+        try (JsonReader reader = new JsonReader(new FileReader("src/main/resources/oop/arkanoid/level" + level + ".json"))) {
+            scoreText = gson.fromJson(reader, JsonObject.class);
         } catch (IOException e) {
-//надо что-то написать потом
+//тоже когда-нибудь обработать
         }
-        text.setX(Double.parseDouble(properties.getProperty("score.x")));
-        text.setY(Double.parseDouble(properties.getProperty("score.y")));
-        text.setFont(Font.font(properties.getProperty("score.font")));
-        text.setFill(Color.valueOf(properties.getProperty("score.color")));
-        text.setStyle("-fx-font-size: " + properties.getProperty("score.font.size"));
+        scoreText = scoreText.getAsJsonObject("score");
+        text.setX(scoreText.get("x").getAsDouble());
+        text.setY(scoreText.get("y").getAsDouble());
+        text.setFont(Font.font(scoreText.get("font").getAsString()));
+        text.setFill(Color.valueOf(scoreText.get("color").getAsString()));
+        text.setStyle("-fx-font-size: " + scoreText.get("fontSize").getAsString());
     }
 
     public Scene getGameScene() {
