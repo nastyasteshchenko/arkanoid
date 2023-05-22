@@ -122,15 +122,16 @@ public class GameLevel {
         return platform.position.x();
     }
 
+    public GameStates gameState(){
+        if(bricks.isEmpty()){
+            return GameStates.GAME_WIN;
+        } else if (ball.position.y()>scene.y()){
+            return GameStates.GAME_LOSE;
+        } else {
+            return GameStates.GAME_IN_PROCESS;
+        }
+    }
     //enum с состояниями игры
-    public boolean gameWin() {
-        return bricks.isEmpty();
-    }
-
-    public boolean gameLose() {
-        return ball.position.y() > scene.y();
-    }
-
     public static GameLevel initLevel(JsonObject object) {
         return new LevelInitiator(object).initLevel();
     }

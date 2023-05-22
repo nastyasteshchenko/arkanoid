@@ -1,9 +1,7 @@
 package oop.arkanoid;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import javafx.animation.Animation;
@@ -22,7 +20,6 @@ import oop.arkanoid.view.LevelView;
 import java.io.*;
 import java.util.*;
 
-//TODO использовать json
 //Я когда-нибудь нормально обработаю исключения
 
 public class Presenter {
@@ -189,11 +186,9 @@ public class Presenter {
             if (gameIsStarted) {
                 try {
                     gameView.drawBall(model.nextBallPosition());
-                    if (model.gameWin()) {
-                        gameWin();
-                    }
-                    if (model.gameLose()) {
-                        gameLose();
+                    switch (model.gameState()) {
+                        case GAME_WIN -> gameWin();
+                        case GAME_LOSE -> gameLose();
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
