@@ -23,7 +23,7 @@ import java.util.*;
 //Я когда-нибудь нормально обработаю исключения
 
 public class Presenter {
-    private static final Gson gson = new Gson();
+    private static final Gson GSON_LOADER = new Gson();
     private static JsonObject records = new JsonObject();
     private static int numLevel = 1;
     private static Timeline animation;
@@ -55,11 +55,16 @@ public class Presenter {
         }
     }
 
-    static void loadScenes() throws IOException {
+    static void loadResources() throws IOException {
         mainScene = loadNewScene("main-scene.fxml");
         aboutScene = loadNewScene("about-scene.fxml");
         gameLoseScene = loadNewScene("game-over-scene.fxml");
         gameWinScene = loadNewScene("game-win-scene.fxml");
+        try (JsonReader reader = new JsonReader(new FileReader("src/main/resources/oop/arkanoid/records.json"))) {
+            records = GSON_LOADER.fromJson(reader, JsonObject.class);
+        } catch (IOException e) {
+//тоже когда-нибудь обработать
+        }
     }
 
     @FXML
@@ -80,12 +85,6 @@ public class Presenter {
             gameView.drawScore(model.getScore());
         });
 
-        try (JsonReader reader = new JsonReader(new FileReader("src/main/resources/oop/arkanoid/records.json"))) {
-            records = gson.fromJson(reader, JsonObject.class);
-        } catch (IOException e) {
-//тоже когда-нибудь обработать
-        }
-
         startLevel();
     }
 
@@ -101,16 +100,14 @@ public class Presenter {
 
     @FXML
     protected void watchRecords() throws IOException {
-        try (JsonReader reader = new JsonReader(new FileReader("src/main/resources/oop/arkanoid/records.json"))) {
-            records = gson.fromJson(reader, JsonObject.class);
-        } catch (IOException e) {
-//тоже когда-нибудь обработать
-        }
+
         Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("records-scene.fxml")));
         Text level1Score = new Text(records.getAsJsonObject("records").get("level1").getAsString());
-        LevelView.setRecordText(level1Score, "1");
+
+
+        LevelView.setRecordText(level1Score, records, "level1");
         Text level2Score = new Text(records.getAsJsonObject("records").get("level2").getAsString());
-        LevelView.setRecordText(level2Score, "2");
+        LevelView.setRecordText(level2Score, records, "level2");
         root.getChildren().addAll(level1Score, level2Score);
         Arkanoid.changeScene(new Scene(root));
 
@@ -131,7 +128,7 @@ public class Presenter {
         gameIsStarted = false;
 
         try (JsonWriter writer = new JsonWriter(new FileWriter("src/main/resources/oop/arkanoid/records.json"))) {
-            gson.toJson(records, writer);
+            GSON_LOADER.toJson(records, writer);
         } catch (IOException e) {
 //тоже когда-нибудь обработать
         }
@@ -149,7 +146,7 @@ public class Presenter {
 
         JsonObject paramsForLevel = new JsonObject();
         try (JsonReader reader = new JsonReader(new FileReader(jsonFileName))) {
-            paramsForLevel = gson.fromJson(reader, JsonObject.class);
+            paramsForLevel = GSON_LOADER.fromJson(reader, JsonObject.class);
         } catch (IOException e) {
 //тоже когда-нибудь обработать
         }

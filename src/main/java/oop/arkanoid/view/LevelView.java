@@ -15,7 +15,6 @@ import javafx.scene.text.Text;
 import oop.arkanoid.Presenter;
 import oop.arkanoid.model.*;
 
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -209,15 +208,9 @@ public class LevelView {
         removeBrick(bricks.stream().filter(i -> point.x() == i.getX() && point.y() == i.getY()).findFirst().get());
     }
 
-    public static void setRecordText(Text text, String level) {
-        Gson gson = new Gson();
-        JsonObject scoreText = new JsonObject();
-        try (JsonReader reader = new JsonReader(new FileReader("src/main/resources/oop/arkanoid/level" + level + ".json"))) {
-            scoreText = gson.fromJson(reader, JsonObject.class);
-        } catch (IOException e) {
-//тоже когда-нибудь обработать
-        }
-        scoreText = scoreText.getAsJsonObject("score");
+    public static void setRecordText(Text text, JsonObject params, String level) {
+
+        JsonObject scoreText = params.getAsJsonObject("scoreLabel").getAsJsonObject(level);
         text.setX(scoreText.get("x").getAsDouble());
         text.setY(scoreText.get("y").getAsDouble());
         text.setFont(Font.font(scoreText.get("font").getAsString()));

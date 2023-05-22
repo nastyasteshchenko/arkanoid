@@ -1,1 +1,23 @@
-{"records":{"level1":30,"level2":"0","level3":"0"}}
+{
+  "records": {
+    "level1": 30,
+    "level2": "0",
+    "level3": "0"
+  },
+  "scoreLabel": {
+    "level1": {
+      "x": "283",
+      "y": "280",
+      "font": "Droid Sans Mono",
+      "color": "#680707",
+      "fontSize": "23"
+    },
+    "level2": {
+      "x": "283",
+      "y": "400",
+      "font": "Droid Sans Mono",
+      "color": "#680707",
+      "fontSize": "23"
+    }
+  }
+}

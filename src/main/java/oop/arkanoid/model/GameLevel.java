@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
-//GameLevel
 public class GameLevel {
     private final List<Brick> bricks;
     private final Platform platform;
@@ -131,7 +130,7 @@ public class GameLevel {
             return GameStates.GAME_IN_PROCESS;
         }
     }
-    //enum с состояниями игры
+
     public static GameLevel initLevel(JsonObject object) {
         return new LevelInitiator(object).initLevel();
     }
