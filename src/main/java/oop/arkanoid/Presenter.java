@@ -1,5 +1,8 @@
 package oop.arkanoid;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -9,23 +12,26 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import oop.arkanoid.model.Game;
+import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.Point;
 import oop.arkanoid.view.LevelView;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+//TODO использовать json
 //Я когда-нибудь нормально обработаю исключения
 
 public class Presenter {
+    private static final Gson gson = new Gson();
     private static final Properties records = new Properties();
     private static int numLevel = 1;
     private static Timeline animation;
     private static LevelView gameView;
-    private static Game model;
+    private static GameLevel model;
     private static boolean gameIsStarted;
     private static boolean isPause = false;
     private static Scene mainScene;
@@ -139,16 +145,16 @@ public class Presenter {
     }
 
     private void startLevel() {
-        String propertyFileName = "src/main/resources/oop/arkanoid/level" + numLevel + ".properties";
-        Properties properties = new Properties();
-        try (FileInputStream recordsInputStream = new FileInputStream(propertyFileName)) {
-            properties.load(recordsInputStream);
+        String jsonFileName = "src/main/resources/oop/arkanoid/level" + numLevel + ".json";
+
+        JsonObject paramsForLevel = new JsonObject();
+        try (JsonReader reader = new JsonReader(new FileReader(jsonFileName))) {
+            paramsForLevel = gson.fromJson(reader, JsonObject.class);
         } catch (IOException e) {
 //тоже когда-нибудь обработать
         }
-
-        model = Game.initLevel(properties);
-        LevelView.Builder builder = new LevelView.Builder(properties);
+        model = GameLevel.initLevel(paramsForLevel);
+        LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
 
         builder.ball(model.getBallPosition(), model.getBallRadius())
                 .platform(model.getPlatformPosition(), model.getPlatformSize())

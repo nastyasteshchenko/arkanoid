@@ -1,0 +1,143 @@
+{
+  "scene": {
+    "color": "#E0FFFF",
+    "width": "600",
+    "height": "900"
+  },
+  "pauseButton": {
+    "font": "Droid Sans Mono",
+    "textColor": "#ffffff",
+    "fontSize": "15",
+    "color": "#a944ff"
+  },
+  "platform": {
+    "color": "#000000",
+    "width": "124",
+    "height": "22",
+    "x": "236",
+    "y": "756"
+  },
+  "ball": {
+    "color": "#9370DB",
+    "strokeColor": "#9370DB",
+    "strokeWidth": "3",
+    "x": "298",
+    "y": "740",
+    "radius": "15"
+  },
+  "score": {
+    "x": "283",
+    "y": "280",
+    "font": "Droid Sans Mono",
+    "color": "#680707",
+    "fontSize": "23"
+  },
+  "bricks": {
+    "width": "114",
+    "height": "30",
+    "standardBrick": {
+      "color": "#8A2BE2",
+      "strokeColor": "#800080",
+      "strokeWidth": "3"
+    },
+    "immortalBrick": {
+      "color": "#808080",
+      "strokeColor": "#A9A9A9",
+      "strokeWidth": "3"
+    },
+    "bricks": [
+      {
+        "x": "9",
+        "y": "81",
+        "type": "s"
+      },
+      {
+        "x": "126",
+        "y": "81",
+        "type": "s"
+      },
+      {
+        "x": "243",
+        "y": "81",
+        "type": "s"
+      },
+      {
+        "x": "360",
+        "y": "81",
+        "type": "s"
+      },
+      {
+        "x": "477",
+        "y": "81",
+        "type": "s"
+      },
+      {
+        "x": "9",
+        "y": "114",
+        "type": "s"
+      },
+      {
+        "x": "126",
+        "y": "114",
+        "type": "s"
+      },
+      {
+        "x": "243",
+        "y": "114",
+        "type": "s"
+      },
+      {
+        "x": "360",
+        "y": "114",
+        "type": "s"
+      },
+      {
+        "x": "477",
+        "y": "114",
+        "type": "s"
+      },
+      {
+        "x": "9",
+        "y": "147",
+        "type": "s"
+      },
+      {
+        "x": "126",
+        "y": "147",
+        "type": "s"
+      },
+      {
+        "x": "243",
+        "y": "147",
+        "type": "s"
+      },
+      {
+        "x": "360",
+        "y": "147",
+        "type": "s"
+      },
+      {
+        "x": "477",
+        "y": "147",
+        "type": "s"
+      },
+      {
+        "x": "126",
+        "y": "180",
+        "type": "im"
+      },
+      {
+        "x": "243",
+        "y": "180",
+        "type": "im"
+      },
+      {
+        "x": "360",
+        "y": "180",
+        "type": "im"
+      }
+    ]
+  }
+}
+
+

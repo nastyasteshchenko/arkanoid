@@ -1,6 +1,7 @@
 module oop.arkanoid {
     requires javafx.controls;
     requires javafx.fxml;
+    requires com.google.gson;
 
 
     opens oop.arkanoid to javafx.fxml;

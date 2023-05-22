@@ -15,7 +15,7 @@ class Ball {
         motion = new Motion(position, Math.random() * 60 - 120);
     }
 
-    Point nextPosition(List<Barrier> barriers) {
+    Point move(List<Barrier> barriers) {
         motion.move(speed);
         if (motion.predictedCollisions.isEmpty()) {
             predictCollisions(barriers);

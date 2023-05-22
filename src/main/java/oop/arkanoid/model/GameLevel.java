@@ -1,10 +1,12 @@
 package oop.arkanoid.model;
 
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
-public class Game {
+//GameLevel
+public class GameLevel {
     private final List<Brick> bricks;
     private final Platform platform;
     private final List<Barrier> barriers;
@@ -12,7 +14,7 @@ public class Game {
     private final Point scene;
     private static int score;
 
-    Game(Ball ball, Platform platform, List<Brick> bricks, List<Barrier> barriers, Point scene) {
+    GameLevel(Ball ball, Platform platform, List<Brick> bricks, List<Barrier> barriers, Point scene) {
         this.ball = ball;
         this.platform = platform;
         this.bricks = bricks;
@@ -74,7 +76,9 @@ public class Game {
             return this;
         }
 
-        Game build() {
+        //не должно быть возможности выйти за стенки
+        GameLevel build() {
+            //коллизия с барьером общий метод использовать
             //TODO added exceptions(?)
             if (!isBallOnPlatform()) {
                 System.out.println("Ball is not on the platform");
@@ -82,7 +86,8 @@ public class Game {
             if (ball == null || platform == null || scene == null || bricks.isEmpty() || barriers.isEmpty()) {
                 System.out.println("Game can't start");
             }
-            return new Game(ball, platform, bricks, barriers, scene);
+            //в самом начале генерации всей игры проходить по всем файлам и проверять нормально загружается игра или нет
+            return new GameLevel(ball, platform, bricks, barriers, scene);
         }
 
         private boolean isBallOnPlatform() {
@@ -105,7 +110,7 @@ public class Game {
     }
 
     public Point nextBallPosition() {
-        Point newBallPos = ball.nextPosition(barriers);
+        Point newBallPos = ball.move(barriers);
         ArrayList<Brick> toRemove = new ArrayList<>();
         bricks.stream().filter(brick -> !barriers.contains(brick)).forEach(toRemove::add);
         toRemove.forEach(bricks::remove);
@@ -117,6 +122,7 @@ public class Game {
         return platform.position.x();
     }
 
+    //enum с состояниями игры
     public boolean gameWin() {
         return bricks.isEmpty();
     }
@@ -125,8 +131,8 @@ public class Game {
         return ball.position.y() > scene.y();
     }
 
-    public static Game initLevel(Properties properties) {
-        return new LevelInitiator(properties).initLevel();
+    public static GameLevel initLevel(JsonObject object) {
+        return new LevelInitiator(object).initLevel();
     }
 
     private void updateSpeed(int speed) {

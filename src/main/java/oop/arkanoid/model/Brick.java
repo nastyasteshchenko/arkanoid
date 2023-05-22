@@ -28,7 +28,7 @@ class Brick extends Barrier implements Destroyable {
     public void onHit() {
         health.decrease();
         if (!isAlive()) {
-            Game.increaseScore(score);
+            GameLevel.increaseScore(score);
             Notifications.getInstance().publish(Notifications.EventType.DESTROY, this);
         }
     }
