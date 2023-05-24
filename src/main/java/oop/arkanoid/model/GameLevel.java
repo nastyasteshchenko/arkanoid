@@ -64,7 +64,7 @@ public class GameLevel {
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        Builder addWall(Point position, Point size, wallType type) {
+        Builder addWall(Point position, Point size, WallType type) {
             barriers.add(new Wall(position, size, type));
             return this;
         }
