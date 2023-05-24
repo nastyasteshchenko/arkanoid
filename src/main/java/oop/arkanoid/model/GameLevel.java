@@ -141,9 +141,8 @@ public class GameLevel {
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        Builder addWall(Point position, Point size, WallType type) throws GeneratingGameException {
+        Builder addWall(Point position, Point size, WallType type){
             Wall wall = new Wall(position, size, type);
-            checkIfCollisions(wall);
             barriers.add(wall);
             return this;
         }
