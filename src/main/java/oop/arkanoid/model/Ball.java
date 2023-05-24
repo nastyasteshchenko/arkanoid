@@ -1,15 +1,8 @@
 package oop.arkanoid.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-enum CollisionResult {
-    HAS_COLLISION,
-    NO_COLLISION
-}
 
 class Ball {
     final double radius;
@@ -19,7 +12,7 @@ class Ball {
 
     Ball(Point position, double radius) {
         this.radius = radius;
-        motionTrajectory = new MotionTrajectory(new Point(1, -1), position, new Point(0, 100000), new Point(0, 100000));
+        motionTrajectory = new MotionTrajectory(new Point(1, -1), position);
     }
 
     Point move(List<Barrier> barriers) {
@@ -42,16 +35,16 @@ class Ball {
     }
 
     private void checkCollisions(List<Barrier> barriers) {
-        AtomicBoolean hasVerticalCollision = new AtomicBoolean(false);
-        AtomicBoolean hasHorizontalCollision = new AtomicBoolean(false);
+        AtomicBoolean hasCollision = new AtomicBoolean(false);
         visibleCollisions.forEach(barrier -> {
             if (isCollisionWithBottom(barrier) || isCollisionWithTop(barrier)) {
-                if (!hasHorizontalCollision.get()) {
+                if (!hasCollision.get()) {
                     motionTrajectory.trajectory.dy = -motionTrajectory.trajectory.dy;
                     if (barrier instanceof Platform p) {
                         changeAngleByPlatform(p);
                     }
                     motionTrajectory.trajectory.recountB(motionTrajectory.position);
+                    hasCollision.set(true);
                 }
                 if (barrier instanceof Destroyable d) {
                     d.onHit();
@@ -59,7 +52,6 @@ class Ball {
                         barriers.remove(d);
                     }
                 }
-                hasHorizontalCollision.set(true);
             } else if (isCollisionWithLeftSide(barrier) || isCollisionWithRightSide(barrier)) {
                 if (barrier instanceof Destroyable d) {
                     d.onHit();
@@ -67,14 +59,14 @@ class Ball {
                         barriers.remove(d);
                     }
                 }
-                if (!hasHorizontalCollision.get()) {
+                if (!hasCollision.get()) {
                     motionTrajectory.trajectory.dx = -motionTrajectory.trajectory.dx;
                     motionTrajectory.trajectory.recountB(motionTrajectory.position);
+                    hasCollision.set(true);
                 }
-                hasHorizontalCollision.set(true);
             }
         });
-        if (hasVerticalCollision.get() || hasHorizontalCollision.get()) {
+        if (hasCollision.get()) {
             visibleCollisions.clear();
         }
     }
@@ -82,7 +74,7 @@ class Ball {
     private void changeAngleByPlatform(Platform platform) {
         double halfPlatformXSize = platform.size.x() / 2;
         double platformCenterX = platform.position.x() + halfPlatformXSize;
-        motionTrajectory.changeAngle((motionTrajectory.position.x() - platformCenterX) / halfPlatformXSize);
+        motionTrajectory.changeAngle((motionTrajectory.position.x() - platformCenterX) / halfPlatformXSize + 0.1);
     }
 
     private boolean isCollisionWithBottom(Barrier barrier) {

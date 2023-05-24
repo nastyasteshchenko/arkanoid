@@ -7,8 +7,8 @@ class MotionTrajectory {
 
     final double speed;
 
-    MotionTrajectory(Point diffs, Point startPosition, Point possibleValuesX, Point possibleValuesY) {
-        this.trajectory = new Trajectory(diffs, possibleValuesX, possibleValuesY);
+    MotionTrajectory(Point diffs, Point startPosition) {
+        this.trajectory = new Trajectory(diffs, new Point(0, 0), new Point(0,0));
         trajectory.recountB(startPosition);
         this.position = startPosition;
         speed = Math.sqrt(trajectory.dx * trajectory.dx + trajectory.dy * trajectory.dy);
