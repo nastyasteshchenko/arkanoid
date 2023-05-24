@@ -10,7 +10,7 @@ class Ball {
 
     Ball(Point position, double radius) {
         this.radius = radius;
-        motionTrajectory = new MotionTrajectory(new Point(1, -1), position);
+        motionTrajectory = new MotionTrajectory(new Point(1, 1), position);
     }
 
     Point move(List<Barrier> barriers) {
@@ -19,6 +19,11 @@ class Ball {
         }
         checkCollisions(barriers);
         return motionTrajectory.nextPoint();
+    }
+
+    boolean isCollisionWithTop(Barrier barrier) {
+        return motionTrajectory.position.x() - radius <= barrier.position.x() + barrier.size.x() && motionTrajectory.position.x() + radius >= barrier.position.x()
+                && Math.abs(motionTrajectory.position.y() + radius - barrier.position.y()) <= Math.abs(motionTrajectory.trajectory.dy) / 2;
     }
 
     private void detectVisibleCollisions(List<Barrier> barriers) {
@@ -78,11 +83,6 @@ class Ball {
     private boolean isCollisionWithBottom(Barrier barrier) {
         return motionTrajectory.position.x() - radius <= barrier.position.x() + barrier.size.x() && motionTrajectory.position.x() + radius >= barrier.position.x()
                 && Math.abs(motionTrajectory.position.y() - radius - barrier.position.y() - barrier.size.y()) <= Math.abs(motionTrajectory.trajectory.dy) / 2;
-    }
-
-    private boolean isCollisionWithTop(Barrier barrier) {
-        return motionTrajectory.position.x() - radius <= barrier.position.x() + barrier.size.x() && motionTrajectory.position.x() + radius >= barrier.position.x()
-                && Math.abs(motionTrajectory.position.y() + radius - barrier.position.y()) <= Math.abs(motionTrajectory.trajectory.dy) / 2;
     }
 
     private boolean isCollisionWithLeftSide(Barrier barrier) {

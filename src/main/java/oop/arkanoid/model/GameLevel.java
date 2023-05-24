@@ -156,7 +156,7 @@ public class GameLevel {
         GameLevel build() {
             //коллизия с барьером общий метод использовать
             //TODO added exceptions(?)
-            if (!isBallOnPlatform()) {
+            if (!ball.isCollisionWithTop(platform)) {
                 System.out.println("Ball is not on the platform");
             }
             if (ball == null || platform == null || scene == null || bricks.isEmpty() || barriers.isEmpty()) {
@@ -164,11 +164,6 @@ public class GameLevel {
             }
             //в самом начале генерации всей игры проходить по всем файлам и проверять нормально загружается игра или нет
             return new GameLevel(ball, platform, bricks, barriers, scene);
-        }
-
-        private boolean isBallOnPlatform() {
-            return inSegment(platform.position.y() - ball.radius - 2, platform.position.y() - ball.radius, ball.motionTrajectory.position.y()) &&
-                    platform.position.x() + platform.size.x() / 2 == ball.motionTrajectory.position.x();
         }
 
         static boolean inSegment(double a, double b, double x) {

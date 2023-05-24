@@ -20,9 +20,9 @@
   "ball": {
     "color": "#FF0000",
     "strokeColor": "#FF0000",
-    "strokeWidth": "3",
+    "strokeWidth": "1",
     "x": "298",
-    "y": "740",
+    "y": "741",
     "radius": "15"
   },
   "score": {
