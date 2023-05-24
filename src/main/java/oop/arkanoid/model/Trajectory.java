@@ -8,7 +8,6 @@ class Trajectory {
     double dy;
     double b;
 
-
     private final Point possibleValuesX;
     private final Point possibleValuesY;
 
@@ -23,7 +22,7 @@ class Trajectory {
         if (dy == trajectory.dy && dx == trajectory.dx) {
             return false;
         }
-        return dy == 0 ? inSegment(trajectory.findX(b), possibleValuesX.x() - radius, possibleValuesX.y() + radius) : inSegment(trajectory.findY(b), possibleValuesY.x() - radius, possibleValuesY.y() + radius);
+        return dy == 0 ? inSegment(possibleValuesX.x() - radius, possibleValuesX.y() + radius, trajectory.findX(b)) : inSegment( possibleValuesY.x() - radius, possibleValuesY.y() + radius, trajectory.findY(b));
     }
 
     void recountB(Point position) {
@@ -37,6 +36,5 @@ class Trajectory {
     double findX(double y) {
         return dx / dy * (y - b);
     }
-
 
 }
