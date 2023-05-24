@@ -24,7 +24,7 @@ import java.util.*;
 
 public class Presenter {
     private static final Gson GSON_LOADER = new Gson();
-    private static JsonObject records = new JsonObject();
+    private static JsonObject records;
     private static int numLevel = 1;
     private static Timeline animation;
     private static LevelView gameView;
