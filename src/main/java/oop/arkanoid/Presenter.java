@@ -23,8 +23,6 @@ import java.util.*;
 
 import static oop.arkanoid.view.LevelView.setErrorText;
 
-//Я когда-нибудь нормально обработаю исключения
-
 public class Presenter {
     private static final Gson GSON_LOADER = new Gson();
     private static JsonObject records;
@@ -58,11 +56,15 @@ public class Presenter {
         }
     }
 
-    static void loadResources() throws IOException {
-        mainScene = loadNewScene("main-scene.fxml");
-        aboutScene = loadNewScene("about-scene.fxml");
-        gameLoseScene = loadNewScene("game-over-scene.fxml");
-        gameWinScene = loadNewScene("game-win-scene.fxml");
+    static void loadResources() {
+        try {
+            mainScene = loadNewScene("main-scene.fxml");
+            aboutScene = loadNewScene("about-scene.fxml");
+            gameLoseScene = loadNewScene("game-over-scene.fxml");
+            gameWinScene = loadNewScene("game-win-scene.fxml");
+        } catch (IOException e){
+            loadErrorScene(e.getMessage());
+        }
         try (JsonReader reader = new JsonReader(new FileReader("src/main/resources/oop/arkanoid/records.json"))) {
             records = GSON_LOADER.fromJson(reader, JsonObject.class);
         } catch (IOException e) {
@@ -102,11 +104,16 @@ public class Presenter {
     }
 
     @FXML
-    protected void watchRecords() throws IOException {
+    protected void watchRecords() {
 
-        Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("records-scene.fxml")));
+        Pane root = null;
+        try {
+            root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("records-scene.fxml")));
+        } catch (IOException e) {
+            loadErrorScene(e.getMessage());
+        }
+
         Text level1Score = new Text(records.getAsJsonObject("records").get("level1").getAsString());
-
 
         LevelView.setRecordText(level1Score, records, "level1");
         Text level2Score = new Text(records.getAsJsonObject("records").get("level2").getAsString());
@@ -116,11 +123,11 @@ public class Presenter {
 
     }
 
-    private void gameLose() throws IOException {
+    private void gameLose() {
         prepareForGameOver(gameLoseScene);
     }
 
-    private void gameWin() throws IOException {
+    private void gameWin() {
         prepareForGameOver(gameWinScene);
         numLevel++;
     }
@@ -188,14 +195,10 @@ public class Presenter {
     private void startAnimation() {
         animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
             if (gameIsStarted) {
-                try {
-                    gameView.drawBall(model.nextBallPosition());
-                    switch (model.gameState()) {
-                        case GAME_WIN -> gameWin();
-                        case GAME_LOSE -> gameLose();
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                gameView.drawBall(model.nextBallPosition());
+                switch (model.gameState()) {
+                    case GAME_WIN -> gameWin();
+                    case GAME_LOSE -> gameLose();
                 }
             }
         }));
@@ -212,7 +215,7 @@ public class Presenter {
             Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("error-scene.fxml")));
             Text error = new Text(errorMsg);
             setErrorText(error);
-            root.getChildren().addAll(error);
+            root.getChildren().add(error);
             Arkanoid.changeScene(new Scene(root));
         } catch (IOException e) {
 //TODO some report in file?
