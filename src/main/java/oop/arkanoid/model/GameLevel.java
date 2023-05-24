@@ -45,7 +45,7 @@ public class GameLevel {
         }
     }
 
-    public static GameLevel initLevel(JsonObject object) {
+    public static GameLevel initLevel(JsonObject object) throws GeneratingGameException {
         return new LevelInitiator(object).initLevel();
     }
 
@@ -104,7 +104,11 @@ public class GameLevel {
         private final List<Barrier> barriers = new ArrayList<>();
         private Platform platform;
         private Ball ball;
-        private Point scene;
+        private final Point scene;
+
+        Builder(Point scene){
+            this.scene = scene;
+        }
 
         Builder platform(Point position, Point size) {
             platform = new Platform(position, size);
@@ -118,59 +122,69 @@ public class GameLevel {
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        Builder addDestroyableBrick(Point position, Point size, int health) {
+        Builder addDestroyableBrick(Point position, Point size, int health) throws GeneratingGameException {
             Brick brick = new Brick(position, size, new Health(health));
-            if (bricks.stream().anyMatch(b -> hasCollision(brick, b))) {
-                //TODO think about
-                System.out.println("Collision");
-            }
+            checkIfOutOfScene(brick.position, size);
+            checkIfCollisions(brick);
             bricks.add(brick);
             barriers.add(brick);
             return this;
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        Builder addImmortalBrick(Point position, Point size) {
+        Builder addImmortalBrick(Point position, Point size) throws GeneratingGameException {
             Brick brick = new Brick(position, size, Health.createImmortal());
-            if (bricks.stream().anyMatch(b -> hasCollision(brick, b))) {
-                //TODO the same
-                System.out.println("Collision");
-            }
+            checkIfOutOfScene(brick.position, size);
+            checkIfCollisions(brick);
             barriers.add(brick);
             return this;
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        Builder addWall(Point position, Point size, WallType type) {
-            barriers.add(new Wall(position, size, type));
+        Builder addWall(Point position, Point size, WallType type) throws GeneratingGameException {
+            Wall wall = new Wall(position, size, type);
+            checkIfCollisions(wall);
+            barriers.add(wall);
             return this;
         }
 
-        @SuppressWarnings("UnusedReturnValue")
-        Builder scene(Point size) {
-            scene = size;
-            return this;
-        }
+        GameLevel build() throws GeneratingGameException {
 
-        //не должно быть возможности выйти за стенки
-        GameLevel build() {
-            //коллизия с барьером общий метод использовать
-            //TODO added exceptions(?)
-            if (!ball.isCollisionWithTop(platform)) {
-                System.out.println("Ball is not on the platform");
-            }
-            if (ball == null || platform == null || scene == null || bricks.isEmpty() || barriers.isEmpty()) {
-                System.out.println("Game can't start");
-            }
+            checkIfBallOnPlatform();
+            checkUninitObjects();
             //в самом начале генерации всей игры проходить по всем файлам и проверять нормально загружается игра или нет
             return new GameLevel(ball, platform, bricks, barriers, scene);
+        }
+
+        private void checkIfBallOnPlatform() throws GeneratingGameException {
+            if (!ball.isCollisionWithTop(platform)) {
+                throw GeneratingGameException.ballIsNotOnPlatform();
+            }
+        }
+
+        private void checkUninitObjects() throws GeneratingGameException {
+            if (ball == null || platform == null || scene == null || bricks.isEmpty() || barriers.isEmpty()) {
+                throw GeneratingGameException.uninitObjects();
+            }
         }
 
         static boolean inSegment(double a, double b, double x) {
             return a <= x && x <= b;
         }
 
-        private boolean hasCollision(Brick b1, Brick b2) {
+        private void checkIfOutOfScene(Point position, Point size) throws GeneratingGameException {
+            if (!inSegment(0, scene.x(), position.x()) || !inSegment(0, scene.y(), position.y()) || !inSegment(0, scene.x(), position.x() + size.x()) || !inSegment(0, scene.y(), position.y() + size.y())){
+                throw GeneratingGameException.outOfScene();
+            }
+        }
+
+        private void checkIfCollisions(Barrier barrier) throws GeneratingGameException {
+            if (barriers.stream().anyMatch(b -> hasCollision(barrier, b))) {
+                throw GeneratingGameException.collisionWithOtherObjects();
+            }
+        }
+
+        private boolean hasCollision(Barrier b1, Barrier b2) {
             return (inSegment(b2.position.x(), b2.position.x() + b2.size.x(), b1.position.x()) || inSegment(b2.position.x(), b2.position.x() + b2.size.x(), b1.position.x() + b1.size.x()))
                     && (inSegment(b2.position.y(), b2.position.y() + b2.size.y(), b1.position.y()) || inSegment(b2.position.y(), b2.position.y() + b2.size.y(), b1.position.y() + b1.size.y()));
         }

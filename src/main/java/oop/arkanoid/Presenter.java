@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import oop.arkanoid.model.GameLevel;
+import oop.arkanoid.model.GeneratingGameException;
 import oop.arkanoid.model.Point;
 import oop.arkanoid.view.LevelView;
 
@@ -68,7 +69,7 @@ public class Presenter {
     }
 
     @FXML
-    protected void restartGame() {
+    protected void restartGame() throws GeneratingGameException {
         startLevel();
     }
 
@@ -78,7 +79,7 @@ public class Presenter {
     }
 
     @FXML
-    protected void startGame() {
+    protected void startGame() throws GeneratingGameException {
 
         Notifications.getInstance().subscribe(Notifications.EventType.DESTROY, destroyable -> {
             gameView.deleteBrick(destroyable.position());
@@ -141,7 +142,7 @@ public class Presenter {
         }
     }
 
-    private void startLevel() {
+    private void startLevel() throws GeneratingGameException {
         String jsonFileName = "src/main/resources/oop/arkanoid/level" + numLevel + ".json";
 
         JsonObject paramsForLevel = new JsonObject();
