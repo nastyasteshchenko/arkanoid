@@ -2,12 +2,10 @@ package oop.arkanoid.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 class Ball {
     final double radius;
     MotionTrajectory motionTrajectory;
-
     List<Barrier> visibleCollisions = new ArrayList<>();
 
     Ball(Point position, double radius) {
@@ -24,54 +22,54 @@ class Ball {
     }
 
     private void detectVisibleCollisions(List<Barrier> barriers) {
-        for (Barrier barrier : barriers) {
+        barriers.forEach(barrier -> {
             if (barrier instanceof Platform) {
                 visibleCollisions.add(barrier);
-            }
-            if (barrier.hasVisibleCollisions(motionTrajectory.trajectory, radius)) {
-                visibleCollisions.add(barrier);
-            }
-        }
-    }
-
-    private void checkCollisions(List<Barrier> barriers) {
-        AtomicBoolean hasCollision = new AtomicBoolean(false);
-        visibleCollisions.forEach(barrier -> {
-            if (isCollisionWithBottom(barrier) || isCollisionWithTop(barrier)) {
-                if (!hasCollision.get()) {
-                    motionTrajectory.trajectory.dy = -motionTrajectory.trajectory.dy;
-                    if (barrier instanceof Platform p) {
-                        changeAngleByPlatform(p);
-                    }
-                    motionTrajectory.trajectory.recountB(motionTrajectory.position);
-                    hasCollision.set(true);
-                }
-                if (barrier instanceof Destroyable d) {
-                    d.onHit();
-                    if (!d.isAlive()) {
-                        barriers.remove(d);
-                    }
-                }
-            } else if (isCollisionWithLeftSide(barrier) || isCollisionWithRightSide(barrier)) {
-                if (barrier instanceof Destroyable d) {
-                    d.onHit();
-                    if (!d.isAlive()) {
-                        barriers.remove(d);
-                    }
-                }
-                if (!hasCollision.get()) {
-                    motionTrajectory.trajectory.dx = -motionTrajectory.trajectory.dx;
-                    motionTrajectory.trajectory.recountB(motionTrajectory.position);
-                    hasCollision.set(true);
+            } else {
+                if (barrier.hasVisibleCollisions(motionTrajectory.trajectory, radius)) {
+                    visibleCollisions.add(barrier);
                 }
             }
         });
-        if (hasCollision.get()) {
+    }
+
+    private void checkCollisions(List<Barrier> barriers) {
+        boolean hasCollision = false;
+        for (Barrier barrier: visibleCollisions){
+            if (isCollisionWithBottom(barrier) || isCollisionWithTop(barrier)) {
+                if (!hasCollision) {
+                    motionTrajectory.trajectory.dy = -motionTrajectory.trajectory.dy;
+                    if (barrier instanceof Platform p) {
+                        changeAngleAccordingToPlatform(p);
+                    }
+                    motionTrajectory.trajectory.recountB(motionTrajectory.position);
+                    hasCollision=true;
+                }
+                handleCollision(barriers, barrier);
+            } else if (isCollisionWithLeftSide(barrier) || isCollisionWithRightSide(barrier)) {
+                if (!hasCollision) {
+                    motionTrajectory.trajectory.dx = -motionTrajectory.trajectory.dx;
+                    motionTrajectory.trajectory.recountB(motionTrajectory.position);
+                    hasCollision= true;
+                }
+                handleCollision(barriers, barrier);
+            }
+        }
+        if (hasCollision) {
             visibleCollisions.clear();
         }
     }
 
-    private void changeAngleByPlatform(Platform platform) {
+    private static void handleCollision(List<Barrier> barriers, Barrier barrier) {
+        if (barrier instanceof Destroyable d) {
+            d.onHit();
+            if (!d.isAlive()) {
+                barriers.remove(d);
+            }
+        }
+    }
+
+    private void changeAngleAccordingToPlatform(Platform platform) {
         double halfPlatformXSize = platform.size.x() / 2;
         double platformCenterX = platform.position.x() + halfPlatformXSize;
         motionTrajectory.changeAngle((motionTrajectory.position.x() - platformCenterX) / halfPlatformXSize + 0.1);

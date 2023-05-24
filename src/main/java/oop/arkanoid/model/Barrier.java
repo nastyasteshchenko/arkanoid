@@ -3,7 +3,7 @@ package oop.arkanoid.model;
 import java.util.HashMap;
 import java.util.Map;
 
-enum TrajectoryType {
+enum StraightSides {
     LEFT_SIDE,
     RIGHT_SIDE,
     TOP_SIDE,
@@ -15,7 +15,7 @@ abstract class Barrier {
     final Point position;
     final Point size;
 
-    Map<TrajectoryType, Trajectory> trajectories = new HashMap<>();
+    Map<StraightSides, Trajectory> trajectories = new HashMap<>();
 
     Barrier(Point position, Point size) {
         this.position = position;
