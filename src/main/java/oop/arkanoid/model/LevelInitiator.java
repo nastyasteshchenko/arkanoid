@@ -40,9 +40,9 @@ public class LevelInitiator {
                                 createPoint(brickWidth, brickHeight));
             }
         });
-        builder.addWall(createPoint(0, 0), createPoint(0.5, sceneHeight));
-        builder.addWall(createPoint(sceneWidth-0.5, 0), createPoint(0.5, sceneHeight));
-        builder.addWall(createPoint(0, 0), createPoint(sceneWidth, 0.5));
+        builder.addWall(createPoint(0, 0), createPoint(0.5, sceneHeight), wallType.LEFT);
+        builder.addWall(createPoint(sceneWidth-0.5, 0), createPoint(0.5, sceneHeight), wallType.RIGHT);
+        builder.addWall(createPoint(0, 0), createPoint(sceneWidth, 0.5), wallType.TOP);
 
         return builder.build();
                 }

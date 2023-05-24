@@ -64,8 +64,8 @@ public class GameLevel {
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        Builder addWall(Point position, Point size) {
-            barriers.add(new Wall(position, size));
+        Builder addWall(Point position, Point size, wallType type) {
+            barriers.add(new Wall(position, size, type));
             return this;
         }
 
@@ -90,8 +90,8 @@ public class GameLevel {
         }
 
         private boolean isBallOnPlatform() {
-            return inSegment(platform.position.y() - ball.radius - 2, platform.position.y() - ball.radius, ball.position.y()) &&
-                    platform.position.x() + platform.size.x() / 2 == ball.position.x();
+            return inSegment(platform.position.y() - ball.radius - 2, platform.position.y() - ball.radius, ball.motionTrajectory.position.y()) &&
+                    platform.position.x() + platform.size.x() / 2 == ball.motionTrajectory.position.x();
         }
 
         private boolean inSegment(double a, double b, double x) {
@@ -124,7 +124,7 @@ public class GameLevel {
     public GameStates gameState(){
         if(bricks.isEmpty()){
             return GameStates.GAME_WIN;
-        } else if (ball.position.y()>scene.y()){
+        } else if (ball.motionTrajectory.position.y()>scene.y()){
             return GameStates.GAME_LOSE;
         } else {
             return GameStates.GAME_IN_PROCESS;
@@ -133,10 +133,6 @@ public class GameLevel {
 
     public static GameLevel initLevel(JsonObject object) {
         return new LevelInitiator(object).initLevel();
-    }
-
-    private void updateSpeed(int speed) {
-        ball.speed = speed;
     }
 
     public ArrayList<Point> getStandardBricks() {
@@ -166,7 +162,7 @@ public class GameLevel {
     }
 
     public Point getBallPosition() {
-        return ball.position;
+        return ball.motionTrajectory.position;
     }
 
     public double getBallRadius() {
