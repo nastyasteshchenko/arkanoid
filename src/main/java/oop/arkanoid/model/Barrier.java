@@ -23,6 +23,6 @@ abstract class Barrier {
 
     }
 
-    abstract CollisionResult hasVisibleCollisions(Trajectory trajectory);
+    abstract CollisionResult hasVisibleCollisions(Trajectory trajectory, double radius);
 
 }

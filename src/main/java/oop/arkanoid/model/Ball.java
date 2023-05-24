@@ -31,7 +31,7 @@ class Ball {
 
     private void detectVisibleCollisions(List<Barrier> barriers) {
         for (Barrier barrier : barriers) {
-            CollisionResult collisionResult = barrier.hasVisibleCollisions(motionTrajectory.trajectory);
+            CollisionResult collisionResult = barrier.hasVisibleCollisions(motionTrajectory.trajectory, radius);
             if (barrier instanceof Platform) {
                 collisionResult = CollisionResult.NEED_TO_CHANGE_ANGLE;
             }
@@ -42,11 +42,14 @@ class Ball {
     }
 
     private void checkCollisions(List<Barrier> barriers) {
-        AtomicBoolean hasColl = new AtomicBoolean(false);
+        AtomicBoolean hasVerticalCollision = new AtomicBoolean(false);
+        AtomicBoolean hasHorizontalCollision = new AtomicBoolean(false);
         visibleCollisions.forEach((barrier, collisionResult) -> {
             if (collisionResult == CollisionResult.NEED_TO_CHANGE_ANGLE) {
                 if (isCollisionWithBottom(barrier) || isCollisionWithTop(barrier)) {
-                    motionTrajectory.trajectory.dy = -motionTrajectory.trajectory.dy;
+                    if (!hasHorizontalCollision.get()) {
+                        motionTrajectory.trajectory.dy = -motionTrajectory.trajectory.dy;
+                    }
                     if (barrier instanceof Destroyable d) {
                         d.onHit();
                         if (!d.isAlive()) {
@@ -56,7 +59,7 @@ class Ball {
                         changeAngleByPlatform(p);
                     }
                     motionTrajectory.trajectory.recountB(motionTrajectory.position);
-                    hasColl.set(true);
+                    hasHorizontalCollision.set(true);
                 }
             } else if (isCollisionWithLeftSide(barrier) || isCollisionWithRightSide(barrier)) {
                 if (barrier instanceof Destroyable d) {
@@ -65,19 +68,21 @@ class Ball {
                         barriers.remove(d);
                     }
                 }
-                motionTrajectory.trajectory.dx = -motionTrajectory.trajectory.dx;
-                motionTrajectory.trajectory.recountB(motionTrajectory.position);
-                hasColl.set(true);
+                if (!hasVerticalCollision.get()) {
+                    motionTrajectory.trajectory.dx = -motionTrajectory.trajectory.dx;
+                    motionTrajectory.trajectory.recountB(motionTrajectory.position);
+                }
+                hasVerticalCollision.set(true);
             }
         });
-        if (hasColl.get()) {
+        if (hasVerticalCollision.get() || hasHorizontalCollision.get()) {
             visibleCollisions.clear();
         }
     }
 
     private void changeAngleByPlatform(Platform platform) {
         double platformCenterX = platform.position.x() + platform.size.x() / motionTrajectory.speed / 2;
-        double halfPlatformXSize = platform.size.x()/2;
+        double halfPlatformXSize = platform.size.x() / 2;
         motionTrajectory.changeAngle((motionTrajectory.position.x() - platformCenterX) / halfPlatformXSize);
     }
 

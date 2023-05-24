@@ -25,20 +25,20 @@ public class Wall extends Barrier {
     }
 
     @Override
-    CollisionResult hasVisibleCollisions(Trajectory trajectory) {
+    CollisionResult hasVisibleCollisions(Trajectory trajectory, double radius) {
         switch (type) {
             case RIGHT -> {
-                if (trajectories.get(TrajectoryType.LEFT_SIDE).hasIntersection(trajectory)) {
+                if (trajectories.get(TrajectoryType.LEFT_SIDE).hasIntersection(trajectory, radius)) {
                     return CollisionResult.NO_ANGLE_CHANGE;
                 }
             }
             case LEFT -> {
-                if (trajectories.get(TrajectoryType.RIGHT_SIDE).hasIntersection(trajectory)) {
+                if (trajectories.get(TrajectoryType.RIGHT_SIDE).hasIntersection(trajectory, radius)) {
                     return CollisionResult.NO_ANGLE_CHANGE;
                 }
             }
             case TOP -> {
-                if (trajectories.get(TrajectoryType.BOTTOM_SIDE).hasIntersection(trajectory)) {
+                if (trajectories.get(TrajectoryType.BOTTOM_SIDE).hasIntersection(trajectory, radius)) {
                     return CollisionResult.NEED_TO_CHANGE_ANGLE;
                 }
             }

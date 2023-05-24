@@ -17,26 +17,16 @@ class Trajectory {
         this.possibleValuesY = possibleValuesY;
     }
 
-    boolean hasIntersection(Trajectory trajectory) {
+    boolean hasIntersection(Trajectory trajectory, double radius) {
         if (dy == trajectory.dy && dx == trajectory.dx) {
             return false;
         }
 
-        double x;
-        double y;
-
         if (dy == 0) {
-            y = b;
-            x = trajectory.findX(y);
-        } else if (dx == 0) {
-            x = b;
-            y = trajectory.findY(x);
+            return inSegment(trajectory.findX(b), possibleValuesX.x() - radius, possibleValuesX.y() + radius);
         } else {
-            x = (trajectory.b - b) / (trajectory.dy / trajectory.dx - dy / dx);
-            y = trajectory.findY(x);
+            return inSegment(trajectory.findY(b), possibleValuesY.x() - radius, possibleValuesY.y() + radius);
         }
-
-        return inSegment(x, possibleValuesX.x(), possibleValuesX.y()) && inSegment(y, possibleValuesY.x(), possibleValuesY.y());
     }
 
     void recountB(Point position) {
@@ -52,6 +42,6 @@ class Trajectory {
     }
 
     private boolean inSegment(double value, double min, double max) {
-        return value <= max && value >= min;
+        return value < max && value > min;
     }
 }

@@ -9,8 +9,8 @@ class Platform extends Barrier {
     }
 
     @Override
-    CollisionResult hasVisibleCollisions(Trajectory trajectory) {
-        if (trajectories.get(TrajectoryType.TOP_SIDE).hasIntersection(trajectory)) {
+    CollisionResult hasVisibleCollisions(Trajectory trajectory, double radius) {
+        if (trajectories.get(TrajectoryType.TOP_SIDE).hasIntersection(trajectory, radius)) {
             return CollisionResult.NEED_TO_CHANGE_ANGLE;
         }
         return null;
