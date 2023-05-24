@@ -21,6 +21,8 @@ import oop.arkanoid.view.LevelView;
 import java.io.*;
 import java.util.*;
 
+import static oop.arkanoid.view.LevelView.setErrorText;
+
 //Я когда-нибудь нормально обработаю исключения
 
 public class Presenter {
@@ -64,12 +66,12 @@ public class Presenter {
         try (JsonReader reader = new JsonReader(new FileReader("src/main/resources/oop/arkanoid/records.json"))) {
             records = GSON_LOADER.fromJson(reader, JsonObject.class);
         } catch (IOException e) {
-//тоже когда-нибудь обработать
+            loadErrorScene(e.getMessage());
         }
     }
 
     @FXML
-    protected void restartGame() throws GeneratingGameException {
+    protected void restartGame() {
         startLevel();
     }
 
@@ -79,7 +81,7 @@ public class Presenter {
     }
 
     @FXML
-    protected void startGame() throws GeneratingGameException {
+    protected void startGame() {
 
         Notifications.getInstance().subscribe(Notifications.EventType.DESTROY, destroyable -> {
             gameView.deleteBrick(destroyable.position());
@@ -131,7 +133,7 @@ public class Presenter {
         try (JsonWriter writer = new JsonWriter(new FileWriter("src/main/resources/oop/arkanoid/records.json"))) {
             GSON_LOADER.toJson(records, writer);
         } catch (IOException e) {
-//тоже когда-нибудь обработать
+            loadErrorScene(e.getMessage());
         }
         Arkanoid.changeScene(gameWinScene);
     }
@@ -142,43 +144,47 @@ public class Presenter {
         }
     }
 
-    private void startLevel() throws GeneratingGameException {
+    private void startLevel() {
         String jsonFileName = "src/main/resources/oop/arkanoid/level" + numLevel + ".json";
 
         JsonObject paramsForLevel = new JsonObject();
         try (JsonReader reader = new JsonReader(new FileReader(jsonFileName))) {
             paramsForLevel = GSON_LOADER.fromJson(reader, JsonObject.class);
         } catch (IOException e) {
-//тоже когда-нибудь обработать
+            loadErrorScene(e.getMessage());
         }
-        model = GameLevel.initLevel(paramsForLevel);
-        LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
 
-        builder.ball(model.getBallPosition(), model.getBallRadius())
-                .platform(model.getPlatformPosition(), model.getPlatformSize())
-                .gameScene(model.getSceneSize());
+        try {
+            model = GameLevel.initLevel(paramsForLevel);
+            LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
 
-        Point brickSize = model.getBrickSize();
-        ArrayList<Point> standardBricks = model.getStandardBricks();
+            builder.ball(model.getBallPosition(), model.getBallRadius())
+                    .platform(model.getPlatformPosition(), model.getPlatformSize())
+                    .gameScene(model.getSceneSize());
 
-        standardBricks.forEach(b -> builder.addStandardBrick(b, brickSize));
+            Point brickSize = model.getBrickSize();
+            ArrayList<Point> standardBricks = model.getStandardBricks();
 
-        ArrayList<Point> immortalBricks = model.getImmortalBricks();
-        immortalBricks.forEach(b -> builder.addImmortalBrick(b, brickSize));
+            standardBricks.forEach(b -> builder.addStandardBrick(b, brickSize));
 
-        ArrayList<Point> doubleHitBricks = model.getDoubleHitBricks();
-        doubleHitBricks.forEach(b -> builder.addDoubleHitBrick(b, brickSize));
+            ArrayList<Point> immortalBricks = model.getImmortalBricks();
+            immortalBricks.forEach(b -> builder.addImmortalBrick(b, brickSize));
 
-        builder.highScore(records.getAsJsonObject("records").get("level" + numLevel).getAsInt());
+            ArrayList<Point> doubleHitBricks = model.getDoubleHitBricks();
+            doubleHitBricks.forEach(b -> builder.addDoubleHitBrick(b, brickSize));
 
-        gameView = builder.build();
+            builder.highScore(records.getAsJsonObject("records").get("level" + numLevel).getAsInt());
+
+            gameView = builder.build();
+        } catch (GeneratingGameException e) {
+            loadErrorScene(e.getMessage());
+        }
         Arkanoid.changeScene(gameView.getGameScene());
 
         startAnimation();
 
     }
 
-    //TODO подумать над названием
     private void startAnimation() {
         animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
             if (gameIsStarted) {
@@ -200,4 +206,18 @@ public class Presenter {
     private static Scene loadNewScene(String fileName) throws IOException {
         return new Scene(FXMLLoader.load(Objects.requireNonNull(Presenter.class.getResource(fileName))));
     }
+
+    private static void loadErrorScene(String errorMsg) {
+        try {
+            Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("error-scene.fxml")));
+            Text error = new Text(errorMsg);
+            setErrorText(error);
+            root.getChildren().addAll(error);
+            Arkanoid.changeScene(new Scene(root));
+        } catch (IOException e) {
+//TODO some report in file?
+        }
+
+    }
+
 }

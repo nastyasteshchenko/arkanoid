@@ -1,8 +1,6 @@
 package oop.arkanoid.view;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,8 +13,6 @@ import javafx.scene.text.Text;
 import oop.arkanoid.Presenter;
 import oop.arkanoid.model.*;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -218,6 +214,13 @@ public class LevelView {
         text.setStyle("-fx-font-size: " + scoreText.get("fontSize").getAsString());
     }
 
+    public static void setErrorText(Text error) {
+        error.setFont(Font.font("Droid Sans Mono"));
+        error.setFill(Color.valueOf("#680707"));
+        error.setStyle("-fx-font-size: 16");
+        error.setX(25);
+        error.setY(100);
+    }
     public Scene getGameScene() {
         return gameScene;
     }
