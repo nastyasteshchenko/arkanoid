@@ -22,6 +22,83 @@ public class GameLevel {
         score = 0;
     }
 
+    public Point nextBallPosition() {
+        Point newBallPos = ball.move(barriers);
+        ArrayList<Brick> toRemove = new ArrayList<>();
+        bricks.stream().filter(brick -> !barriers.contains(brick)).forEach(toRemove::add);
+        toRemove.forEach(bricks::remove);
+        return newBallPos;
+    }
+
+    public double updatePlatformPosition(double x) {
+        platform.position.setX(x - platform.size.x() / 2);
+        return platform.position.x();
+    }
+
+    public GameStates gameState(){
+        if(bricks.isEmpty()){
+            return GameStates.GAME_WIN;
+        } else if (ball.motionTrajectory.position.y()>scene.y()){
+            return GameStates.GAME_LOSE;
+        } else {
+            return GameStates.GAME_IN_PROCESS;
+        }
+    }
+
+    public static GameLevel initLevel(JsonObject object) {
+        return new LevelInitiator(object).initLevel();
+    }
+
+    public ArrayList<Point> getStandardBricks() {
+        ArrayList<Point> bricks = new ArrayList<>();
+        this.bricks.stream().filter(brick -> brick.health.getValue() == 1).forEach(brick -> bricks.add(brick.position));
+        return bricks;
+    }
+
+    public ArrayList<Point> getDoubleHitBricks() {
+        ArrayList<Point> bricks = new ArrayList<>();
+        this.bricks.stream().filter(brick -> brick.health.getValue() == 2).forEach(brick -> bricks.add(brick.position));
+        return bricks;
+    }
+
+    public ArrayList<Point> getImmortalBricks() {
+        ArrayList<Point> bricks = new ArrayList<>();
+        barriers.stream().filter(barrier -> barrier instanceof Brick && ((Brick) barrier).health instanceof Health.Immortal).forEach(brick -> bricks.add(brick.position));
+        return bricks;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public Point getBrickSize() {
+        return bricks.get(0).size;
+    }
+
+    public Point getBallPosition() {
+        return ball.motionTrajectory.position;
+    }
+
+    public double getBallRadius() {
+        return ball.radius;
+    }
+
+    public Point getPlatformSize() {
+        return platform.size;
+    }
+
+    public Point getPlatformPosition() {
+        return platform.position;
+    }
+
+    public Point getSceneSize() {
+        return scene;
+    }
+
+    static void increaseScore(int value) {
+        score += value;
+    }
+
     static class Builder {
         private final List<Brick> bricks = new ArrayList<>();
         private final List<Barrier> barriers = new ArrayList<>();
@@ -103,82 +180,4 @@ public class GameLevel {
                     && (inSegment(b2.position.y(), b2.position.y() + b2.size.y(), b1.position.y()) || inSegment(b2.position.y(), b2.position.y() + b2.size.y(), b1.position.y() + b1.size.y()));
         }
     }
-
-    static void increaseScore(int value) {
-        score += value;
-    }
-
-    public Point nextBallPosition() {
-        Point newBallPos = ball.move(barriers);
-        ArrayList<Brick> toRemove = new ArrayList<>();
-        bricks.stream().filter(brick -> !barriers.contains(brick)).forEach(toRemove::add);
-        toRemove.forEach(bricks::remove);
-        return newBallPos;
-    }
-
-    public double updatePlatformPosition(double x) {
-        platform.position.setX(x - platform.size.x() / 2);
-        return platform.position.x();
-    }
-
-    public GameStates gameState(){
-        if(bricks.isEmpty()){
-            return GameStates.GAME_WIN;
-        } else if (ball.motionTrajectory.position.y()>scene.y()){
-            return GameStates.GAME_LOSE;
-        } else {
-            return GameStates.GAME_IN_PROCESS;
-        }
-    }
-
-    public static GameLevel initLevel(JsonObject object) {
-        return new LevelInitiator(object).initLevel();
-    }
-
-    public ArrayList<Point> getStandardBricks() {
-        ArrayList<Point> bricks = new ArrayList<>();
-        this.bricks.stream().filter(brick -> brick.health.getValue() == 1).forEach(brick -> bricks.add(brick.position));
-        return bricks;
-    }
-
-    public ArrayList<Point> getDoubleHitBricks() {
-        ArrayList<Point> bricks = new ArrayList<>();
-        this.bricks.stream().filter(brick -> brick.health.getValue() == 2).forEach(brick -> bricks.add(brick.position));
-        return bricks;
-    }
-
-    public ArrayList<Point> getImmortalBricks() {
-        ArrayList<Point> bricks = new ArrayList<>();
-        barriers.stream().filter(barrier -> barrier instanceof Brick && ((Brick) barrier).health instanceof Health.Immortal).forEach(brick -> bricks.add(brick.position));
-        return bricks;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public Point getBrickSize() {
-        return bricks.get(0).size;
-    }
-
-    public Point getBallPosition() {
-        return ball.motionTrajectory.position;
-    }
-
-    public double getBallRadius() {
-        return ball.radius;
-    }
-
-    public Point getPlatformSize() {
-        return platform.size;
-    }
-
-    public Point getPlatformPosition() {
-        return platform.position;
-    }
-
-    public Point getSceneSize() {
-        return scene;
-    }
-
 }
