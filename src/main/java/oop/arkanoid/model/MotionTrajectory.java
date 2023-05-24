@@ -4,8 +4,7 @@ class MotionTrajectory {
 
     final Trajectory trajectory;
     final Point position;
-
-    final double speed;
+    private final double speed;
 
     MotionTrajectory(Point diffs, Point startPosition) {
         this.trajectory = new Trajectory(diffs, new Point(0, 0), new Point(0,0));
@@ -22,7 +21,6 @@ class MotionTrajectory {
         } else {
             trajectory.dy = newDY;
         }
-
     }
 
     Point nextPoint() {

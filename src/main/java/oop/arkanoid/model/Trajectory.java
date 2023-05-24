@@ -1,5 +1,7 @@
 package oop.arkanoid.model;
 
+import static oop.arkanoid.model.GameLevel.Builder.inSegment;
+
 class Trajectory {
 
     double dx;
@@ -21,12 +23,7 @@ class Trajectory {
         if (dy == trajectory.dy && dx == trajectory.dx) {
             return false;
         }
-
-        if (dy == 0) {
-            return inSegment(trajectory.findX(b), possibleValuesX.x() - radius, possibleValuesX.y() + radius);
-        } else {
-            return inSegment(trajectory.findY(b), possibleValuesY.x() - radius, possibleValuesY.y() + radius);
-        }
+        return dy == 0 ? inSegment(trajectory.findX(b), possibleValuesX.x() - radius, possibleValuesX.y() + radius) : inSegment(trajectory.findY(b), possibleValuesY.x() - radius, possibleValuesY.y() + radius);
     }
 
     void recountB(Point position) {
@@ -41,7 +38,5 @@ class Trajectory {
         return dx / dy * (y - b);
     }
 
-    private boolean inSegment(double value, double min, double max) {
-        return value < max && value > min;
-    }
+
 }

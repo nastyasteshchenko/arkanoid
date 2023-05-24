@@ -171,7 +171,7 @@ public class GameLevel {
                     platform.position.x() + platform.size.x() / 2 == ball.motionTrajectory.position.x();
         }
 
-        private boolean inSegment(double a, double b, double x) {
+        static boolean inSegment(double a, double b, double x) {
             return a <= x && x <= b;
         }
 

@@ -2,7 +2,7 @@ package oop.arkanoid.model;
 
 public class Wall extends Barrier {
 
-    WallType type;
+    private final WallType type;
 
     Wall(Point position, Point size, WallType type) {
         super(position, size);
