@@ -137,7 +137,7 @@ public class Presenter {
 
     private void setRecord() {
         if (model.getScore() > records.getAsJsonObject("records").get("level" + numLevel).getAsInt()) {
-            records.getAsJsonObject("records").addProperty("level1", model.getScore());
+            records.getAsJsonObject("records").addProperty("level" + numLevel, model.getScore());
         }
     }
 

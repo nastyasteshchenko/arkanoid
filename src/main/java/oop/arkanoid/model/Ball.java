@@ -49,6 +49,7 @@ class Ball {
                 if (isCollisionWithBottom(barrier) || isCollisionWithTop(barrier)) {
                     if (!hasHorizontalCollision.get()) {
                         motionTrajectory.trajectory.dy = -motionTrajectory.trajectory.dy;
+                        motionTrajectory.trajectory.recountB(motionTrajectory.position);
                     }
                     if (barrier instanceof Destroyable d) {
                         d.onHit();
@@ -57,8 +58,8 @@ class Ball {
                         }
                     } else if (barrier instanceof Platform p) {
                         changeAngleByPlatform(p);
+                        motionTrajectory.trajectory.recountB(motionTrajectory.position);
                     }
-                    motionTrajectory.trajectory.recountB(motionTrajectory.position);
                     hasHorizontalCollision.set(true);
                 }
             } else if (isCollisionWithLeftSide(barrier) || isCollisionWithRightSide(barrier)) {
@@ -68,11 +69,11 @@ class Ball {
                         barriers.remove(d);
                     }
                 }
-                if (!hasVerticalCollision.get()) {
+                if (!hasHorizontalCollision.get()) {
                     motionTrajectory.trajectory.dx = -motionTrajectory.trajectory.dx;
                     motionTrajectory.trajectory.recountB(motionTrajectory.position);
                 }
-                hasVerticalCollision.set(true);
+                hasHorizontalCollision.set(true);
             }
         });
         if (hasVerticalCollision.get() || hasHorizontalCollision.get()) {
@@ -81,28 +82,28 @@ class Ball {
     }
 
     private void changeAngleByPlatform(Platform platform) {
-        double platformCenterX = platform.position.x() + platform.size.x() / motionTrajectory.speed / 2;
         double halfPlatformXSize = platform.size.x() / 2;
+        double platformCenterX = platform.position.x() + halfPlatformXSize;
         motionTrajectory.changeAngle((motionTrajectory.position.x() - platformCenterX) / halfPlatformXSize);
     }
 
     private boolean isCollisionWithBottom(Barrier barrier) {
         return motionTrajectory.position.x() - radius < barrier.position.x() + barrier.size.x() && motionTrajectory.position.x() + radius > barrier.position.x()
-                && Math.abs(motionTrajectory.position.y() - radius - barrier.position.y() - barrier.size.y()) <= motionTrajectory.speed / 2;
+                && Math.abs(motionTrajectory.position.y() - radius - barrier.position.y() - barrier.size.y()) <= Math.abs(motionTrajectory.trajectory.dy) / 2;
     }
 
     private boolean isCollisionWithTop(Barrier barrier) {
         return motionTrajectory.position.x() - radius < barrier.position.x() + barrier.size.x() && motionTrajectory.position.x() + radius > barrier.position.x()
-                && Math.abs(motionTrajectory.position.y() + radius - barrier.position.y()) <= motionTrajectory.speed / 2;
+                && Math.abs(motionTrajectory.position.y() + radius - barrier.position.y()) <= Math.abs(motionTrajectory.trajectory.dy) / 2;
     }
 
     private boolean isCollisionWithLeftSide(Barrier barrier) {
-        return Math.abs(motionTrajectory.position.x() + radius - barrier.position.x()) <= motionTrajectory.speed / 2
+        return Math.abs(motionTrajectory.position.x() + radius - barrier.position.x()) <= Math.abs(motionTrajectory.trajectory.dx) / 2
                 && motionTrajectory.position.y() + radius > barrier.position.y() && motionTrajectory.position.y() - radius < barrier.position.y() + barrier.size.y();
     }
 
     private boolean isCollisionWithRightSide(Barrier barrier) {
-        return Math.abs(motionTrajectory.position.x() - radius - barrier.position.x() - barrier.size.x()) <= 1
+        return Math.abs(motionTrajectory.position.x() - radius - barrier.position.x() - barrier.size.x()) <= Math.abs(motionTrajectory.trajectory.dx) / 2
                 && motionTrajectory.position.y() + radius > barrier.position.y() && motionTrajectory.position.y() - radius < barrier.position.y() + barrier.size.y();
     }
 

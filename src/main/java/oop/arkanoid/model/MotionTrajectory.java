@@ -16,10 +16,11 @@ class MotionTrajectory {
 
     void changeAngle(double dx) {
         trajectory.dx = dx;
+        double newDY = Math.sqrt(speed * speed - dx * dx);
         if (trajectory.dy < 0) {
-            trajectory.dy = -Math.sqrt(speed * speed - trajectory.dx * trajectory.dx);
+            trajectory.dy = -newDY;
         } else {
-            trajectory.dy = Math.sqrt(speed * speed - trajectory.dx * trajectory.dx);
+            trajectory.dy = newDY;
         }
 
     }

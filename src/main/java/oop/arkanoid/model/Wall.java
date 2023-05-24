@@ -10,7 +10,7 @@ public class Wall extends Barrier {
 
         if (type == wallType.TOP) {
             Trajectory topTrajectory = new Trajectory(new Point(1, 0), new Point(position.x(), position.x() + size.x()), new Point(position.y(), position.y() + size.y()));
-            topTrajectory.recountB(new Point(position.x(), position.y()));
+            topTrajectory.b = position.y();
             trajectories.put(TrajectoryType.BOTTOM_SIDE, topTrajectory);
 
         } else {

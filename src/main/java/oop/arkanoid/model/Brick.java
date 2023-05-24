@@ -13,11 +13,11 @@ class Brick extends Barrier implements Destroyable {
         score = health.getValue() * 5;
 
         Trajectory bottomTrajectory = new Trajectory(new Point(1, 0), new Point(position.x(), position.x() + size.x()), new Point(position.y() + size.y(), position.y() + size.y()));
-        bottomTrajectory.recountB(new Point(position.x(), position.y() + size.y()));
+        bottomTrajectory.b = position.y() + size.y();
         trajectories.put(TrajectoryType.BOTTOM_SIDE, bottomTrajectory);
 
         Trajectory topTrajectory = new Trajectory(new Point(1, 0), new Point(position.x(), position.x() + size.x()), new Point(position.y(), position.y()));
-        topTrajectory.recountB(new Point(position.x(), position.y()));
+        topTrajectory.b = position().y();
         trajectories.put(TrajectoryType.TOP_SIDE, topTrajectory);
 
         Trajectory leftSideTrajectory = new Trajectory(new Point(0, 1), new Point(position.x(), position.x()), new Point(position.y(), position.y() + size.y()));
@@ -48,12 +48,13 @@ class Brick extends Barrier implements Destroyable {
         }
     }
 
+    //TODO подумать над вверх/вниз
     @Override
     CollisionResult hasVisibleCollisions(Trajectory trajectory, double radius) {
-        if (trajectories.get(TrajectoryType.LEFT_SIDE).hasIntersection(trajectory, radius) || trajectories.get(TrajectoryType.RIGHT_SIDE).hasIntersection(trajectory, radius)) {
-            return CollisionResult.NO_ANGLE_CHANGE;
-        } else if (trajectories.get(TrajectoryType.BOTTOM_SIDE).hasIntersection(trajectory, radius) || trajectories.get(TrajectoryType.TOP_SIDE).hasIntersection(trajectory, radius)) {
+        if (trajectories.get(TrajectoryType.BOTTOM_SIDE).hasIntersection(trajectory, radius) || trajectories.get(TrajectoryType.TOP_SIDE).hasIntersection(trajectory, radius)) {
             return CollisionResult.NEED_TO_CHANGE_ANGLE;
+        } else if (trajectories.get(TrajectoryType.LEFT_SIDE).hasIntersection(trajectory, radius) || trajectories.get(TrajectoryType.RIGHT_SIDE).hasIntersection(trajectory, radius)) {
+            return CollisionResult.NO_ANGLE_CHANGE;
         }
         return null;
     }
