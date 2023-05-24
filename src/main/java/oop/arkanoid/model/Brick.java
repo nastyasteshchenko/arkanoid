@@ -50,13 +50,8 @@ class Brick extends Barrier implements Destroyable {
 
     //TODO подумать над вверх/вниз
     @Override
-    CollisionResult hasVisibleCollisions(Trajectory trajectory, double radius) {
-        if (trajectories.get(TrajectoryType.BOTTOM_SIDE).hasIntersection(trajectory, radius) || trajectories.get(TrajectoryType.TOP_SIDE).hasIntersection(trajectory, radius)) {
-            return CollisionResult.NEED_TO_CHANGE_ANGLE;
-        } else if (trajectories.get(TrajectoryType.LEFT_SIDE).hasIntersection(trajectory, radius) || trajectories.get(TrajectoryType.RIGHT_SIDE).hasIntersection(trajectory, radius)) {
-            return CollisionResult.NO_ANGLE_CHANGE;
-        }
-        return null;
+    boolean hasVisibleCollisions(Trajectory trajectory, double radius) {
+        return trajectories.get(TrajectoryType.BOTTOM_SIDE).hasIntersection(trajectory, radius) || trajectories.get(TrajectoryType.TOP_SIDE).hasIntersection(trajectory, radius) || trajectories.get(TrajectoryType.LEFT_SIDE).hasIntersection(trajectory, radius) || trajectories.get(TrajectoryType.RIGHT_SIDE).hasIntersection(trajectory, radius);
     }
 
 }

@@ -1,10 +1,5 @@
 package oop.arkanoid.model;
 
-enum WallType {
-    LEFT,
-    RIGHT,
-    TOP
-}
 public class Wall extends Barrier {
 
     WallType type;
@@ -30,24 +25,20 @@ public class Wall extends Barrier {
     }
 
     @Override
-    CollisionResult hasVisibleCollisions(Trajectory trajectory, double radius) {
+    boolean hasVisibleCollisions(Trajectory trajectory, double radius) {
         switch (type) {
             case RIGHT -> {
-                if (trajectories.get(TrajectoryType.LEFT_SIDE).hasIntersection(trajectory, radius)) {
-                    return CollisionResult.NO_ANGLE_CHANGE;
-                }
+                return trajectories.get(TrajectoryType.LEFT_SIDE).hasIntersection(trajectory, radius);
             }
             case LEFT -> {
-                if (trajectories.get(TrajectoryType.RIGHT_SIDE).hasIntersection(trajectory, radius)) {
-                    return CollisionResult.NO_ANGLE_CHANGE;
-                }
+                return trajectories.get(TrajectoryType.RIGHT_SIDE).hasIntersection(trajectory, radius);
             }
             case TOP -> {
-                if (trajectories.get(TrajectoryType.BOTTOM_SIDE).hasIntersection(trajectory, radius)) {
-                    return CollisionResult.NEED_TO_CHANGE_ANGLE;
-                }
+                return trajectories.get(TrajectoryType.BOTTOM_SIDE).hasIntersection(trajectory, radius);
+            }
+            default -> {
+                return false;
             }
         }
-        return null;
     }
 }
