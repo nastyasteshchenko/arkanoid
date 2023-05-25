@@ -60,7 +60,7 @@ public class Presenter {
     static void checkGeneratingAllLevels() {
         for (; currentLevel < AMOUNT_OF_LEVELS + 1; currentLevel++) {
             try {
-                model = GameLevel.initLevel(loadFileWithParams());
+                model = GameLevel.initLevel(loadFileWithParamsForLevel());
             } catch (GeneratingGameException e) {
                 loadErrorScene(e.getMessage());
             }
@@ -158,33 +158,15 @@ public class Presenter {
     }
 
     private void startLevel() {
-        JsonObject paramsForLevel = loadFileWithParams();
+        JsonObject paramsForLevel = loadFileWithParamsForLevel();
 
         try {
             model = GameLevel.initLevel(paramsForLevel);
         } catch (GeneratingGameException e) {
             loadErrorScene(e.getMessage());
         }
-        LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
 
-        builder.ball(model.getBallPosition(), model.getBallRadius())
-                .platform(model.getPlatformPosition(), model.getPlatformSize())
-                .gameScene(model.getSceneSize());
-
-        Point brickSize = model.getBrickSize();
-        ArrayList<Point> standardBricks = model.getStandardBricks();
-
-        standardBricks.forEach(b -> builder.addStandardBrick(b, brickSize));
-
-        ArrayList<Point> immortalBricks = model.getImmortalBricks();
-        immortalBricks.forEach(b -> builder.addImmortalBrick(b, brickSize));
-
-        ArrayList<Point> doubleHitBricks = model.getDoubleHitBricks();
-        doubleHitBricks.forEach(b -> builder.addDoubleHitBrick(b, brickSize));
-
-        builder.highScore(records.getAsJsonObject("records").get("level" + currentLevel).getAsInt());
-
-        gameView = builder.build();
+        setGameView(paramsForLevel);
 
         Arkanoid.changeScene(gameView.getGameScene());
 
@@ -210,7 +192,7 @@ public class Presenter {
         return new Scene(FXMLLoader.load(Objects.requireNonNull(Presenter.class.getResource(fileName))));
     }
 
-    private static JsonObject loadFileWithParams() {
+    private static JsonObject loadFileWithParamsForLevel() {
         String jsonFileName = "src/main/resources/oop/arkanoid/level" + currentLevel + ".json";
 
         JsonObject paramsForLevel = new JsonObject();
@@ -233,6 +215,29 @@ public class Presenter {
 //TODO some report in file?
         }
 
+    }
+
+    private static void setGameView(JsonObject paramsForLevel) {
+        LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
+
+        builder.ball(model.getBallPosition(), model.getBallRadius())
+                .platform(model.getPlatformPosition(), model.getPlatformSize())
+                .gameScene(model.getSceneSize());
+
+        Point brickSize = model.getBrickSize();
+        ArrayList<Point> standardBricks = model.getStandardBricks();
+
+        standardBricks.forEach(b -> builder.addStandardBrick(b, brickSize));
+
+        ArrayList<Point> immortalBricks = model.getImmortalBricks();
+        immortalBricks.forEach(b -> builder.addImmortalBrick(b, brickSize));
+
+        ArrayList<Point> doubleHitBricks = model.getDoubleHitBricks();
+        doubleHitBricks.forEach(b -> builder.addDoubleHitBrick(b, brickSize));
+
+        builder.highScore(records.getAsJsonObject("records").get("level" + currentLevel).getAsInt());
+
+        gameView = builder.build();
     }
 
 }

@@ -58,7 +58,6 @@ public class LevelView {
         public Builder gameScene(Point size) {
             gamePane.setOpacity(0.5);
             gameScene = new Scene(gamePane, size.x(), size.y(), Color.valueOf(paramsForLevel.getAsJsonObject("scene").get("color").getAsString()));
-
             return this;
         }
 
@@ -183,8 +182,6 @@ public class LevelView {
             this.score.setFont(Font.font(score.get("font").getAsString()));
             this.score.setStyle("-fx-font-size: " + score.get("fontSize").getAsString());
         }
-
-
     }
 
     public void drawScore(int value) {
@@ -205,7 +202,6 @@ public class LevelView {
     }
 
     public static void setRecordText(Text text, JsonObject params, String level) {
-
         JsonObject scoreText = params.getAsJsonObject("scoreLabel").getAsJsonObject(level);
         text.setX(scoreText.get("x").getAsDouble());
         text.setY(scoreText.get("y").getAsDouble());
@@ -221,6 +217,7 @@ public class LevelView {
         error.setX(25);
         error.setY(100);
     }
+
     public Scene getGameScene() {
         return gameScene;
     }

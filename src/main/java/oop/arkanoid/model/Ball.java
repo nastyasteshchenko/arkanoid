@@ -5,7 +5,7 @@ import java.util.List;
 
 class Ball {
     final double radius;
-    MotionTrajectory motionTrajectory;
+    final MotionTrajectory motionTrajectory;
     List<Barrier> visibleCollisions = new ArrayList<>();
 
     Ball(Point position, double radius) {
