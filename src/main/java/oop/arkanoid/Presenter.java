@@ -84,7 +84,6 @@ public class Presenter {
     }
 
     static void checkGeneratingAllLevels() {
-
         for (; numLevel < AMOUNT_OF_LEVELS + 1; numLevel++) {
             try {
                 model = GameLevel.initLevel(loadFileWithParams());
@@ -135,16 +134,16 @@ public class Presenter {
 
     }
 
-    private static void gameLose() {
+    private void gameLose() {
         prepareForGameOver(gameLoseScene);
     }
 
-    private static void gameWin() {
+    private void gameWin() {
         prepareForGameOver(gameWinScene);
         numLevel++;
     }
 
-    private static void prepareForGameOver(Scene gameWinScene) {
+    private void prepareForGameOver(Scene gameWinScene) {
         animation.stop();
         setRecord();
         gameIsStarted = false;
@@ -157,13 +156,13 @@ public class Presenter {
         Arkanoid.changeScene(gameWinScene);
     }
 
-    private static void setRecord() {
+    private void setRecord() {
         if (model.getScore() > records.getAsJsonObject("records").get("level" + numLevel).getAsInt()) {
             records.getAsJsonObject("records").addProperty("level" + numLevel, model.getScore());
         }
     }
 
-    private static void startLevel() {
+    private void startLevel() {
         JsonObject paramsForLevel = loadFileWithParams();
 
         try {
@@ -171,26 +170,26 @@ public class Presenter {
         } catch (GeneratingGameException e) {
             loadErrorScene(e.getMessage());
         }
-            LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
+        LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
 
-            builder.ball(model.getBallPosition(), model.getBallRadius())
-                    .platform(model.getPlatformPosition(), model.getPlatformSize())
-                    .gameScene(model.getSceneSize());
+        builder.ball(model.getBallPosition(), model.getBallRadius())
+                .platform(model.getPlatformPosition(), model.getPlatformSize())
+                .gameScene(model.getSceneSize());
 
-            Point brickSize = model.getBrickSize();
-            ArrayList<Point> standardBricks = model.getStandardBricks();
+        Point brickSize = model.getBrickSize();
+        ArrayList<Point> standardBricks = model.getStandardBricks();
 
-            standardBricks.forEach(b -> builder.addStandardBrick(b, brickSize));
+        standardBricks.forEach(b -> builder.addStandardBrick(b, brickSize));
 
-            ArrayList<Point> immortalBricks = model.getImmortalBricks();
-            immortalBricks.forEach(b -> builder.addImmortalBrick(b, brickSize));
+        ArrayList<Point> immortalBricks = model.getImmortalBricks();
+        immortalBricks.forEach(b -> builder.addImmortalBrick(b, brickSize));
 
-            ArrayList<Point> doubleHitBricks = model.getDoubleHitBricks();
-            doubleHitBricks.forEach(b -> builder.addDoubleHitBrick(b, brickSize));
+        ArrayList<Point> doubleHitBricks = model.getDoubleHitBricks();
+        doubleHitBricks.forEach(b -> builder.addDoubleHitBrick(b, brickSize));
 
-            builder.highScore(records.getAsJsonObject("records").get("level" + numLevel).getAsInt());
+        builder.highScore(records.getAsJsonObject("records").get("level" + numLevel).getAsInt());
 
-            gameView = builder.build();
+        gameView = builder.build();
 
         Arkanoid.changeScene(gameView.getGameScene());
 
@@ -198,7 +197,7 @@ public class Presenter {
 
     }
 
-    private static void startAnimation() {
+    private void startAnimation() {
         animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
             if (gameIsStarted) {
                 gameView.drawBall(model.nextBallPosition());
