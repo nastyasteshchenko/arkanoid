@@ -30,17 +30,15 @@ class Ball {
         barriers.forEach(barrier -> {
             if (barrier instanceof Platform) {
                 visibleCollisions.add(barrier);
-            } else {
-                if (barrier.hasVisibleCollisions(motionTrajectory.trajectory, radius)) {
-                    visibleCollisions.add(barrier);
-                }
+            } else if (barrier.hasVisibleCollisions(motionTrajectory.trajectory, radius)) {
+                visibleCollisions.add(barrier);
             }
         });
     }
 
     private void checkCollisions(List<Barrier> barriers) {
         boolean hasCollision = false;
-        for (Barrier barrier: visibleCollisions){
+        for (Barrier barrier : visibleCollisions) {
             if (isCollisionWithBottom(barrier) || isCollisionWithTop(barrier)) {
                 if (!hasCollision) {
                     motionTrajectory.trajectory.dy = -motionTrajectory.trajectory.dy;
@@ -48,14 +46,14 @@ class Ball {
                         changeAngleAccordingToPlatform(p);
                     }
                     motionTrajectory.trajectory.recountB(motionTrajectory.position);
-                    hasCollision=true;
+                    hasCollision = true;
                 }
                 handleCollision(barriers, barrier);
             } else if (isCollisionWithLeftSide(barrier) || isCollisionWithRightSide(barrier)) {
                 if (!hasCollision) {
                     motionTrajectory.trajectory.dx = -motionTrajectory.trajectory.dx;
                     motionTrajectory.trajectory.recountB(motionTrajectory.position);
-                    hasCollision= true;
+                    hasCollision = true;
                 }
                 handleCollision(barriers, barrier);
             }

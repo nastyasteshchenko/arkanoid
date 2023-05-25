@@ -14,8 +14,7 @@ abstract class Barrier {
 
     final Point position;
     final Point size;
-
-    Map<StraightSides, Trajectory> trajectories = new HashMap<>();
+    final Map<StraightSides, Trajectory> trajectories = new HashMap<>();
 
     Barrier(Point position, Point size) {
         this.position = position;
