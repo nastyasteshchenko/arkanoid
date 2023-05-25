@@ -19,6 +19,7 @@ public class Arkanoid extends Application {
         Arkanoid.stage = stage;
         Arkanoid.stage.setResizable(false);
         Presenter.loadResources();
+        Presenter.checkGeneratingAllLevels();
         stage.show();
     }
 
