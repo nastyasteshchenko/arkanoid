@@ -35,10 +35,10 @@ public class GameLevel {
         return platform.position.x();
     }
 
-    public GameStates gameState(){
-        if(bricks.isEmpty()){
+    public GameStates gameState() {
+        if (bricks.isEmpty()) {
             return GameStates.GAME_WIN;
-        } else if (ball.motionTrajectory.position.y()>scene.y()){
+        } else if (ball.motionTrajectory.position.y() > scene.y()) {
             return GameStates.GAME_LOSE;
         } else {
             return GameStates.GAME_IN_PROCESS;
@@ -106,7 +106,7 @@ public class GameLevel {
         private Ball ball;
         private final Point scene;
 
-        Builder(Point scene){
+        Builder(Point scene) {
             this.scene = scene;
         }
 
@@ -141,7 +141,7 @@ public class GameLevel {
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        Builder addWall(Point position, Point size, WallType type){
+        Builder addWall(Point position, Point size, WallType type) {
             Wall wall = new Wall(position, size, type);
             barriers.add(wall);
             return this;
@@ -151,7 +151,7 @@ public class GameLevel {
 
             checkIfBallOnPlatform();
             checkUninitObjects();
-            //в самом начале генерации всей игры проходить по всем файлам и проверять нормально загружается игра или нет
+
             return new GameLevel(ball, platform, bricks, barriers, scene);
         }
 
@@ -172,7 +172,7 @@ public class GameLevel {
         }
 
         private void checkIfOutOfScene(Point position, Point size) throws GeneratingGameException {
-            if (!inSegment(0, scene.x(), position.x()) || !inSegment(0, scene.y(), position.y()) || !inSegment(0, scene.x(), position.x() + size.x()) || !inSegment(0, scene.y(), position.y() + size.y())){
+            if (!inSegment(0, scene.x(), position.x()) || !inSegment(0, scene.y(), position.y()) || !inSegment(0, scene.x(), position.x() + size.x()) || !inSegment(0, scene.y(), position.y() + size.y())) {
                 throw GeneratingGameException.outOfScene();
             }
         }

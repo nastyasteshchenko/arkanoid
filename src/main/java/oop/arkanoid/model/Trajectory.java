@@ -7,7 +7,6 @@ class Trajectory {
     double dx;
     double dy;
     double b;
-
     private final Point possibleValuesX;
     private final Point possibleValuesY;
 
@@ -29,11 +28,11 @@ class Trajectory {
         b = position.y() - dy * position.x() / dx;
     }
 
-    double findY(double x) {
+    private double findY(double x) {
         return dy * x / dx + b;
     }
 
-    double findX(double y) {
+    private double findX(double y) {
         return dx / dy * (y - b);
     }
 
