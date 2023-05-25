@@ -6,7 +6,7 @@ import java.util.List;
 class Ball {
     final double radius;
     final MotionTrajectory motionTrajectory;
-    List<Barrier> visibleCollisions = new ArrayList<>();
+    private final List<Barrier> visibleCollisions = new ArrayList<>();
 
     Ball(Point position, double radius) {
         this.radius = radius;
