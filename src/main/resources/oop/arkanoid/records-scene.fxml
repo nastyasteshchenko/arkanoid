@@ -26,4 +26,9 @@
          <Font name="Droid Sans Mono" size="23.0" />
       </font>
    </Text>
+    <Text fill="#680707" layoutX="66.0" layoutY="462.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The third Level:" textAlignment="CENTER" wrappingWidth="484.748291015625">
+        <font>
+            <Font name="Droid Sans Mono" size="23.0" />
+        </font>
+    </Text>
 </AnchorPane>
