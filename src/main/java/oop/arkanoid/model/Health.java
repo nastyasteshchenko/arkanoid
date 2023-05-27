@@ -21,7 +21,7 @@ class Health {
 
     static class Immortal extends Health {
         Immortal() {
-            super((byte) 1);
+            super(1);
         }
 
         @Override
@@ -29,7 +29,7 @@ class Health {
         }
     }
 
-    public int getValue(){
+    int getValue() {
         return value;
     }
 }

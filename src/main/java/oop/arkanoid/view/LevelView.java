@@ -1,5 +1,6 @@
 package oop.arkanoid.view;
 
+import com.google.gson.JsonObject;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,11 +13,8 @@ import javafx.scene.text.Text;
 import oop.arkanoid.Presenter;
 import oop.arkanoid.model.*;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class LevelView {
 
@@ -40,14 +38,14 @@ public class LevelView {
         private final List<Rectangle> bricks = new ArrayList<>();
         private Rectangle platform;
         private Circle ball;
-        private final Properties properties;
+        private final JsonObject paramsForLevel;
         private final Pane gamePane = new Pane();
         private Scene gameScene;
         private Label score;
         private int highScore;
 
-        public Builder(Properties properties) {
-            this.properties = properties;
+        public Builder(JsonObject jsonObject) {
+            this.paramsForLevel = jsonObject;
         }
 
         @SuppressWarnings("UnusedReturnValue")
@@ -59,8 +57,7 @@ public class LevelView {
         @SuppressWarnings("UnusedReturnValue")
         public Builder gameScene(Point size) {
             gamePane.setOpacity(0.5);
-            gameScene = new Scene(gamePane, size.x(), size.y(), Color.valueOf(properties.getProperty("scene.color")));
-
+            gameScene = new Scene(gamePane, size.x(), size.y(), Color.valueOf(paramsForLevel.getAsJsonObject("scene").get("color").getAsString()));
             return this;
         }
 
@@ -99,7 +96,7 @@ public class LevelView {
         @SuppressWarnings("UnusedReturnValue")
         public Builder addImmortalBrick(Point position, Point size) {
             Rectangle brick = new Rectangle(position.x(), position.y(), size.x(), size.y());
-            setIndestructibleBrickParams(brick);
+            setImmortalBrickParams(brick);
             bricks.add(brick);
             gamePane.getChildren().add(brick);
             return this;
@@ -126,14 +123,15 @@ public class LevelView {
         }
 
         private void setPlatformParams() {
-            platform.setFill(Color.valueOf(getPropertyInString("platform.color")));
+            platform.setFill(Color.valueOf(paramsForLevel.getAsJsonObject("platform").get("color").getAsString()));
         }
 
         private void setHighScoreLabelParams(Label highScoreLabel) {
             highScoreLabel.setTranslateX(10);
             highScoreLabel.setTranslateY(gameScene.getHeight() - 40);
-            highScoreLabel.setFont(Font.font(getPropertyInString("score.font")));
-            highScoreLabel.setStyle("-fx-font-size: " + getPropertyInString("score.font.size"));
+            JsonObject score = paramsForLevel.getAsJsonObject("score");
+            highScoreLabel.setFont(Font.font(score.get("font").getAsString()));
+            highScoreLabel.setStyle("-fx-font-size: " + score.get("fontSize").getAsString());
         }
 
         private void setPauseButtonParams(Button pauseButton) {
@@ -142,47 +140,48 @@ public class LevelView {
             pauseButton.setTranslateX(gameScene.getWidth() - 75);
             pauseButton.setTranslateY(gameScene.getHeight() - 50);
             pauseButton.setPrefSize(60, 40);
-            pauseButton.setStyle("-fx-font-size: " + getPropertyInString("pause.button.font.size"));
-            pauseButton.setFont(Font.font(getPropertyInString("pause.button.font")));
-            pauseButton.setTextFill(Color.valueOf(properties.getProperty("pause.button.text.color")));
-            pauseButton.setStyle("-fx-background-color: " + getPropertyInString("pause.button.color"));
+            JsonObject button = paramsForLevel.getAsJsonObject("pauseButton");
+            pauseButton.setStyle("-fx-font-size: " + button.get("fontSize").getAsString());
+            pauseButton.setFont(Font.font(button.get("font").getAsString()));
+            pauseButton.setTextFill(Color.valueOf(button.get("textColor").getAsString()));
+            pauseButton.setStyle("-fx-background-color: " + button.get("color").getAsString());
         }
 
-        private void setIndestructibleBrickParams(Rectangle brick) {
-            brick.setFill(Color.valueOf(getPropertyInString("immortal.brick.color")));
-            brick.setStroke(Color.valueOf(getPropertyInString("immortal.brick.stroke.color")));
-            brick.setStyle("-fx-stroke-width: " + getPropertyInString("immortal.brick.stroke.width"));
+        private void setImmortalBrickParams(Rectangle brick) {
+            JsonObject immortalBrick = paramsForLevel.getAsJsonObject("bricks").getAsJsonObject("immortalBrick");
+            brick.setFill(Color.valueOf(immortalBrick.get("color").getAsString()));
+            brick.setStroke(Color.valueOf(immortalBrick.get("strokeColor").getAsString()));
+            brick.setStyle("-fx-stroke-width: " + immortalBrick.get("strokeWidth").getAsString());
         }
 
         private void setDoubleHitBrickParams(Rectangle brick) {
-            brick.setFill(Color.valueOf(getPropertyInString("double.hit.brick.color")));
-            brick.setStroke(Color.valueOf(getPropertyInString("double.hit.brick.stroke.color")));
-            brick.setStyle("-fx-stroke-width: " + getPropertyInString("double.hit.brick.stroke.width"));
+            JsonObject doubleHitBrick = paramsForLevel.getAsJsonObject("bricks").getAsJsonObject("doubleHitBrick");
+            brick.setFill(Color.valueOf(doubleHitBrick.get("color").getAsString()));
+            brick.setStroke(Color.valueOf(doubleHitBrick.get("strokeColor").getAsString()));
+            brick.setStyle("-fx-stroke-width: " + doubleHitBrick.get("strokeWidth").getAsString());
         }
 
         private void setStandardBrickParams(Rectangle brick) {
-            brick.setFill(Color.valueOf(getPropertyInString("standard.brick.color")));
-            brick.setStroke(Color.valueOf(getPropertyInString("standard.brick.stroke.color")));
-            brick.setStyle("-fx-stroke-width: " + getPropertyInString("standard.brick.stroke.width"));
+            JsonObject standardBrick = paramsForLevel.getAsJsonObject("bricks").getAsJsonObject("standardBrick");
+            brick.setFill(Color.valueOf(standardBrick.get("color").getAsString()));
+            brick.setStroke(Color.valueOf(standardBrick.get("strokeColor").getAsString()));
+            brick.setStyle("-fx-stroke-width: " + standardBrick.get("strokeWidth").getAsString());
         }
 
         private void setBallParams() {
-            ball.setFill(Color.valueOf(getPropertyInString("ball.color")));
-            ball.setStroke(Color.valueOf(getPropertyInString("ball.stroke.color")));
-            ball.setStyle("-fx-stroke-width: " + getPropertyInString("ball.stroke.width"));
+            JsonObject ball = paramsForLevel.getAsJsonObject("ball");
+            this.ball.setFill(Color.valueOf(ball.get("color").getAsString()));
+            this.ball.setStroke(Color.valueOf(ball.get("strokeColor").getAsString()));
+            this.ball.setStyle("-fx-stroke-width: " + ball.get("strokeWidth").getAsString());
         }
 
         private void setScoreParams() {
             score.setTranslateX(200);
             score.setTranslateY(gameScene.getHeight() - 40);
-            score.setFont(Font.font(getPropertyInString("score.font")));
-            score.setStyle("-fx-font-size: " + getPropertyInString("score.font.size"));
+            JsonObject score = paramsForLevel.getAsJsonObject("score");
+            this.score.setFont(Font.font(score.get("font").getAsString()));
+            this.score.setStyle("-fx-font-size: " + score.get("fontSize").getAsString());
         }
-
-        private String getPropertyInString(String key) {
-            return properties.getProperty(key);
-        }
-
     }
 
     public void drawScore(int value) {
@@ -202,18 +201,21 @@ public class LevelView {
         removeBrick(bricks.stream().filter(i -> point.x() == i.getX() && point.y() == i.getY()).findFirst().get());
     }
 
-    public static void setRecordText(Text text, String level) {
-        Properties properties = new Properties();
-        try (FileInputStream fieldView = new FileInputStream("src/main/resources/oop/arkanoid/level" + level + ".properties")) {
-            properties.load(fieldView);
-        } catch (IOException e) {
-//надо что-то написать потом
-        }
-        text.setX(Double.parseDouble(properties.getProperty("score.x")));
-        text.setY(Double.parseDouble(properties.getProperty("score.y")));
-        text.setFont(Font.font(properties.getProperty("score.font")));
-        text.setFill(Color.valueOf(properties.getProperty("score.color")));
-        text.setStyle("-fx-font-size: " + properties.getProperty("score.font.size"));
+    public static void setRecordText(Text text, JsonObject params, String level) {
+        JsonObject scoreText = params.getAsJsonObject("scoreLabel").getAsJsonObject(level);
+        text.setX(scoreText.get("x").getAsDouble());
+        text.setY(scoreText.get("y").getAsDouble());
+        text.setFont(Font.font(scoreText.get("font").getAsString()));
+        text.setFill(Color.valueOf(scoreText.get("color").getAsString()));
+        text.setStyle("-fx-font-size: " + scoreText.get("fontSize").getAsString());
+    }
+
+    public static void setErrorText(Text error) {
+        error.setFont(Font.font("Droid Sans Mono"));
+        error.setFill(Color.valueOf("#680707"));
+        error.setStyle("-fx-font-size: 16");
+        error.setX(25);
+        error.setY(100);
     }
 
     public Scene getGameScene() {

@@ -7,7 +7,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-//TODO почитать про наблюдателя
 public class Notifications {
 
     private static Notifications instance;
