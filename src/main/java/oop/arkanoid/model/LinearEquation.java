@@ -8,11 +8,11 @@ interface LinearEquation {
 
     LinearEquation rotate(Point currPoint);
 
-    static LinearEquation linearEquation(double angle, double b) {
-        return new BaseLinearEquation(angle, b);
+    static LinearEquation linearEquation(double angle, double b, Point xBorders) {
+        return new BaseLinearEquation(angle, b, xBorders);
     }
 
-    static LinearEquation xlinearMotionEquation(double x) {
-        return new XLinearEquation(x);
+    static LinearEquation xlinearMotionEquation(double x, Point yBorders) {
+        return new XLinearEquation(x, yBorders);
     }
 }
