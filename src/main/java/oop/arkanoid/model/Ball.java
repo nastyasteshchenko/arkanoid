@@ -1,97 +1,156 @@
+//package oop.arkanoid.model;
+//
+//import java.util.ArrayList;
+//import java.util.List;
+//
+//class Ball {
+//    final double radius;
+//    final MotionTrajectory motionTrajectory;
+//    private final List<Barrier> visibleCollisions = new ArrayList<>();
+//
+//    Ball(Point position, double radius) {
+//        this.radius = radius;
+//        motionTrajectory = new MotionTrajectory(new Point(1, 1), position);
+//    }
+//
+//    Point move(List<Barrier> barriers) {
+//        if (visibleCollisions.isEmpty()) {
+//            detectVisibleCollisions(barriers);
+//        }
+//        checkCollisions(barriers);
+//        return motionTrajectory.nextPoint();
+//    }
+//
+//    boolean isCollisionWithTop(Barrier barrier) {
+//        return motionTrajectory.position.x() - radius <= barrier.position.x() + barrier.size.x() && motionTrajectory.position.x() + radius >= barrier.position.x()
+//                && Math.abs(motionTrajectory.position.y() + radius - barrier.position.y()) <= Math.abs(motionTrajectory.trajectory.dy) / 2;
+//    }
+//
+//    private void detectVisibleCollisions(List<Barrier> barriers) {
+//        barriers.forEach(barrier -> {
+//            if (barrier instanceof Platform) {
+//                visibleCollisions.add(barrier);
+//            } else if (barrier.hasVisibleCollisions(motionTrajectory.trajectory, radius)) {
+//                visibleCollisions.add(barrier);
+//            }
+//        });
+//    }
+//
+//    private void checkCollisions(List<Barrier> barriers) {
+//        boolean hasCollision = false;
+//        for (Barrier barrier : visibleCollisions) {
+//            if (isCollisionWithBottom(barrier) || isCollisionWithTop(barrier)) {
+//                if (!hasCollision) {
+//                    motionTrajectory.trajectory.dy = -motionTrajectory.trajectory.dy;
+//                    if (barrier instanceof Platform p) {
+//                        changeAngleAccordingToPlatform(p);
+//                    }
+//                    motionTrajectory.trajectory.recountB(motionTrajectory.position);
+//                    hasCollision = true;
+//                }
+//                handleCollision(barriers, barrier);
+//            } else if (isCollisionWithLeftSide(barrier) || isCollisionWithRightSide(barrier)) {
+//                if (!hasCollision) {
+//                    motionTrajectory.trajectory.dx = -motionTrajectory.trajectory.dx;
+//                    motionTrajectory.trajectory.recountB(motionTrajectory.position);
+//                    hasCollision = true;
+//                }
+//                handleCollision(barriers, barrier);
+//            }
+//        }
+//        if (hasCollision) {
+//            visibleCollisions.clear();
+//        }
+//    }
+//
+//    private static void handleCollision(List<Barrier> barriers, Barrier barrier) {
+//        if (barrier instanceof Destroyable d) {
+//            d.onHit();
+//            if (!d.isAlive()) {
+//                barriers.remove(d);
+//            }
+//        }
+//    }
+//
+//    private void changeAngleAccordingToPlatform(Platform platform) {
+//        double halfPlatformXSize = platform.size.x() / 2;
+//        double platformCenterX = platform.position.x() + halfPlatformXSize;
+//        motionTrajectory.changeAngle((motionTrajectory.position.x() - platformCenterX) / halfPlatformXSize + 0.1);
+//    }
+//
+//    private boolean isCollisionWithBottom(Barrier barrier) {
+//        return motionTrajectory.position.x() - radius <= barrier.position.x() + barrier.size.x() && motionTrajectory.position.x() + radius >= barrier.position.x()
+//                && Math.abs(motionTrajectory.position.y() - radius - barrier.position.y() - barrier.size.y()) <= Math.abs(motionTrajectory.trajectory.dy) / 2;
+//    }
+//
+//    private boolean isCollisionWithLeftSide(Barrier barrier) {
+//        return Math.abs(motionTrajectory.position.x() + radius - barrier.position.x()) <= Math.abs(motionTrajectory.trajectory.dx) / 2
+//                && motionTrajectory.position.y() + radius >= barrier.position.y() && motionTrajectory.position.y() - radius <= barrier.position.y() + barrier.size.y();
+//    }
+//
+//    private boolean isCollisionWithRightSide(Barrier barrier) {
+//        return Math.abs(motionTrajectory.position.x() - radius - barrier.position.x() - barrier.size.x()) <= Math.abs(motionTrajectory.trajectory.dx) / 2
+//                && motionTrajectory.position.y() + radius >= barrier.position.y() && motionTrajectory.position.y() - radius <= barrier.position.y() + barrier.size.y();
+//    }
+//
+//}
+//
+
 package oop.arkanoid.model;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 class Ball {
     final double radius;
-    final MotionTrajectory motionTrajectory;
-    private final List<Barrier> visibleCollisions = new ArrayList<>();
 
-    Ball(Point position, double radius) {
+    Point position;
+    LinearMotion motion;
+
+    Ball(double radius, Point startPos, LinearMotion startMotion) {
         this.radius = radius;
-        motionTrajectory = new MotionTrajectory(new Point(1, 1), position);
+        this.position = startPos;
+        this.motion = startMotion;
     }
 
-    Point move(List<Barrier> barriers) {
-        if (visibleCollisions.isEmpty()) {
-            detectVisibleCollisions(barriers);
-        }
-        checkCollisions(barriers);
-        return motionTrajectory.nextPoint();
+    Point move(double step, List<Barrier> barriers) {
+        detectCollisions(barriers);
+
+        motion = motion.changeStepIfNeeded(step);
+
+        Point newPosition = motion.nextPoint();
+        this.position = newPosition;
+        return newPosition;
     }
 
-    boolean isCollisionWithTop(Barrier barrier) {
-        return motionTrajectory.position.x() - radius <= barrier.position.x() + barrier.size.x() && motionTrajectory.position.x() + radius >= barrier.position.x()
-                && Math.abs(motionTrajectory.position.y() + radius - barrier.position.y()) <= Math.abs(motionTrajectory.trajectory.dy) / 2;
-    }
-
-    private void detectVisibleCollisions(List<Barrier> barriers) {
-        barriers.forEach(barrier -> {
-            if (barrier instanceof Platform) {
-                visibleCollisions.add(barrier);
-            } else if (barrier.hasVisibleCollisions(motionTrajectory.trajectory, radius)) {
-                visibleCollisions.add(barrier);
+    private void detectCollisions(List<Barrier> barriers) {
+        CircleEquation circleEquation = new CircleEquation(position, radius);
+        // TODO detect one barrier if there are several collisions
+        for (Barrier barrier : barriers) {
+            Barrier.CollisionPlace collision = barrier.findCollision(circleEquation);
+            if (collision == null) {
+                continue;
             }
-        });
-    }
-
-    private void checkCollisions(List<Barrier> barriers) {
-        boolean hasCollision = false;
-        for (Barrier barrier : visibleCollisions) {
-            if (isCollisionWithBottom(barrier) || isCollisionWithTop(barrier)) {
-                if (!hasCollision) {
-                    motionTrajectory.trajectory.dy = -motionTrajectory.trajectory.dy;
-                    if (barrier instanceof Platform p) {
-                        changeAngleAccordingToPlatform(p);
-                    }
-                    motionTrajectory.trajectory.recountB(motionTrajectory.position);
-                    hasCollision = true;
-                }
-                handleCollision(barriers, barrier);
-            } else if (isCollisionWithLeftSide(barrier) || isCollisionWithRightSide(barrier)) {
-                if (!hasCollision) {
-                    motionTrajectory.trajectory.dx = -motionTrajectory.trajectory.dx;
-                    motionTrajectory.trajectory.recountB(motionTrajectory.position);
-                    hasCollision = true;
-                }
-                handleCollision(barriers, barrier);
+            motion = motion.rotate();
+            if (collision.needToChangeDirection) {
+                motion = motion.flipDirection();
             }
-        }
-        if (hasCollision) {
-            visibleCollisions.clear();
+            // TODO fire hit
         }
     }
+}
 
-    private static void handleCollision(List<Barrier> barriers, Barrier barrier) {
-        if (barrier instanceof Destroyable d) {
-            d.onHit();
-            if (!d.isAlive()) {
-                barriers.remove(d);
-            }
-        }
+class CircleEquation {
+    final Point center;
+    final double radius;
+
+    CircleEquation(Point center, double radius) {
+        this.center = center;
+        this.radius = radius;
     }
 
-    private void changeAngleAccordingToPlatform(Platform platform) {
-        double halfPlatformXSize = platform.size.x() / 2;
-        double platformCenterX = platform.position.x() + halfPlatformXSize;
-        motionTrajectory.changeAngle((motionTrajectory.position.x() - platformCenterX) / halfPlatformXSize + 0.1);
+    List<Double> getY(double x) {
+        return new QuadraticEquation(1, 2 * center.y(), center.y() * center.y() - radius * radius + Math.pow(x - center.x(), 2)).roots;
     }
-
-    private boolean isCollisionWithBottom(Barrier barrier) {
-        return motionTrajectory.position.x() - radius <= barrier.position.x() + barrier.size.x() && motionTrajectory.position.x() + radius >= barrier.position.x()
-                && Math.abs(motionTrajectory.position.y() - radius - barrier.position.y() - barrier.size.y()) <= Math.abs(motionTrajectory.trajectory.dy) / 2;
-    }
-
-    private boolean isCollisionWithLeftSide(Barrier barrier) {
-        return Math.abs(motionTrajectory.position.x() + radius - barrier.position.x()) <= Math.abs(motionTrajectory.trajectory.dx) / 2
-                && motionTrajectory.position.y() + radius >= barrier.position.y() && motionTrajectory.position.y() - radius <= barrier.position.y() + barrier.size.y();
-    }
-
-    private boolean isCollisionWithRightSide(Barrier barrier) {
-        return Math.abs(motionTrajectory.position.x() - radius - barrier.position.x() - barrier.size.x()) <= Math.abs(motionTrajectory.trajectory.dx) / 2
-                && motionTrajectory.position.y() + radius >= barrier.position.y() && motionTrajectory.position.y() - radius <= barrier.position.y() + barrier.size.y();
-    }
-
 }
 
