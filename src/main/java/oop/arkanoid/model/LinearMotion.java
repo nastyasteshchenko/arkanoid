@@ -5,14 +5,13 @@ import java.util.List;
 class LinearMotion {
 
     final BaseLinearEquation linearEquation;
-    final MotionDirection direction;
     final double step;
 
     Point currPoint;
 
-    LinearMotion(BaseLinearEquation linearEquation, MotionDirection direction, double step, Point startPos) {
+    LinearMotion(BaseLinearEquation linearEquation, double step, Point startPos) {
         this.linearEquation = linearEquation;
-        this.direction = direction;
+      //  this.direction = direction;
         this.step = step;
         currPoint = startPos;
     }
@@ -39,14 +38,10 @@ class LinearMotion {
         if (step == newStep) {
             return this;
         }
-        return new LinearMotion(linearEquation, direction, newStep, currPoint);
-    }
-
-    LinearMotion flipDirection() {
-        return new LinearMotion(linearEquation, direction.flip(), step, currPoint);
+        return new LinearMotion(linearEquation, newStep, currPoint);
     }
 
     LinearMotion rotate(CollisionPlace place) {
-        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, place), direction, step, currPoint);
+        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, place), step, currPoint);
     }
 }
