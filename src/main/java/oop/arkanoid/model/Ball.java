@@ -130,6 +130,7 @@ class Ball {
             if (collision == null) {
                 continue;
             }
+            System.out.println(collision);
             motion = motion.rotate();
             if (collision.needToChangeDirection) {
                 motion = motion.flipDirection();

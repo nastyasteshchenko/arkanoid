@@ -13,6 +13,8 @@ public class GameLevel {
     private final Point scene;
     private static int score;
 
+    private int step;
+
     GameLevel(Ball ball, Platform platform, List<Brick> bricks, List<Barrier> barriers, Point scene) {
         this.ball = ball;
         this.platform = platform;
@@ -20,10 +22,11 @@ public class GameLevel {
         this.barriers = barriers;
         this.scene = scene;
         score = 0;
+        step = 2;
     }
 
     public Point nextBallPosition() {
-        Point newBallPos = ball.move(barriers);
+        Point newBallPos = ball.move(step, barriers);
         ArrayList<Brick> toRemove = new ArrayList<>();
         bricks.stream().filter(brick -> !barriers.contains(brick)).forEach(toRemove::add);
         toRemove.forEach(bricks::remove);
@@ -117,7 +120,8 @@ public class GameLevel {
         }
 
         Builder ball(Point position, double radius) {
-            ball = new Ball(position, radius);
+            //TODO think about step
+            ball = new Ball(radius, position, new LinearMotion(new BaseLinearEquation(45, BaseLinearEquation.recountB(-45, position)), MotionDirection.RIGHT, 2, position));
             return this;
         }
 
@@ -141,25 +145,25 @@ public class GameLevel {
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        Builder addWall(Point position, Point size) {
-            Wall wall = new Wall(position, size);
+        Builder addWall(Point position, Point size, CollisionPlace place) {
+            Wall wall = new Wall(position, size, place, scene.x());
             barriers.add(wall);
             return this;
         }
 
         GameLevel build() throws GeneratingGameException {
 
-            checkIfBallOnPlatform();
+          //  checkIfBallOnPlatform();
             checkUninitObjects();
 
             return new GameLevel(ball, platform, bricks, barriers, scene);
         }
 
-        private void checkIfBallOnPlatform() throws GeneratingGameException {
-            if (!ball.motion(platform)) {
-                throw GeneratingGameException.ballIsNotOnPlatform();
-            }
-        }
+//        private void checkIfBallOnPlatform() throws GeneratingGameException {
+//            if (!ball.motion(platform)) {
+//                throw GeneratingGameException.ballIsNotOnPlatform();
+//            }
+//        }
 
         private void checkUninitObjects() throws GeneratingGameException {
             if (ball == null || platform == null || scene == null || bricks.isEmpty() || barriers.isEmpty()) {

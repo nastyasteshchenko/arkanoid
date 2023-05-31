@@ -16,7 +16,8 @@ class BaseLinearEquation implements LinearEquation {
 
     @Override
     public boolean hasIntersection(CircleEquation circleEquation) {
-        //(x-centerX)^2 + (y - centerY)^2 = R^2  and  y=kx+b
+        // { (x-centerX)^2 + (y - centerY)^2 = R^2
+        // { y=kx+b
         //[1+k^2]x^2 + [2(k(b-centerY) - centerX)]x + [centerX^2 - R^2 + (b - centerY)^2] = 0
         QuadraticEquation qEquation = new QuadraticEquation(1 + k * k, 2 * (k * (b - circleEquation.center().y()) - circleEquation.center().x()),
                 circleEquation.center().x() * circleEquation.center().x() - circleEquation.radius() * circleEquation.radius() + Math.pow(b - circleEquation.center().y(), 2));
@@ -34,8 +35,12 @@ class BaseLinearEquation implements LinearEquation {
     }
 
     @Override
-    public LinearEquation rotate() {
-        return new BaseLinearEquation(-angle, b);
+    public LinearEquation rotate(Point currPoint) {
+        return new BaseLinearEquation(-angle, recountB(-angle, currPoint));
+    }
+
+    static double recountB(double angle, Point position) {
+        return position.y() - position.x() * Math.tan(angle);
     }
 
 }
@@ -60,7 +65,7 @@ class XLinearEquation implements LinearEquation {
     }
 
     @Override
-    public LinearEquation rotate() {
+    public LinearEquation rotate(Point currPoint) {
         throw new UnsupportedOperationException();
     }
 }
