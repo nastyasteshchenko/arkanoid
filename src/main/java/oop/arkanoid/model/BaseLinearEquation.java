@@ -45,8 +45,16 @@ class BaseLinearEquation implements LinearEquation {
     }
 
     @Override
-    public LinearEquation rotate(Point currPoint) {
-        return new BaseLinearEquation(-angle, recountB(-180-angle, currPoint), xBorders);
+    public LinearEquation rotate(Point currPoint, CollisionPlace place) {
+//        if (ball.isCollisionWithPlatform(platform)) {
+//            return -90 - (platform.getX() + platform.getWidth() / 2 - ball.getCenterX());
+//        }
+
+        if (place.needToChangeDirection) {
+            return new BaseLinearEquation(-180-angle, recountB(-180-angle, currPoint), xBorders);
+        } else {
+            return new BaseLinearEquation(- angle, recountB(- angle, currPoint), xBorders);
+        }
     }
 
     static double recountB(double angle, Point position) {

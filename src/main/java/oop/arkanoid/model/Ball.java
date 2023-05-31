@@ -130,8 +130,10 @@ class Ball {
             if (collision == null) {
                 continue;
             }
-            System.out.println(collision);
-            motion = motion.rotate();
+            if (barrier instanceof Wall) {
+                System.out.println(collision);
+            }
+            motion = motion.rotate(collision);
             if (collision.needToChangeDirection) {
                 motion = motion.flipDirection();
             }

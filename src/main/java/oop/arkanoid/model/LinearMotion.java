@@ -46,7 +46,7 @@ class LinearMotion {
         return new LinearMotion(linearEquation, direction.flip(), step, currPoint);
     }
 
-    LinearMotion rotate() {
-        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint), direction, step, currPoint);
+    LinearMotion rotate(CollisionPlace place) {
+        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, place), direction, step, currPoint);
     }
 }

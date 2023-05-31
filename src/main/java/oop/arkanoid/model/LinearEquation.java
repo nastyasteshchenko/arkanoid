@@ -6,7 +6,7 @@ interface LinearEquation {
 
     double getY(double x);
 
-    LinearEquation rotate(Point currPoint);
+    LinearEquation rotate(Point currPoint, CollisionPlace place);
 
     static LinearEquation linearEquation(double angle, double b, Point xBorders) {
         return new BaseLinearEquation(angle, b, xBorders);
