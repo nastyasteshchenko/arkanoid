@@ -2,14 +2,7 @@ package oop.arkanoid.model;
 
 import java.util.List;
 
-class CircleEquation {
-    final Point center;
-    final double radius;
-
-    CircleEquation(Point center, double radius) {
-        this.center = center;
-        this.radius = radius;
-    }
+record CircleEquation(Point center, double radius) {
 
     List<Double> getY(double x) {
         //(x-a)^2 + (y-b)^2 = R^2, where (a, b) - center of circle

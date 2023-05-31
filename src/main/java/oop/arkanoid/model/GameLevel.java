@@ -141,8 +141,8 @@ public class GameLevel {
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        Builder addWall(Point position, Point size, WallType type) {
-            Wall wall = new Wall(position, size, type);
+        Builder addWall(Point position, Point size) {
+            Wall wall = new Wall(position, size);
             barriers.add(wall);
             return this;
         }
@@ -156,7 +156,7 @@ public class GameLevel {
         }
 
         private void checkIfBallOnPlatform() throws GeneratingGameException {
-            if (!ball.motion.(platform)) {
+            if (!ball.motion(platform)) {
                 throw GeneratingGameException.ballIsNotOnPlatform();
             }
         }
