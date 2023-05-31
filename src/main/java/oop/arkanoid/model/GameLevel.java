@@ -38,7 +38,7 @@ public class GameLevel {
     public GameStates gameState() {
         if (bricks.isEmpty()) {
             return GameStates.GAME_WIN;
-        } else if (ball.motionTrajectory.position.y() > scene.y()) {
+        } else if (ball.position.y() > scene.y()) {
             return GameStates.GAME_LOSE;
         } else {
             return GameStates.GAME_IN_PROCESS;
@@ -76,7 +76,7 @@ public class GameLevel {
     }
 
     public Point getBallPosition() {
-        return ball.motionTrajectory.position;
+        return ball.position;
     }
 
     public double getBallRadius() {
@@ -156,7 +156,7 @@ public class GameLevel {
         }
 
         private void checkIfBallOnPlatform() throws GeneratingGameException {
-            if (!ball.isCollisionWithTop(platform)) {
+            if (!ball.motion.(platform)) {
                 throw GeneratingGameException.ballIsNotOnPlatform();
             }
         }

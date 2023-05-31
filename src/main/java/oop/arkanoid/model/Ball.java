@@ -103,7 +103,6 @@ import java.util.List;
 
 class Ball {
     final double radius;
-
     Point position;
     LinearMotion motion;
 
@@ -127,7 +126,7 @@ class Ball {
         CircleEquation circleEquation = new CircleEquation(position, radius);
         // TODO detect one barrier if there are several collisions
         for (Barrier barrier : barriers) {
-            Barrier.CollisionPlace collision = barrier.findCollision(circleEquation);
+            CollisionPlace collision = barrier.findCollision(circleEquation);
             if (collision == null) {
                 continue;
             }
@@ -137,20 +136,6 @@ class Ball {
             }
             // TODO fire hit
         }
-    }
-}
-
-class CircleEquation {
-    final Point center;
-    final double radius;
-
-    CircleEquation(Point center, double radius) {
-        this.center = center;
-        this.radius = radius;
-    }
-
-    List<Double> getY(double x) {
-        return new QuadraticEquation(1, 2 * center.y(), center.y() * center.y() - radius * radius + Math.pow(x - center.x(), 2)).roots;
     }
 }
 

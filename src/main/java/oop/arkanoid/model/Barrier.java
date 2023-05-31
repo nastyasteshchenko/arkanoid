@@ -33,10 +33,14 @@ import java.util.EnumMap;
 abstract class Barrier {
 
     final Point position;
+    final Point size;
 
+
+    Barrier(Point position, Point size) {
         this.position = position;
         this.size = size;
-}
+
+    }
 
     final CollisionPlace findCollision(CircleEquation circleEquation) {
         var linearEquations = getLinearEquations();
@@ -51,16 +55,4 @@ abstract class Barrier {
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();
 
-enum CollisionPlace {
-    TOP(false),
-    LEFT(true),
-    RIGHT(true),
-    BOTTOM(false);
-
-    final boolean needToChangeDirection;
-
-    CollisionPlace(boolean needToChangeDirection) {
-        this.needToChangeDirection = needToChangeDirection;
-    }
-}
 }

@@ -1,16 +1,22 @@
 package oop.arkanoid.model;
 
+import java.util.EnumMap;
+
+//Сделать чтобы не выходила за стенки
 class Platform extends Barrier {
+
+    private final EnumMap<CollisionPlace, LinearEquation> linearEquations = new EnumMap<>(CollisionPlace.class);
+
     Platform(Point position, Point size) {
         super(position, size);
-        Trajectory trajectory = new Trajectory(new Point(1, 0), new Point(position.x(), position.x() + size.x()), new Point(position.y(), position.y()));
-        trajectory.recountB(new Point(position.x(), position.y()));
-        trajectories.put(StraightSides.TOP_SIDE, trajectory);
+
+        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position.y()));
+        linearEquations.put(CollisionPlace.LEFT, LinearEquation.xlinearMotionEquation(position.x()));
+        linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xlinearMotionEquation(position.x() + size.x()));
     }
 
     @Override
-    boolean hasVisibleCollisions(Trajectory trajectory, double radius) {
-        return trajectories.get(StraightSides.TOP_SIDE).hasIntersection(trajectory, radius);
+    EnumMap<CollisionPlace, LinearEquation> getLinearEquations() {
+        return linearEquations;
     }
-
 }
