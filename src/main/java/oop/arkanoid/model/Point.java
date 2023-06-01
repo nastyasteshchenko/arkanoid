@@ -1,19 +1,19 @@
 package oop.arkanoid.model;
 
 public class Point {
-    private double x;
-    private double y;
+    private Double x;
+    private Double y;
 
     public Point(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    public double x() {
+    public Double x() {
         return x;
     }
 
-    public double y() {
+    public Double y() {
         return y;
     }
 

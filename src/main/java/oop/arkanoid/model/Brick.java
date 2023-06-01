@@ -21,10 +21,6 @@ class Brick extends Barrier implements Destroyable {
         linearEquations.put(CollisionPlace.BOTTOM, LinearEquation.linearEquation(0, position.y() + size.y(), new Point(position.x(), position.x() + size.x())));
     }
 
-//    @Override
-//
-//            Notifications.getInstance().publish(Notifications.EventType.DESTROY, this);
-
     @Override
     public boolean isAlive() {
         return health.isAlive();

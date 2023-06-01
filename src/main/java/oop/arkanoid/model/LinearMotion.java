@@ -17,24 +17,24 @@ class LinearMotion {
     }
 
     Point nextPoint() {
-        // TODO move to ctor
-        // { (x-centerX)^2 + (y - centerY)^2 = R^2
-        // { y=kx+b
-        //[1+k^2]x^2 + [2(k(b-centerY) - centerX)]x + [centerX^2 - R^2 + (b - centerY)^2] = 0
+        /*
+         TODO move to ctor
+         { (x-centerX)^2 + (y - centerY)^2 = R^2
+         { y=kx+b
+        [1+k^2]x^2 + [2(k(b-centerY) - centerX)]x + [centerX^2 - R^2 + (b - centerY)^2] = 0
+        */
         QuadraticEquation qEquation = new QuadraticEquation(1 + linearEquation.k * linearEquation.k, 2 * (linearEquation.k * (linearEquation.b - currPoint.y()) - currPoint.x()),
                 currPoint.x() * currPoint.x() - step * step + Math.pow(linearEquation.b - currPoint.y(), 2));
-//        QuadraticEquation qEquation = new QuadraticEquation(1 + linearEquation.k * linearEquation.k, -2 * currPoint.x(),
-//                currPoint.x() * currPoint.x() - currPoint.y() * currPoint.y() + linearEquation.b * linearEquation.b - step * step);
         List<Double> roots = qEquation.roots;
         // TODO get only one root depending on direction
         if (direction == MotionDirection.LEFT) {
-            if (roots.get(0) > currPoint.x()) {
+            if (roots.get(0) < currPoint.x()) {
                 currPoint.setX(roots.get(0));
             } else {
                 currPoint.setX(roots.get(1));
             }
         } else {
-            if (roots.get(0) < currPoint.x()) {
+            if (roots.get(0) > currPoint.x()) {
                 currPoint.setX(roots.get(0));
             } else {
                 currPoint.setX(roots.get(1));
