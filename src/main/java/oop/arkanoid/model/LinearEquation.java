@@ -6,7 +6,9 @@ interface LinearEquation {
 
     double getY(double x);
 
-    LinearEquation rotate(Point currPoint, VerticalMotionDirection verticalMotionDirection, HorizontalMotionDirection horizontalMotionDirection);
+    LinearEquation rotate(Point currPoint);
+
+    LinearEquation rotate(Point currPoint, double platformX, double platformWidth, double ballX);
 
     static LinearEquation linearEquation(double angle, double b, Point xBorders) {
         return new BaseLinearEquation(angle, b, xBorders);

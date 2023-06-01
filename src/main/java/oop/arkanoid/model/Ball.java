@@ -31,11 +31,23 @@ class Ball {
                 continue;
             }
             if (collision.needToChangeDirection) {
-                motion = motion.flipHorizontalDirection();
-            } else {
-                motion = motion.flipVerticalDirection();
+                motion = motion.flipDirection();
             }
-            motion = motion.rotate();
+
+            if (barrier instanceof Platform) {
+                if (position.x() <= barrier.position.x() + barrier.size.x() / 2) {
+                    if (motion.direction == MotionDirection.RIGHT) {
+                        motion = motion.flipDirection();
+                    }
+                } else {
+                    if (motion.direction == MotionDirection.LEFT) {
+                        motion = motion.flipDirection();
+                    }
+                }
+                motion = motion.rotate(barrier.position.x(), barrier.size.x(), position.x());
+            } else {
+                motion = motion.rotate();
+            }
             break;
             // TODO fire hit
         }

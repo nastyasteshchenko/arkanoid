@@ -40,18 +40,15 @@ class BaseLinearEquation implements LinearEquation {
     }
 
     @Override
-    public LinearEquation rotate(Point currPoint, VerticalMotionDirection verticalMotionDirection, HorizontalMotionDirection horizontalMotionDirection) {
-//        if (ball.isCollisionWithPlatform(platform)) {
-//            return -90 - (platform.getX() + platform.getWidth() / 2 - ball.getCenterX());
-//        }
-//
-        if (verticalMotionDirection == VerticalMotionDirection.UP && horizontalMotionDirection == HorizontalMotionDirection.RIGHT
-                || verticalMotionDirection == VerticalMotionDirection.DOWN && horizontalMotionDirection == HorizontalMotionDirection.LEFT) {
-            return new BaseLinearEquation(angle - 90, recountB(angle - 90, currPoint), xBorders);
-        } else {
-            return new BaseLinearEquation(angle + 90, recountB(angle + 90, currPoint), xBorders);
-        }
+    public LinearEquation rotate(Point currPoint) {
+        return new BaseLinearEquation(-angle, recountB(-angle , currPoint), xBorders);
 
+    }
+
+    @Override
+    public LinearEquation rotate(Point currPoint, double platformX, double platformWidth, double ballX) {
+        double angle =  - 90 - (platformX + platformWidth / 2 - ballX);
+        return new BaseLinearEquation(angle, recountB(angle, currPoint), xBorders);
     }
 
     static double recountB(double angle, Point position) {

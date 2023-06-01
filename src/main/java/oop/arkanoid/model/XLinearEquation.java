@@ -15,8 +15,8 @@ class XLinearEquation implements LinearEquation {
     @Override
     public boolean hasIntersection(CircleEquation circleEquation) {
         List<Double> ys = circleEquation.getY(x);
-        for (Double y : ys){
-            if (GameLevel.Builder.inSegment(yBorders.x(), yBorders.y(),y)){
+        for (Double y : ys) {
+            if (GameLevel.Builder.inSegment(yBorders.x(), yBorders.y(), y)) {
                 return true;
             }
         }
@@ -29,7 +29,12 @@ class XLinearEquation implements LinearEquation {
     }
 
     @Override
-    public LinearEquation rotate(Point currPoint, VerticalMotionDirection verticalMotionDirection, HorizontalMotionDirection horizontalMotionDirection) {
+    public LinearEquation rotate(Point currPoint) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public LinearEquation rotate(Point currPoint, double platformX, double platformWidth, double ballX){
         throw new UnsupportedOperationException();
     }
 }
