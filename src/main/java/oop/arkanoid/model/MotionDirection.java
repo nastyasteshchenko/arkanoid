@@ -2,8 +2,7 @@ package oop.arkanoid.model;
 
 enum MotionDirection {
     LEFT,
-    RIGHT
-    ;
+    RIGHT;
 
     MotionDirection flip() {
         return this == LEFT ? RIGHT : LEFT;

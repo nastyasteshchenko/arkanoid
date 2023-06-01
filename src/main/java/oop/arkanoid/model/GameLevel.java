@@ -121,9 +121,9 @@ public class GameLevel {
 
         Builder ball(Point position, double radius) {
             //TODO think about step
-            double angle = Math.random() * 60 - 120;
+            double angle = 180;//Math.random() * 60 - 120;
             BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.recountB(angle, position), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-            ball = new Ball(radius, position, new LinearMotion(ballLineEquation, MotionDirection.LEFT, 1.5, position));
+            ball = new Ball(radius, position, new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 1.5, position));
             return this;
         }
 
