@@ -2,7 +2,6 @@ package oop.arkanoid.model;
 
 import java.util.EnumMap;
 
-//Сделать чтобы не выходила за стенки
 class Platform extends Barrier {
 
     private final EnumMap<CollisionPlace, LinearEquation> linearEquations = new EnumMap<>(CollisionPlace.class);
