@@ -27,9 +27,6 @@ class BaseLinearEquation implements LinearEquation {
                 circleEquation.center().x() * circleEquation.center().x() - circleEquation.radius() * circleEquation.radius() + Math.pow(b - circleEquation.center().y(), 2));
 
         for (Double root : qEquation.roots) {
-//            if (circleEquation.getY(root).isEmpty()) {
-//                continue;
-//            }
             if (GameLevel.Builder.inSegment(xBorders.x(), xBorders.y(), root)) {
                 return true;
             }
@@ -48,16 +45,13 @@ class BaseLinearEquation implements LinearEquation {
 //            return -90 - (platform.getX() + platform.getWidth() / 2 - ball.getCenterX());
 //        }
 //
-        if (verticalMotionDirection == VerticalMotionDirection.UP && horizontalMotionDirection==HorizontalMotionDirection.RIGHT
+        if (verticalMotionDirection == VerticalMotionDirection.UP && horizontalMotionDirection == HorizontalMotionDirection.RIGHT
                 || verticalMotionDirection == VerticalMotionDirection.DOWN && horizontalMotionDirection == HorizontalMotionDirection.LEFT) {
-            return new BaseLinearEquation(angle - 90, recountB(angle -90, currPoint), xBorders);
+            return new BaseLinearEquation(angle - 90, recountB(angle - 90, currPoint), xBorders);
         } else {
-            return new BaseLinearEquation(angle + 90, recountB(angle +90, currPoint), xBorders);
+            return new BaseLinearEquation(angle + 90, recountB(angle + 90, currPoint), xBorders);
         }
-//        else if (verticalMotionDirection == VerticalMotionDirection.DOWN &&  horizontalMotionDirection==HorizontalMotionDirection.RIGHT
-//                || verticalMotionDirection == VerticalMotionDirection.UP && horizontalMotionDirection == HorizontalMotionDirection.LEFT) {
-//            return new BaseLinearEquation(angle + 90, recountB(angle +90, currPoint), xBorders);
-//        }
+
     }
 
     static double recountB(double angle, Point position) {

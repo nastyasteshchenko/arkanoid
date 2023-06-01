@@ -28,7 +28,7 @@ class LinearMotion {
         QuadraticEquation qEquation = new QuadraticEquation(1 + linearEquation.k * linearEquation.k, 2 * (linearEquation.k * (linearEquation.b - currPoint.y()) - currPoint.x()),
                 currPoint.x() * currPoint.x() - step * step + Math.pow(linearEquation.b - currPoint.y(), 2));
         List<Double> roots = qEquation.roots;
-        // TODO get only one root depending on direction
+
         if (horizontalDirection == HorizontalMotionDirection.LEFT) {
             if (roots.get(0) < currPoint.x()) {
                 currPoint.setX(roots.get(0));
