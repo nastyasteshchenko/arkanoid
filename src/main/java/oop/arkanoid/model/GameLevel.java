@@ -13,7 +13,7 @@ public class GameLevel {
     private final Point scene;
     private static int score;
 
-    private int step;
+    private double step;
 
     GameLevel(Ball ball, Platform platform, List<Brick> bricks, List<Barrier> barriers, Point scene) {
         this.ball = ball;
@@ -22,7 +22,7 @@ public class GameLevel {
         this.barriers = barriers;
         this.scene = scene;
         score = 0;
-        step = 2;
+        step = 1.5;
     }
 
     public Point nextBallPosition() {
@@ -121,8 +121,9 @@ public class GameLevel {
 
         Builder ball(Point position, double radius) {
             //TODO think about step
-            BaseLinearEquation ballLineEquation = new BaseLinearEquation(Math.random() * 60 - 120, BaseLinearEquation.recountB(-45, position), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-            ball = new Ball(radius, position, new LinearMotion(ballLineEquation, 2, position));
+            double angle = -40;
+            BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.recountB(angle, position), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+            ball = new Ball(radius, position, new LinearMotion(ballLineEquation, MotionDirection.LEFT, 1.5, position));
             return this;
         }
 

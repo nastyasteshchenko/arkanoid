@@ -21,7 +21,7 @@ class QuadraticEquation {
         if (d < 0) {
             roots = List.of();
         } else if (d == 0) {
-            roots = List.of(-b / 2 * a);
+            roots = List.of(-b / (2 * a));
         } else {
             double sqrtD = Math.sqrt(d);
             roots = List.of((-b - sqrtD) / (2 * a), (-b + sqrtD) / (2 * a));

@@ -175,7 +175,7 @@ public class Presenter {
     }
 
     private void startAnimation() {
-        animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
+        animation = new Timeline(new KeyFrame(Duration.millis(3), ae -> {
             if (gameIsStarted) {
                 gameView.drawBall(model.nextBallPosition());
                 switch (model.gameState()) {

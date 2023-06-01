@@ -117,9 +117,8 @@ class Ball {
 
         motion = motion.changeStepIfNeeded(step);
 
-        Point newPosition = motion.nextPoint();
-        this.position = newPosition;
-        return newPosition;
+        this.position = motion.nextPoint();
+        return this.position;
     }
 
     private void detectCollisions(List<Barrier> barriers) {
@@ -130,13 +129,10 @@ class Ball {
             if (collision == null) {
                 continue;
             }
-            if (barrier instanceof Wall) {
-                System.out.println(collision);
-            }
-            motion = motion.rotate(collision);
             if (collision.needToChangeDirection) {
                 motion = motion.flipDirection();
             }
+            motion = motion.rotate(collision);
             // TODO fire hit
         }
     }

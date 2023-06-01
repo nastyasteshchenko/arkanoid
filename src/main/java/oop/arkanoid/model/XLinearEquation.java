@@ -15,11 +15,12 @@ class XLinearEquation implements LinearEquation {
     @Override
     public boolean hasIntersection(CircleEquation circleEquation) {
         List<Double> ys = circleEquation.getY(x);
-        if (ys.stream().noneMatch(y-> GameLevel.Builder.inSegment(yBorders.x(), yBorders.y(), y))){
-            return false;
+        for (Double y : ys){
+            if (GameLevel.Builder.inSegment(yBorders.x(), yBorders.y(),y)){
+                return true;
+            }
         }
-
-        return !ys.isEmpty();
+        return false;
     }
 
     @Override

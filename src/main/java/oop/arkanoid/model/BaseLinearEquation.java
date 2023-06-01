@@ -1,7 +1,5 @@
 package oop.arkanoid.model;
 
-import java.util.List;
-
 class BaseLinearEquation implements LinearEquation {
 
     final double k;
@@ -27,9 +25,9 @@ class BaseLinearEquation implements LinearEquation {
         */
         QuadraticEquation qEquation = new QuadraticEquation(1 + k * k, 2 * (k * (b - circleEquation.center().y()) - circleEquation.center().x()),
                 circleEquation.center().x() * circleEquation.center().x() - circleEquation.radius() * circleEquation.radius() + Math.pow(b - circleEquation.center().y(), 2));
+
         for (Double root : qEquation.roots) {
-            if (!GameLevel.Builder.inSegment(xBorders.x(), xBorders.y(), root)){
-              //  System.out.println("boo");
+            if (!GameLevel.Builder.inSegment(xBorders.x(), xBorders.y(), root)) {
                 continue;
             }
             if (!circleEquation.getY(root).isEmpty()) {
@@ -51,9 +49,9 @@ class BaseLinearEquation implements LinearEquation {
 //        }
 
         if (place.needToChangeDirection) {
-            return new BaseLinearEquation(-180-angle, recountB(-180-angle, currPoint), xBorders);
+            return new BaseLinearEquation(-180 - angle, recountB(-180 - angle, currPoint), xBorders);
         } else {
-            return new BaseLinearEquation(- angle, recountB(- angle, currPoint), xBorders);
+            return new BaseLinearEquation(-angle, recountB(-angle, currPoint), xBorders);
         }
     }
 
