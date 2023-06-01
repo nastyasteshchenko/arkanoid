@@ -7,7 +7,7 @@ import java.util.List;
 
 public class GameLevel {
     private final List<Brick> bricks;
-    private final Platform platform;
+    private Platform platform;
     private final List<Barrier> barriers;
     private final Ball ball;
     private final Point scene;
@@ -34,7 +34,8 @@ public class GameLevel {
     }
 
     public double updatePlatformPosition(double x) {
-        platform.position.setX(x - platform.size.x() / 2);
+        platform = new Platform(new Point(x - platform.size.x() / 2, platform.position.y()), platform.size);
+        //platform.position.setX(x - platform.size.x() / 2);
         return platform.position.x();
     }
 
@@ -121,7 +122,7 @@ public class GameLevel {
 
         Builder ball(Point position, double radius) {
             //TODO think about step
-            double angle = 180;//Math.random() * 60 - 120;
+            double angle = -45;//Math.random() * 60 - 120;
             BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.recountB(angle, position), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
             ball = new Ball(radius, position, new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 1.5, position));
             return this;

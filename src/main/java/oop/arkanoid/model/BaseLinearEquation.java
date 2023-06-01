@@ -48,10 +48,10 @@ class BaseLinearEquation implements LinearEquation {
 //            return -90 - (platform.getX() + platform.getWidth() / 2 - ball.getCenterX());
 //        }
 
-        if (place.needToChangeDirection) {
-            return new BaseLinearEquation(-180 - angle, recountB(-180 - angle, currPoint), xBorders);
+        if (place == CollisionPlace.LEFT || place == CollisionPlace.BOTTOM) {
+            return new BaseLinearEquation(angle + 180, recountB(angle + 180, currPoint), xBorders);
         } else {
-            return new BaseLinearEquation(-angle, recountB(-angle, currPoint), xBorders);
+            return new BaseLinearEquation(angle - 180, recountB(angle - 180, currPoint), xBorders);
         }
     }
 

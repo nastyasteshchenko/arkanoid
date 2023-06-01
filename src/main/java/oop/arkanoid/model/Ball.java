@@ -31,7 +31,6 @@ class Ball {
                 continue;
             }
             motion = motion.rotate(collision);
-            System.out.println("I am " + collision);
             if (collision.needToChangeDirection) {
                 motion = motion.flipDirection();
             }

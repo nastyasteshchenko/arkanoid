@@ -15,6 +15,7 @@ class Platform extends Barrier {
         linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xlinearMotionEquation(position.x() + size.x(), new Point(position.y(), position.y() + size.y())));
     }
 
+
     @Override
     EnumMap<CollisionPlace, LinearEquation> getLinearEquations() {
         return linearEquations;
