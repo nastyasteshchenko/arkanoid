@@ -27,10 +27,10 @@ class BaseLinearEquation implements LinearEquation {
                 circleEquation.center().x() * circleEquation.center().x() - circleEquation.radius() * circleEquation.radius() + Math.pow(b - circleEquation.center().y(), 2));
 
         for (Double root : qEquation.roots) {
-            if (!GameLevel.Builder.inSegment(xBorders.x(), xBorders.y(), root)) {
-                continue;
-            }
-            if (!circleEquation.getY(root).isEmpty()) {
+//            if (circleEquation.getY(root).isEmpty()) {
+//                continue;
+//            }
+            if (GameLevel.Builder.inSegment(xBorders.x(), xBorders.y(), root)) {
                 return true;
             }
         }
