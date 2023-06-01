@@ -148,7 +148,7 @@ public class GameLevel {
 
         @SuppressWarnings("UnusedReturnValue")
         Builder addWall(Point position, Point size, CollisionPlace place) {
-            Wall wall = new Wall(position, size, place, scene.x());
+            Wall wall = new Wall(position, size, place);
             barriers.add(wall);
             return this;
         }
