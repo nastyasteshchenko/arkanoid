@@ -11,7 +11,7 @@ public class Wall extends Barrier {
             super(position, size);
             this.collisionPlace = collisionPlace;
             linearEquation = switch (collisionPlace) {
-                case LEFT, RIGHT -> LinearEquation.xlinearMotionEquation(position.x(), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+                case LEFT, RIGHT -> LinearEquation.xLinearMotionEquation(position.x(), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
                 case BOTTOM -> LinearEquation.linearEquation(0, 0, new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
                 case TOP -> throw new UnsupportedOperationException();
             };

@@ -35,7 +35,8 @@ class Ball {
             }
 
             if (barrier instanceof Platform) {
-                if (position.x() <= barrier.position.x() + barrier.size.x() / 2) {
+                double platformCenterX = barrier.position.x() + barrier.size.x() / 2;
+                if (position.x() <= platformCenterX) {
                     if (motion.direction == MotionDirection.RIGHT) {
                         motion = motion.flipDirection();
                     }
@@ -44,7 +45,7 @@ class Ball {
                         motion = motion.flipDirection();
                     }
                 }
-                motion = motion.rotate(barrier.position.x(), barrier.size.x(), position.x());
+                motion = motion.rotate(platformCenterX, position.x());
             } else {
                 motion = motion.rotate();
             }

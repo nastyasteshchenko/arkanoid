@@ -41,13 +41,19 @@ class BaseLinearEquation implements LinearEquation {
 
     @Override
     public LinearEquation rotate(Point currPoint) {
-        return new BaseLinearEquation(-angle, recountB(-angle , currPoint), xBorders);
-
+        return new BaseLinearEquation(-angle, recountB(-angle, currPoint), xBorders);
     }
 
     @Override
-    public LinearEquation rotate(Point currPoint, double platformX, double platformWidth, double ballX) {
-        double angle =  - 90 - (platformX + platformWidth / 2 - ballX);
+    public LinearEquation rotate(Point currPoint, double platformCenterX, double ballX) {
+        double angle = 80;
+        if (platformCenterX - ballX < 0) {
+            angle = -180 - platformCenterX + ballX;
+        } else {
+            if (platformCenterX - ballX > 0){
+                angle = 180 - platformCenterX + ballX;
+            }
+        }
         return new BaseLinearEquation(angle, recountB(angle, currPoint), xBorders);
     }
 

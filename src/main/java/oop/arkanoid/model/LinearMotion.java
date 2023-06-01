@@ -28,13 +28,13 @@ class LinearMotion {
         List<Double> roots = qEquation.roots;
 
         if (direction == MotionDirection.LEFT) {
-            if (roots.get(0) < currPoint.x()) {
+            if (roots.get(0) <= currPoint.x()) {
                 currPoint.setX(roots.get(0));
             } else {
                 currPoint.setX(roots.get(1));
             }
         } else {
-            if (roots.get(0) > currPoint.x()) {
+            if (roots.get(0) >= currPoint.x()) {
                 currPoint.setX(roots.get(0));
             } else {
                 currPoint.setX(roots.get(1));
@@ -59,7 +59,7 @@ class LinearMotion {
         return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint), direction, step, currPoint);
     }
 
-    LinearMotion rotate(double platformX, double platformWidth, double ballX) {
-        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, platformX, platformWidth, ballX), direction, step, currPoint);
+    LinearMotion rotate(double platformCenterX, double ballX) {
+        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, platformCenterX, ballX), direction, step, currPoint);
     }
 }
