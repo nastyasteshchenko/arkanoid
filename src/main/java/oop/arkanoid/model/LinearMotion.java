@@ -5,13 +5,15 @@ import java.util.List;
 class LinearMotion {
 
     final BaseLinearEquation linearEquation;
-    final MotionDirection direction;
+    final HorizontalMotionDirection horizontalDirection;
+    final VerticalMotionDirection verticalDirection;
     final double step;
     Point currPoint;
 
-    LinearMotion(BaseLinearEquation linearEquation, MotionDirection direction, double step, Point startPos) {
+    LinearMotion(BaseLinearEquation linearEquation, HorizontalMotionDirection horizontalDirection, VerticalMotionDirection verticalDirection, double step, Point startPos) {
         this.linearEquation = linearEquation;
-        this.direction = direction;
+        this.horizontalDirection = horizontalDirection;
+        this.verticalDirection = verticalDirection;
         this.step = step;
         currPoint = startPos;
     }
@@ -27,7 +29,7 @@ class LinearMotion {
                 currPoint.x() * currPoint.x() - step * step + Math.pow(linearEquation.b - currPoint.y(), 2));
         List<Double> roots = qEquation.roots;
         // TODO get only one root depending on direction
-        if (direction == MotionDirection.LEFT) {
+        if (horizontalDirection == HorizontalMotionDirection.LEFT) {
             if (roots.get(0) < currPoint.x()) {
                 currPoint.setX(roots.get(0));
             } else {
@@ -48,14 +50,18 @@ class LinearMotion {
         if (step == newStep) {
             return this;
         }
-        return new LinearMotion(linearEquation, direction, newStep, currPoint);
+        return new LinearMotion(linearEquation, horizontalDirection, verticalDirection, newStep, currPoint);
     }
 
-    LinearMotion flipDirection() {
-        return new LinearMotion(linearEquation, direction.flip(), step, currPoint);
+    LinearMotion flipHorizontalDirection() {
+        return new LinearMotion(linearEquation, horizontalDirection.flip(), verticalDirection, step, currPoint);
     }
 
-    LinearMotion rotate(CollisionPlace place) {
-        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, place), direction, step, currPoint);
+    LinearMotion flipVerticalDirection() {
+        return new LinearMotion(linearEquation, horizontalDirection, verticalDirection.flip(), step, currPoint);
+    }
+
+    LinearMotion rotate() {
+        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, verticalDirection, horizontalDirection), horizontalDirection, verticalDirection, step, currPoint);
     }
 }

@@ -1,10 +1,10 @@
 package oop.arkanoid.model;
 
-enum MotionDirection {
+enum HorizontalMotionDirection {
     LEFT,
     RIGHT;
 
-    MotionDirection flip() {
+    HorizontalMotionDirection flip() {
         return this == LEFT ? RIGHT : LEFT;
     }
 }

@@ -43,16 +43,21 @@ class BaseLinearEquation implements LinearEquation {
     }
 
     @Override
-    public LinearEquation rotate(Point currPoint, CollisionPlace place) {
+    public LinearEquation rotate(Point currPoint, VerticalMotionDirection verticalMotionDirection, HorizontalMotionDirection horizontalMotionDirection) {
 //        if (ball.isCollisionWithPlatform(platform)) {
 //            return -90 - (platform.getX() + platform.getWidth() / 2 - ball.getCenterX());
 //        }
-
-        if (place == CollisionPlace.LEFT || place == CollisionPlace.BOTTOM) {
-            return new BaseLinearEquation(angle + 180, recountB(angle + 180, currPoint), xBorders);
+//
+        if (verticalMotionDirection == VerticalMotionDirection.UP && horizontalMotionDirection==HorizontalMotionDirection.RIGHT
+                || verticalMotionDirection == VerticalMotionDirection.DOWN && horizontalMotionDirection == HorizontalMotionDirection.LEFT) {
+            return new BaseLinearEquation(angle - 90, recountB(angle -90, currPoint), xBorders);
         } else {
-            return new BaseLinearEquation(angle - 180, recountB(angle - 180, currPoint), xBorders);
+            return new BaseLinearEquation(angle + 90, recountB(angle +90, currPoint), xBorders);
         }
+//        else if (verticalMotionDirection == VerticalMotionDirection.DOWN &&  horizontalMotionDirection==HorizontalMotionDirection.RIGHT
+//                || verticalMotionDirection == VerticalMotionDirection.UP && horizontalMotionDirection == HorizontalMotionDirection.LEFT) {
+//            return new BaseLinearEquation(angle + 90, recountB(angle +90, currPoint), xBorders);
+//        }
     }
 
     static double recountB(double angle, Point position) {

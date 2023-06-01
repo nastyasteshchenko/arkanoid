@@ -29,7 +29,7 @@ class XLinearEquation implements LinearEquation {
     }
 
     @Override
-    public LinearEquation rotate(Point currPoint, CollisionPlace place) {
+    public LinearEquation rotate(Point currPoint, VerticalMotionDirection verticalMotionDirection, HorizontalMotionDirection horizontalMotionDirection) {
         throw new UnsupportedOperationException();
     }
 }

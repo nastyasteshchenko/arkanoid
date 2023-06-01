@@ -30,10 +30,12 @@ class Ball {
             if (collision == null) {
                 continue;
             }
-            motion = motion.rotate(collision);
             if (collision.needToChangeDirection) {
-                motion = motion.flipDirection();
+                motion = motion.flipHorizontalDirection();
+            } else {
+                motion = motion.flipVerticalDirection();
             }
+            motion = motion.rotate();
             break;
             // TODO fire hit
         }

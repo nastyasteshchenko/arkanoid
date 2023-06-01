@@ -34,8 +34,8 @@ public class GameLevel {
     }
 
     public double updatePlatformPosition(double x) {
-        platform = new Platform(new Point(x - platform.size.x() / 2, platform.position.y()), platform.size);
-        //platform.position.setX(x - platform.size.x() / 2);
+        //TODo think
+        platform.update(x - platform.size.x() / 2);
         return platform.position.x();
     }
 
@@ -124,7 +124,7 @@ public class GameLevel {
             //TODO think about step
             double angle = -45;//Math.random() * 60 - 120;
             BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.recountB(angle, position), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-            ball = new Ball(radius, position, new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 1.5, position));
+            ball = new Ball(radius, position, new LinearMotion(ballLineEquation, HorizontalMotionDirection.RIGHT, VerticalMotionDirection.UP, 1.5, position));
             return this;
         }
 
@@ -156,7 +156,7 @@ public class GameLevel {
 
         GameLevel build() throws GeneratingGameException {
 
-          //  checkIfBallOnPlatform();
+            //  checkIfBallOnPlatform();
             checkUninitObjects();
 
             return new GameLevel(ball, platform, bricks, barriers, scene);
