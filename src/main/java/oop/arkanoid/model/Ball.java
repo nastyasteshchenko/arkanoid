@@ -45,9 +45,9 @@ class Ball {
                         motion = motion.flipDirection();
                     }
                 }
-                motion = motion.rotate(platformCenterX, position.x());
+                motion = motion.rotate(platformCenterX - position.x());
             } else {
-                motion = motion.rotate();
+                motion = motion.rotate(collision);
             }
             break;
             // TODO fire hit

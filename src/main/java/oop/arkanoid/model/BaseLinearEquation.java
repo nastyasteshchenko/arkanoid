@@ -10,7 +10,8 @@ class BaseLinearEquation implements LinearEquation {
 
     BaseLinearEquation(double angle, double b, Point xBorders) {
         this.angle = angle;
-        this.k = Math.tan(angle);
+        this.k = Math.sin(angle * Math.PI / 180) / Math.cos(angle * Math.PI / 180);//Math.tan(angle * Math.PI/180);
+        System.out.println(k);
         this.b = b;
         this.xBorders = xBorders;
     }
@@ -40,25 +41,22 @@ class BaseLinearEquation implements LinearEquation {
     }
 
     @Override
-    public LinearEquation rotate(Point currPoint) {
-        return new BaseLinearEquation(-angle, recountB(-angle, currPoint), xBorders);
+    public LinearEquation rotate(Point currPoint, CollisionPlace place) {
+        if (place.needToChangeDirection) {
+            return new BaseLinearEquation(-180 - angle, recountB(180 -angle, currPoint), xBorders);
+        } else {
+            return new BaseLinearEquation(-angle, recountB(-angle, currPoint), xBorders);
+        }
     }
 
     @Override
-    public LinearEquation rotate(Point currPoint, double platformCenterX, double ballX) {
-        double angle = 80;
-        if (platformCenterX - ballX < 0) {
-            angle = -180 - platformCenterX + ballX;
-        } else {
-            if (platformCenterX - ballX > 0){
-                angle = 180 - platformCenterX + ballX;
-            }
-        }
+    public LinearEquation rotate(Point currPoint, double diffX) {
+        double angle = -90 - diffX;
         return new BaseLinearEquation(angle, recountB(angle, currPoint), xBorders);
     }
 
     static double recountB(double angle, Point position) {
-        return position.y() - position.x() * Math.tan(angle);
+        return position.y() - position.x() * Math.tan(angle * Math.PI / 180);
     }
 
 }

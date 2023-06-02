@@ -55,11 +55,11 @@ class LinearMotion {
         return new LinearMotion(linearEquation, direction.flip(), step, currPoint);
     }
 
-    LinearMotion rotate() {
-        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint), direction, step, currPoint);
+    LinearMotion rotate(CollisionPlace place) {
+        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, place), direction, step, currPoint);
     }
 
-    LinearMotion rotate(double platformCenterX, double ballX) {
-        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, platformCenterX, ballX), direction, step, currPoint);
+    LinearMotion rotate(double diffX) {
+        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, diffX), direction, step, currPoint);
     }
 }
