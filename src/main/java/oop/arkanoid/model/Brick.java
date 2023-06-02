@@ -15,10 +15,10 @@ class Brick extends Barrier implements Destroyable {
         this.health = health;
         score = health.getValue() * 5;
 
-        linearEquations.put(CollisionPlace.BOTTOM, LinearEquation.linearEquation(0, position.y() + size.y(), new Point(position.x(), position.x() + size.x())));
-        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position.y(), new Point(position.x(), position.x() + size.x())));
-        linearEquations.put(CollisionPlace.LEFT, LinearEquation.xLinearMotionEquation(position.x(), new Point(position.y(), position.y() + size.y())));
-        linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xLinearMotionEquation(position.x() + size.x(), new Point(position.y(), position.y() + size.y())));
+        linearEquations.put(CollisionPlace.BOTTOM, LinearEquation.linearEquation(0, position.y() + size.y(), new Point(position.x() + 1, position.x() + size.x() - 1)));
+        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position.y(), new Point(position.x() + 1, position.x() + size.x() - 1)));
+        linearEquations.put(CollisionPlace.LEFT, LinearEquation.xLinearMotionEquation(position.x(), new Point(position.y() + 1, position.y() + size.y() - 1)));
+        linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xLinearMotionEquation(position.x() + size.x(), new Point(position.y() + 1, position.y() + size.y() - 1)));
     }
 
     @Override

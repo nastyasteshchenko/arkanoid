@@ -46,11 +46,13 @@ class Ball {
 
             if (barrier instanceof Brick brick) {
                 brick.onHit();
-             //   collisions.add(brick);
+                if (!brick.isAlive()) {
+                    collisions.add(brick);
+                }
             }
         }
 
-        if (!collisions.isEmpty()){
+        if (!collisions.isEmpty()) {
             collisions.forEach(barriers::remove);
         }
     }

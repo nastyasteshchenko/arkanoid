@@ -1,10 +1,11 @@
 package oop.arkanoid.model;
 
 enum CollisionPlace {
+
+    BOTTOM(false),
     TOP(false),
     LEFT(true),
-    RIGHT(true),
-    BOTTOM(false);
+    RIGHT(true);
 
     final boolean needToChangeDirection;
 
