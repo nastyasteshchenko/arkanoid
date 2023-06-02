@@ -8,7 +8,7 @@ interface LinearEquation {
 
     LinearEquation rotate(Point currPoint, CollisionPlace place);
 
-    LinearEquation rotate(Point currPoint, double diffX);
+    LinearEquation rotate(Point currPoint, double diffBetweenBallAndCenterPlatform);
 
     static LinearEquation linearEquation(double angle, double b, Point xBorders) {
         return new BaseLinearEquation(angle, b, xBorders);

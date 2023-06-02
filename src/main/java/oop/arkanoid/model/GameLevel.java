@@ -6,30 +6,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameLevel {
-    private final List<Brick> bricks;
+    private final List<Brick> destroyableBricks;
     private final Platform platform;
     private final List<Barrier> barriers;
     private final Ball ball;
     private final Point scene;
     private static int score;
-
-    private double step;
+    private double speed;
 
     GameLevel(Ball ball, Platform platform, List<Brick> bricks, List<Barrier> barriers, Point scene) {
         this.ball = ball;
         this.platform = platform;
-        this.bricks = bricks;
+        this.destroyableBricks = bricks;
         this.barriers = barriers;
         this.scene = scene;
         score = 0;
-        step = 1.5;
+        speed = 1.5;
     }
 
     public Point nextBallPosition() {
-        Point newBallPos = ball.move(step, barriers);
+        Point newBallPos = ball.move(speed, barriers);
+
         ArrayList<Brick> toRemove = new ArrayList<>();
-        bricks.stream().filter(brick -> !barriers.contains(brick)).forEach(toRemove::add);
-        toRemove.forEach(bricks::remove);
+        destroyableBricks.stream().filter(brick -> !barriers.contains(brick)).forEach(toRemove::add);
+        toRemove.forEach(destroyableBricks::remove);
+
         return newBallPos;
     }
 
@@ -45,7 +46,7 @@ public class GameLevel {
     }
 
     public GameStates gameState() {
-        if (bricks.isEmpty()) {
+        if (destroyableBricks.isEmpty()) {
             return GameStates.GAME_WIN;
         } else if (ball.position.y() > scene.y()) {
             return GameStates.GAME_LOSE;
@@ -58,17 +59,15 @@ public class GameLevel {
         return new LevelInitiator(object).initLevel();
     }
 
-    //TODO think
-
     public ArrayList<Point> getStandardBricks() {
         ArrayList<Point> bricks = new ArrayList<>();
-        this.bricks.stream().filter(brick -> brick.health.getValue() == 1).forEach(brick -> bricks.add(brick.position));
+        this.destroyableBricks.stream().filter(brick -> brick.health.getValue() == 1).forEach(brick -> bricks.add(brick.position));
         return bricks;
     }
 
     public ArrayList<Point> getDoubleHitBricks() {
         ArrayList<Point> bricks = new ArrayList<>();
-        this.bricks.stream().filter(brick -> brick.health.getValue() == 2).forEach(brick -> bricks.add(brick.position));
+        this.destroyableBricks.stream().filter(brick -> brick.health.getValue() == 2).forEach(brick -> bricks.add(brick.position));
         return bricks;
     }
 
@@ -83,7 +82,7 @@ public class GameLevel {
     }
 
     public Point getBrickSize() {
-        return bricks.get(0).size;
+        return destroyableBricks.get(0).size;
     }
 
     public Point getBallPosition() {
@@ -104,6 +103,10 @@ public class GameLevel {
 
     public Point getSceneSize() {
         return scene;
+    }
+
+    public void updateSpeed(double speed) {
+        this.speed = speed;
     }
 
     static void increaseScore(int value) {
@@ -128,11 +131,10 @@ public class GameLevel {
         }
 
         Builder ball(Point position, double radius) {
-            //TODO think about step and don't needed angle
-            double angle = Math.random()*60 + 100;
-            System.out.println("Ball");
+            double angle = Math.random() * 60 + 100;
             BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.recountB(angle, position), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-            ball = new Ball(radius, position, new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 1.5, position));
+
+            ball = new Ball(radius, position, new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 0, position));
             return this;
         }
 

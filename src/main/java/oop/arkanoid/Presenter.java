@@ -225,6 +225,7 @@ public class Presenter {
                 .gameScene(model.getSceneSize());
 
         Point brickSize = model.getBrickSize();
+
         ArrayList<Point> standardBricks = model.getStandardBricks();
 
         standardBricks.forEach(b -> builder.addStandardBrick(b, brickSize));
