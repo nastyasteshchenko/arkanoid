@@ -65,7 +65,7 @@ public class Presenter {
                 loadErrorScene(e.getMessage());
             }
         }
-        currentLevel = 1;
+        currentLevel = 2;
     }
 
     static void loadResourcesBeforeStartApp() {

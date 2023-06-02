@@ -14,7 +14,6 @@ abstract class Barrier {
 
     final CollisionPlace findCollision(CircleEquation circleEquation) {
         var linearEquations = getLinearEquations();
-        // TODO detect one place if there are several collisions
         for (var entry : linearEquations.entrySet()) {
             if (entry.getValue().hasIntersection(circleEquation)) {
                 return entry.getKey();

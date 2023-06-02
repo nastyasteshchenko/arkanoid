@@ -34,7 +34,7 @@ class XLinearEquation implements LinearEquation {
     }
 
     @Override
-    public LinearEquation rotate(Point currPoint, double diffBetweenBallAndCenterPlatform){
+    public LinearEquation rotate(Point currPoint, double diffBetweenBallAndCenterPlatform) {
         throw new UnsupportedOperationException();
     }
 }
