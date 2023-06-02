@@ -11,7 +11,6 @@ class BaseLinearEquation implements LinearEquation {
     BaseLinearEquation(double angle, double b, Point xBorders) {
         this.angle = angle;
         this.k = Math.tan(angle * Math.PI / 180);
-        System.out.println(k);
         this.b = b;
         this.xBorders = xBorders;
     }
