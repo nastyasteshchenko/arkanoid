@@ -1,6 +1,7 @@
 package oop.arkanoid.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 class Ball {
@@ -8,10 +9,13 @@ class Ball {
     Point position;
     LinearMotion motion;
 
+    CircleEquation previousCircleEquation;
+
     Ball(double radius, Point startPos, LinearMotion startMotion) {
         this.radius = radius;
         this.position = startPos;
         this.motion = startMotion;
+        previousCircleEquation = new CircleEquation(position, radius);
     }
 
     Point move(double step, List<Barrier> barriers) {
@@ -28,10 +32,18 @@ class Ball {
         List<Brick> collisions = new ArrayList<>();
         // TODO detect one barrier if there are several collisions
         for (Barrier barrier : barriers) {
-            CollisionPlace collision = barrier.findCollision(circleEquation);
-            if (collision == null) {
+            HashMap<CollisionPlace, LinearEquation> collisionPlaces = barrier.findCollision(circleEquation);
+            if (collisionPlaces.isEmpty()) {
                 continue;
             }
+            CollisionPlace collision = null;
+            for (var entry : collisionPlaces.entrySet()) {
+                if (entry.getValue().nearLinear(previousCircleEquation)) {
+                    collision = entry.getKey();
+                }
+            }
+
+
             if (collision.needToChangeDirection) {
                 motion = motion.flipDirection();
             }
@@ -51,6 +63,8 @@ class Ball {
                 }
             }
         }
+
+        previousCircleEquation = circleEquation;
 
         if (!collisions.isEmpty()) {
             collisions.forEach(barriers::remove);

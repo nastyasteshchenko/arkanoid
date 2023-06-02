@@ -1,6 +1,8 @@
 package oop.arkanoid.model;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 
 abstract class Barrier {
 
@@ -12,14 +14,15 @@ abstract class Barrier {
         this.size = size;
     }
 
-    final CollisionPlace findCollision(CircleEquation circleEquation) {
+    final HashMap<CollisionPlace, LinearEquation> findCollision(CircleEquation circleEquation) {
+        HashMap<CollisionPlace, LinearEquation> collisionPlaces = new HashMap<>();
         var linearEquations = getLinearEquations();
         for (var entry : linearEquations.entrySet()) {
             if (entry.getValue().hasIntersection(circleEquation)) {
-                return entry.getKey();
+                collisionPlaces.put(entry.getKey(), entry.getValue());
             }
         }
-        return null;
+        return collisionPlaces;
     }
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();

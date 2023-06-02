@@ -17,4 +17,6 @@ interface LinearEquation {
     static LinearEquation xLinearMotionEquation(double x, Point yBorders) {
         return new XLinearEquation(x, yBorders);
     }
+
+    boolean nearLinear(CircleEquation previousCircleEquation);
 }

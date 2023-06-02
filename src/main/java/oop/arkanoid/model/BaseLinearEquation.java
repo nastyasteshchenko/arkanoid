@@ -60,5 +60,10 @@ class BaseLinearEquation implements LinearEquation {
         return position.y() - position.x() * Math.tan(angle * Math.PI / 180);
     }
 
+    @Override
+    public boolean nearLinear(CircleEquation previousCircleEquation) {
+        return GameLevel.Builder.inSegment(xBorders.x() - previousCircleEquation.radius(), xBorders.y() + previousCircleEquation.radius(), previousCircleEquation.center().x());
+    }
+
 }
 
