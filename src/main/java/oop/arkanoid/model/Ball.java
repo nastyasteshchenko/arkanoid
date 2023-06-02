@@ -1,5 +1,6 @@
 package oop.arkanoid.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class Ball {
@@ -24,6 +25,7 @@ class Ball {
 
     private void detectCollisions(List<Barrier> barriers) {
         CircleEquation circleEquation = new CircleEquation(position, radius);
+        List<Brick> collisions = new ArrayList<>();
         // TODO detect one barrier if there are several collisions
         for (Barrier barrier : barriers) {
             CollisionPlace collision = barrier.findCollision(circleEquation);
@@ -36,21 +38,20 @@ class Ball {
 
             if (barrier instanceof Platform) {
                 double platformCenterX = barrier.position.x() + barrier.size.x() / 2;
-                if (position.x() <= platformCenterX) {
-                    if (motion.direction == MotionDirection.RIGHT) {
-                        motion = motion.flipDirection();
-                    }
-                } else {
-                    if (motion.direction == MotionDirection.LEFT) {
-                        motion = motion.flipDirection();
-                    }
-                }
+                motion = motion.flipDirection(position.x() - platformCenterX);
                 motion = motion.rotate(platformCenterX - position.x());
             } else {
                 motion = motion.rotate(collision);
             }
-            break;
-            // TODO fire hit
+
+            if (barrier instanceof Brick brick) {
+                brick.onHit();
+             //   collisions.add(brick);
+            }
+        }
+
+        if (!collisions.isEmpty()){
+            collisions.forEach(barriers::remove);
         }
     }
 }
