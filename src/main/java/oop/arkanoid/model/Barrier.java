@@ -14,15 +14,14 @@ abstract class Barrier {
         this.size = size;
     }
 
-    final HashMap<CollisionPlace, LinearEquation> findCollision(CircleEquation circleEquation) {
-        HashMap<CollisionPlace, LinearEquation> collisionPlaces = new HashMap<>();
+    final CollisionPlace findCollision(CircleEquation circleEquation) {
         var linearEquations = getLinearEquations();
         for (var entry : linearEquations.entrySet()) {
             if (entry.getValue().hasIntersection(circleEquation)) {
-                collisionPlaces.put(entry.getKey(), entry.getValue());
+                return entry.getKey();
             }
         }
-        return collisionPlaces;
+        return null;
     }
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();

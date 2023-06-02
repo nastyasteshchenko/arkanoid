@@ -37,10 +37,4 @@ class XLinearEquation implements LinearEquation {
     public LinearEquation rotate(Point currPoint, double diffBetweenBallAndCenterPlatform) {
         throw new UnsupportedOperationException();
     }
-
-    @Override
-    public boolean nearLinear(CircleEquation previousCircleEquation) {
-        return GameLevel.Builder.inSegment(yBorders.x() - previousCircleEquation.radius(), yBorders.y() + previousCircleEquation.radius(), previousCircleEquation.center().y());
-    }
-
 }

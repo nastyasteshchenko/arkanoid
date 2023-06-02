@@ -10,7 +10,7 @@ class BaseLinearEquation implements LinearEquation {
 
     BaseLinearEquation(double angle, double b, Point xBorders) {
         this.angle = angle;
-        this.k = Math.tan(angle * Math.PI / 180);
+        this.k = Math.tan(Math.toRadians(angle));
         this.b = b;
         this.xBorders = xBorders;
     }
@@ -53,16 +53,14 @@ class BaseLinearEquation implements LinearEquation {
     @Override
     public LinearEquation rotate(Point currPoint, double diffBetweenBallAndCenterPlatform) {
         double angle = -90 - diffBetweenBallAndCenterPlatform;
+        if (diffBetweenBallAndCenterPlatform == 0) {
+            angle = -91;
+        }
         return new BaseLinearEquation(angle, recountB(angle, currPoint), xBorders);
     }
 
     static double recountB(double angle, Point position) {
-        return position.y() - position.x() * Math.tan(angle * Math.PI / 180);
-    }
-
-    @Override
-    public boolean nearLinear(CircleEquation previousCircleEquation) {
-        return GameLevel.Builder.inSegment(xBorders.x() - previousCircleEquation.radius(), xBorders.y() + previousCircleEquation.radius(), previousCircleEquation.center().x());
+        return position.y() - position.x() * Math.tan(Math.toRadians(angle));
     }
 
 }

@@ -32,18 +32,10 @@ class Ball {
         List<Brick> collisions = new ArrayList<>();
         // TODO detect one barrier if there are several collisions
         for (Barrier barrier : barriers) {
-            HashMap<CollisionPlace, LinearEquation> collisionPlaces = barrier.findCollision(circleEquation);
-            if (collisionPlaces.isEmpty()) {
+            CollisionPlace collision = barrier.findCollision(circleEquation);
+            if (collision == null) {
                 continue;
             }
-            CollisionPlace collision = null;
-            for (var entry : collisionPlaces.entrySet()) {
-                if (entry.getValue().nearLinear(previousCircleEquation)) {
-                    collision = entry.getKey();
-                }
-            }
-
-
             if (collision.needToChangeDirection) {
                 motion = motion.flipDirection();
             }
@@ -62,9 +54,10 @@ class Ball {
                     collisions.add(brick);
                 }
             }
+
         }
 
-        previousCircleEquation = circleEquation;
+        previousCircleEquation = new CircleEquation(new Point(position.x(), position.y()), circleEquation.radius());
 
         if (!collisions.isEmpty()) {
             collisions.forEach(barriers::remove);
