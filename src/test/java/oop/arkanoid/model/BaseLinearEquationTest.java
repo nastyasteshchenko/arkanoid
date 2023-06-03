@@ -8,6 +8,16 @@ class BaseLinearEquationTest {
 
     @Test
     void hasIntersection() {
+        CircleEquation circleEquation = new CircleEquation(new Point(123, 130), 15);
+        BaseLinearEquation baseLinearEquation = new BaseLinearEquation(0, 145, new Point(100, 160));
+        assertTrue(baseLinearEquation.hasIntersection(circleEquation));
+    }
+
+    @Test
+    void noIntersection() {
+        CircleEquation circleEquation = new CircleEquation(new Point(123, 130), 15);
+        BaseLinearEquation baseLinearEquation = new BaseLinearEquation(0, 100, new Point(100, 160));
+        assertFalse(baseLinearEquation.hasIntersection(circleEquation));
     }
 
     @Test
