@@ -60,9 +60,6 @@ class BaseLinearEquation implements LinearEquation {
     @Override
     public LinearEquation rotate(Point currPoint, double diffBetweenBallAndCenterPlatform) {
         double angle = -90 - diffBetweenBallAndCenterPlatform;
-        if (diffBetweenBallAndCenterPlatform == 0) {
-            angle = -91;
-        }
         return new BaseLinearEquation(angle, recountB(angle, currPoint), xBorders);
     }
 
@@ -73,11 +70,17 @@ class BaseLinearEquation implements LinearEquation {
     @Override
     public double findDistance(CircleEquation circleEquation, CollisionPlace place) {
         List<Double> xs = circleEquation.getX(b);
-        if (place == CollisionPlace.LEFT) {
-            return Math.abs(xs.get(0) - xBorders.x());
-        } else {
-            return Math.abs(xs.get(0) - xBorders.y());
+
+        for (Double x : xs) {
+            if (GameLevel.Builder.inSegment(xBorders.x(), xBorders.y(), x)) {
+                if (place == CollisionPlace.LEFT) {
+                    return Math.abs(x - xBorders.x());
+                } else {
+                    return Math.abs(x - xBorders.y());
+                }
+            }
         }
+        return 0;
     }
 }
 

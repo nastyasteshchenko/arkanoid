@@ -44,13 +44,18 @@ class XLinearEquation implements LinearEquation {
     }
 
     @Override
-    public double findDistance(CircleEquation circleEquation, CollisionPlace place){
+    public double findDistance(CircleEquation circleEquation, CollisionPlace place) {
         List<Double> ys = circleEquation.getY(x);
-        if (place == CollisionPlace.TOP) {
-            return Math.abs(ys.get(0) - yBorders.x());
-        } else {
-            return Math.abs(ys.get(0) - yBorders.y());
+        for (Double y : ys) {
+            if (GameLevel.Builder.inSegment(yBorders.x(), yBorders.y(), y)) {
+                if (place == CollisionPlace.TOP) {
+                    return Math.abs(y - yBorders.x());
+                } else {
+                    return Math.abs(y - yBorders.y());
+                }
+            }
         }
+        return 0;
     }
 
 }

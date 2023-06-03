@@ -18,8 +18,10 @@ abstract class Barrier {
 
     final CollisionPlace findCollision(CircleEquation circleEquation) {
         CollisionPlace collisionPlace = null;
+
         Pair<CollisionPlace, LinearEquation> vertical = null;
         Pair<CollisionPlace, LinearEquation> horizontal = null;
+
         var linearEquations = getLinearEquations();
         for (var entry : linearEquations.entrySet()) {
             if (entry.getValue().hasIntersection(circleEquation)) {
@@ -31,18 +33,17 @@ abstract class Barrier {
                 collisionPlace = entry.getKey();
             }
         }
-        if (vertical == null && horizontal == null) {
+
+        if (collisionPlace==null) {
             return null;
         }
+
         if (vertical == null || horizontal == null) {
             return collisionPlace;
         }
 
         double distanceY = vertical.getValue().findDistance(circleEquation, horizontal.getKey());
         double distanceX = horizontal.getValue().findDistance(circleEquation, vertical.getKey());
-        if (distanceX==distanceY){
-            System.exit(1);
-        }
 
         return distanceX > distanceY ? vertical.getKey() : horizontal.getKey();
     }
