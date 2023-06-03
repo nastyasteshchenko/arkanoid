@@ -58,4 +58,10 @@ class XLinearEquation implements LinearEquation {
         return 0;
     }
 
+    @Override
+    public double findHordaSize(CircleEquation circleEquation) {
+        List<Double> ys = circleEquation.getY(x);
+        return Math.abs(ys.get(0) - ys.get(1));
+    }
+
 }

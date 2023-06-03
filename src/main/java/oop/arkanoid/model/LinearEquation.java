@@ -21,4 +21,6 @@ interface LinearEquation {
     }
 
     double findDistance(CircleEquation circleEquation, CollisionPlace place);
+
+    double findHordaSize(CircleEquation circleEquation);
 }

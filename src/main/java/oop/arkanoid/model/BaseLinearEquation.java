@@ -82,5 +82,11 @@ class BaseLinearEquation implements LinearEquation {
         }
         return 0;
     }
+
+    @Override
+    public double findHordaSize(CircleEquation circleEquation) {
+        List<Double> xs = circleEquation.getX(b);
+        return Math.abs(xs.get(0) - xs.get(1));
+    }
 }
 

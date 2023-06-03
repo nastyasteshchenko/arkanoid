@@ -45,7 +45,7 @@ abstract class Barrier {
         double distanceY = vertical.getValue().findDistance(circleEquation, horizontal.getKey());
         double distanceX = horizontal.getValue().findDistance(circleEquation, vertical.getKey());
 
-        return distanceX > distanceY ? vertical.getKey() : horizontal.getKey();
+        return distanceX <= distanceY ? vertical.getKey() : horizontal.getKey();
     }
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();
