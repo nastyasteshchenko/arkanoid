@@ -29,6 +29,11 @@ class XLinearEquation implements LinearEquation {
     }
 
     @Override
+    public double getX(double y) {
+        return x;
+    }
+
+    @Override
     public LinearEquation rotate(Point currPoint, CollisionPlace place) {
         throw new UnsupportedOperationException();
     }
@@ -37,4 +42,15 @@ class XLinearEquation implements LinearEquation {
     public LinearEquation rotate(Point currPoint, double diffBetweenBallAndCenterPlatform) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public double findDistance(CircleEquation circleEquation, CollisionPlace place){
+        List<Double> ys = circleEquation.getY(x);
+        if (place == CollisionPlace.TOP) {
+            return Math.abs(ys.get(0) - yBorders.x());
+        } else {
+            return Math.abs(ys.get(0) - yBorders.y());
+        }
+    }
+
 }

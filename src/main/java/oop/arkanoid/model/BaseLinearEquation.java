@@ -1,5 +1,7 @@
 package oop.arkanoid.model;
 
+import java.util.List;
+
 class BaseLinearEquation implements LinearEquation {
 
     final double k;
@@ -42,6 +44,11 @@ class BaseLinearEquation implements LinearEquation {
     }
 
     @Override
+    public double getX(double y) {
+        return (y - b) / k;
+    }
+
+    @Override
     public LinearEquation rotate(Point currPoint, CollisionPlace place) {
         if (place.needToChangeDirection) {
             return new BaseLinearEquation(-180 - angle, recountB(180 - angle, currPoint), xBorders);
@@ -63,5 +70,14 @@ class BaseLinearEquation implements LinearEquation {
         return position.y() - position.x() * Math.tan(Math.toRadians(angle));
     }
 
+    @Override
+    public double findDistance(CircleEquation circleEquation, CollisionPlace place) {
+        List<Double> xs = circleEquation.getX(b);
+        if (place == CollisionPlace.LEFT) {
+            return Math.abs(xs.get(0) - xBorders.x());
+        } else {
+            return Math.abs(xs.get(0) - xBorders.y());
+        }
+    }
 }
 
