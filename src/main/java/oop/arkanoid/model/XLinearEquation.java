@@ -29,11 +29,6 @@ class XLinearEquation implements LinearEquation {
     }
 
     @Override
-    public double getX(double y) {
-        return x;
-    }
-
-    @Override
     public LinearEquation rotate(Point currPoint, CollisionPlace place) {
         throw new UnsupportedOperationException();
     }
@@ -44,7 +39,7 @@ class XLinearEquation implements LinearEquation {
     }
 
     @Override
-    public double findDistance(CircleEquation circleEquation, CollisionPlace place) {
+    public double getDistanceBallCrossingLine(CircleEquation circleEquation, CollisionPlace place) {
         List<Double> ys = circleEquation.getY(x);
         for (Double y : ys) {
             if (GameLevel.Builder.inSegment(yBorders.x(), yBorders.y(), y)) {
@@ -56,12 +51,6 @@ class XLinearEquation implements LinearEquation {
             }
         }
         return 0;
-    }
-
-    @Override
-    public double findHordaSize(CircleEquation circleEquation) {
-        List<Double> ys = circleEquation.getY(x);
-        return Math.abs(ys.get(0) - ys.get(1));
     }
 
 }

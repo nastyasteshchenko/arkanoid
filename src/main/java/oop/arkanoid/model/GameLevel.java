@@ -132,7 +132,7 @@ public class GameLevel {
 
         Builder ball(Point position, double radius) {
             double angle = Math.random() * 60 + 100;
-            BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.recountB(angle, position), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+            BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.countB(angle, position), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
 
             ball = new Ball(radius, position, new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 0, position));
             return this;

@@ -19,6 +19,7 @@ class LinearMotion {
     /*
          { (x-centerX)^2 + (y - centerY)^2 = R^2
          { y=kx+b
+
         [1+k^2]x^2 + [2(k(b-centerY) - centerX)]x + [centerX^2 - R^2 + (b - centerY)^2] = 0
 
     */
@@ -49,15 +50,15 @@ class LinearMotion {
         return new LinearMotion(linearEquation, direction.flip(), step, currPoint);
     }
 
-    LinearMotion flipDirection(double diffBetweenBallAndCenterPlatform) {
-        return new LinearMotion(linearEquation, direction.flipByPlatform(diffBetweenBallAndCenterPlatform), step, currPoint);
+    LinearMotion flipDirection(double diffXBetweenBallAndCenterPlatform) {
+        return new LinearMotion(linearEquation, direction.flipByPlatform(diffXBetweenBallAndCenterPlatform), step, currPoint);
     }
 
     LinearMotion rotate(CollisionPlace place) {
         return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, place), direction, step, currPoint);
     }
 
-    LinearMotion rotate(double diffX) {
-        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, diffX), direction, step, currPoint);
+    LinearMotion rotate(double diffXBetweenBallAndCenterPlatform) {
+        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, diffXBetweenBallAndCenterPlatform), direction, step, currPoint);
     }
 }

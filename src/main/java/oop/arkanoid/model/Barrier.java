@@ -2,9 +2,7 @@ package oop.arkanoid.model;
 
 import javafx.util.Pair;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 
 abstract class Barrier {
 
@@ -42,8 +40,8 @@ abstract class Barrier {
             return collisionPlace;
         }
 
-        double distanceY = vertical.getValue().findDistance(circleEquation, horizontal.getKey());
-        double distanceX = horizontal.getValue().findDistance(circleEquation, vertical.getKey());
+        double distanceY = vertical.getValue().getDistanceBallCrossingLine(circleEquation, horizontal.getKey());
+        double distanceX = horizontal.getValue().getDistanceBallCrossingLine(circleEquation, vertical.getKey());
 
         return distanceX <= distanceY ? vertical.getKey() : horizontal.getKey();
     }

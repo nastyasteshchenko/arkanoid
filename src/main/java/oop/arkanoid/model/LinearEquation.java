@@ -6,8 +6,6 @@ interface LinearEquation {
 
     double getY(double x);
 
-    double getX(double y);
-
     LinearEquation rotate(Point currPoint, CollisionPlace place);
 
     LinearEquation rotate(Point currPoint, double diffBetweenBallAndCenterPlatform);
@@ -20,7 +18,6 @@ interface LinearEquation {
         return new XLinearEquation(x, yBorders);
     }
 
-    double findDistance(CircleEquation circleEquation, CollisionPlace place);
+    double getDistanceBallCrossingLine(CircleEquation circleEquation, CollisionPlace place);
 
-    double findHordaSize(CircleEquation circleEquation);
 }

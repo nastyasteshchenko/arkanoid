@@ -44,31 +44,21 @@ class BaseLinearEquation implements LinearEquation {
     }
 
     @Override
-    public double getX(double y) {
-        return (y - b) / k;
-    }
-
-    @Override
     public LinearEquation rotate(Point currPoint, CollisionPlace place) {
         if (place.needToChangeDirection) {
-            return new BaseLinearEquation(-180 - angle, recountB(180 - angle, currPoint), xBorders);
+            return new BaseLinearEquation(-180 - angle, countB(180 - angle, currPoint), xBorders);
         } else {
-            return new BaseLinearEquation(-angle, recountB(-angle, currPoint), xBorders);
+            return new BaseLinearEquation(-angle, countB(-angle, currPoint), xBorders);
         }
     }
 
     @Override
-    public LinearEquation rotate(Point currPoint, double diffBetweenBallAndCenterPlatform) {
-        double angle = -90 - diffBetweenBallAndCenterPlatform;
-        return new BaseLinearEquation(angle, recountB(angle, currPoint), xBorders);
-    }
-
-    static double recountB(double angle, Point position) {
-        return position.y() - position.x() * Math.tan(Math.toRadians(angle));
+    public LinearEquation rotate(Point currPoint, double diffXBetweenBallAndCenterPlatform) {
+        return new BaseLinearEquation(-90 - diffXBetweenBallAndCenterPlatform, countB(-90 - diffXBetweenBallAndCenterPlatform, currPoint), xBorders);
     }
 
     @Override
-    public double findDistance(CircleEquation circleEquation, CollisionPlace place) {
+    public double getDistanceBallCrossingLine(CircleEquation circleEquation, CollisionPlace place) {
         List<Double> xs = circleEquation.getX(b);
 
         for (Double x : xs) {
@@ -83,10 +73,8 @@ class BaseLinearEquation implements LinearEquation {
         return 0;
     }
 
-    @Override
-    public double findHordaSize(CircleEquation circleEquation) {
-        List<Double> xs = circleEquation.getX(b);
-        return Math.abs(xs.get(0) - xs.get(1));
+    static double countB(double angle, Point position) {
+        return position.y() - position.x() * Math.tan(Math.toRadians(angle));
     }
 }
 

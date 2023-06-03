@@ -26,8 +26,9 @@ class Ball {
 
     private void detectCollisions(List<Barrier> barriers) {
         CircleEquation circleEquation = new CircleEquation(position, radius);
-        List<Brick> collisions = new ArrayList<>();
+        List<Brick> bricksToDelete = new ArrayList<>();
         boolean hasChangedDirection = false;
+
         for (Barrier barrier : barriers) {
             CollisionPlace collision = barrier.findCollision(circleEquation);
             if (collision == null) {
@@ -51,14 +52,13 @@ class Ball {
             if (barrier instanceof Brick brick) {
                 brick.onHit();
                 if (!brick.isAlive()) {
-                    collisions.add(brick);
+                    bricksToDelete.add(brick);
                 }
             }
-
         }
 
         if (hasChangedDirection) {
-            collisions.forEach(barriers::remove);
+            bricksToDelete.forEach(barriers::remove);
         }
     }
 }

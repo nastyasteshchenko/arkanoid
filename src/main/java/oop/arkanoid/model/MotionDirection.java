@@ -8,7 +8,7 @@ enum MotionDirection {
         return this == LEFT ? RIGHT : LEFT;
     }
 
-    MotionDirection flipByPlatform(double diffBetweenBallAndCenterPlatform) {
-        return diffBetweenBallAndCenterPlatform <= 0 ? LEFT : RIGHT;
+    MotionDirection flipByPlatform(double diffXBetweenBallAndCenterPlatform) {
+        return diffXBetweenBallAndCenterPlatform <= 0 ? LEFT : RIGHT;
     }
 }
