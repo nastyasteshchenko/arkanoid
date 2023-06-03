@@ -133,6 +133,7 @@ public class GameLevel {
         }
     }
 
+    //Тут не объединила в один метод, так как возвращаю только координаты кирпичей
     public ArrayList<Point> getStandardBricks() {
         ArrayList<Point> bricks = new ArrayList<>();
         this.destroyableBricks.stream().filter(brick -> brick.health.getValue() == 1).forEach(brick -> bricks.add(brick.position));
