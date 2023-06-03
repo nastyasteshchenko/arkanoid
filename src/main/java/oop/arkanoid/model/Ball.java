@@ -6,12 +6,15 @@ import java.util.List;
 class Ball {
     final double radius;
     Point position;
-    LinearMotion motion;
+    private LinearMotion motion;
 
-    Ball(double radius, Point startPos, LinearMotion startMotion) {
+    Ball(double radius, Point startPos) {
         this.radius = radius;
         this.position = startPos;
-        this.motion = startMotion;
+
+        double angle = Math.random() * 60 + 100;
+        BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.countB(angle, position), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+        this.motion = new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 0, position);
     }
 
     Point move(double step, List<Barrier> barriers) {
@@ -26,6 +29,7 @@ class Ball {
 
     private void detectCollisions(List<Barrier> barriers) {
         CircleEquation circleEquation = new CircleEquation(position, radius);
+
         List<Brick> bricksToDelete = new ArrayList<>();
         boolean hasChangedDirection = false;
 
@@ -35,15 +39,15 @@ class Ball {
                 continue;
             }
             if (!hasChangedDirection) {
-                if (collision.needToChangeDirection) {
-                    motion = motion.flipDirection();
-                }
 
                 if (barrier instanceof Platform) {
-                    double platformCenterX = barrier.position.x() + barrier.size.x() / 2;
-                    motion = motion.flipDirection(position.x() - platformCenterX);
-                    motion = motion.rotate(platformCenterX - position.x());
+                    double diffXBetweenBallAndCenterPlatform = barrier.position.x() + barrier.size.x() / 2 - position.x();
+                    motion = motion.flipDirection(diffXBetweenBallAndCenterPlatform);
+                    motion = motion.rotate(diffXBetweenBallAndCenterPlatform);
                 } else {
+                    if (collision.needToChangeDirection) {
+                        motion = motion.flipDirection();
+                    }
                     motion = motion.rotate(collision);
                 }
                 hasChangedDirection = true;

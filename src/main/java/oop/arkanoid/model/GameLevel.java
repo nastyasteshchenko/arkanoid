@@ -12,7 +12,7 @@ public class GameLevel {
     private final Platform platform;
     private final List<Barrier> barriers;
     private final Ball ball;
-    private final Point scene;
+    private final Point sceneSize;
     private static int score;
     private double speed;
 
@@ -21,7 +21,7 @@ public class GameLevel {
         this.platform = platform;
         this.destroyableBricks = bricks;
         this.barriers = barriers;
-        this.scene = scene;
+        this.sceneSize = scene;
         score = 0;
         speed = 1.5;
     }
@@ -39,8 +39,8 @@ public class GameLevel {
     public double updatePlatformPosition(double x) {
         if (inSegment(0, platform.size.x() / 2, x)) {
             platform.update(0);
-        } else if (inSegment(scene.x() - platform.size.x() / 2, scene.x(), x)) {
-            platform.update(scene.x() - platform.size.x());
+        } else if (inSegment(sceneSize.x() - platform.size.x() / 2, sceneSize.x(), x)) {
+            platform.update(sceneSize.x() - platform.size.x());
         } else {
             platform.update(x - platform.size.x() / 2);
         }
@@ -50,8 +50,7 @@ public class GameLevel {
     public GameStates gameState() {
         if (destroyableBricks.isEmpty()) {
             return GameStates.GAME_WIN;
-        } else if (ball.position.y() > scene.y()) {
-            System.out.println(ball.position.y());
+        } else if (ball.position.y() > sceneSize.y()) {
             return GameStates.GAME_LOSE;
         } else {
             return GameStates.GAME_IN_PROCESS;
@@ -60,6 +59,78 @@ public class GameLevel {
 
     public static GameLevel initLevel(JsonObject object) throws GeneratingGameException {
         return new LevelInitiator(object).initLevel();
+    }
+
+    public void updateSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    static void increaseScore(int value) {
+        score += value;
+    }
+
+    static class Builder {
+        private final List<Brick> bricks = new ArrayList<>();
+        private final List<Barrier> barriers = new ArrayList<>();
+        private Platform platform;
+        private Ball ball;
+        private final Point sceneSize;
+
+        Builder(Point sceneSize) {
+            this.sceneSize = sceneSize;
+        }
+
+        Builder platform(Point position, Point size) {
+            platform = new Platform(position, size);
+            barriers.add(platform);
+            return this;
+        }
+
+        Builder ball(Point position, double radius) {
+            ball = new Ball(radius, position);
+            return this;
+        }
+
+        @SuppressWarnings("UnusedReturnValue")
+        Builder addDestroyableBrick(Point position, Point size, int health) throws GeneratingGameException {
+            Brick brick = new Brick(position, size, new Health(health));
+            brick.checkIfOutOfScene(sceneSize);
+            brick.checkIfCollisions(barriers);
+            bricks.add(brick);
+            barriers.add(brick);
+            return this;
+        }
+
+        @SuppressWarnings("UnusedReturnValue")
+        Builder addImmortalBrick(Point position, Point size) throws GeneratingGameException {
+            Brick brick = new Brick(position, size, Health.createImmortal());
+            brick.checkIfOutOfScene(sceneSize);
+            brick.checkIfCollisions(barriers);
+            barriers.add(brick);
+            return this;
+        }
+
+        @SuppressWarnings("UnusedReturnValue")
+        Builder addWall(Point position, Point size, CollisionPlace place) throws GeneratingGameException {
+            Wall wall = new Wall(position, size, place);
+            wall.checkWall(sceneSize, position);
+            barriers.add(wall);
+            return this;
+        }
+
+        GameLevel build() throws GeneratingGameException {
+
+            platform.isCollisionWithBall(new CircleEquation(ball.position, ball.radius + 2));
+            checkUninitObjects();
+
+            return new GameLevel(ball, platform, bricks, barriers, sceneSize);
+        }
+
+        private void checkUninitObjects() throws GeneratingGameException {
+            if (ball == null || platform == null || sceneSize == null || bricks.isEmpty() || barriers.isEmpty()) {
+                throw GeneratingGameException.uninitObjects();
+            }
+        }
     }
 
     public ArrayList<Point> getStandardBricks() {
@@ -105,81 +176,7 @@ public class GameLevel {
     }
 
     public Point getSceneSize() {
-        return scene;
+        return sceneSize;
     }
 
-    public void updateSpeed(double speed) {
-        this.speed = speed;
-    }
-
-    static void increaseScore(int value) {
-        score += value;
-    }
-
-    static class Builder {
-        private final List<Brick> bricks = new ArrayList<>();
-        private final List<Barrier> barriers = new ArrayList<>();
-        private Platform platform;
-        private Ball ball;
-        private final Point scene;
-
-        Builder(Point scene) {
-            this.scene = scene;
-        }
-
-        Builder platform(Point position, Point size) {
-            platform = new Platform(position, size);
-            barriers.add(platform);
-            return this;
-        }
-
-        Builder ball(Point position, double radius) {
-            double angle = Math.random() * 60 + 100;
-            BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.countB(angle, position), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-            ball = new Ball(radius, position, new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 0, position));
-            return this;
-        }
-
-        @SuppressWarnings("UnusedReturnValue")
-        Builder addDestroyableBrick(Point position, Point size, int health) throws GeneratingGameException {
-            Brick brick = new Brick(position, size, new Health(health));
-            brick.checkIfOutOfScene(scene);
-            brick.checkIfCollisions(barriers);
-            bricks.add(brick);
-            barriers.add(brick);
-            return this;
-        }
-
-        @SuppressWarnings("UnusedReturnValue")
-        Builder addImmortalBrick(Point position, Point size) throws GeneratingGameException {
-            Brick brick = new Brick(position, size, Health.createImmortal());
-            brick.checkIfOutOfScene(scene);
-            brick.checkIfCollisions(barriers);
-            barriers.add(brick);
-            return this;
-        }
-
-        @SuppressWarnings("UnusedReturnValue")
-        Builder addWall(Point position, Point size, CollisionPlace place) {
-            Wall wall = new Wall(position, size, place);
-            barriers.add(wall);
-            return this;
-        }
-
-        GameLevel build() throws GeneratingGameException {
-
-            platform.isCollisionWithBall(new CircleEquation(ball.position, ball.radius + 2));
-            checkUninitObjects();
-
-            return new GameLevel(ball, platform, bricks, barriers, scene);
-        }
-
-        private void checkUninitObjects() throws GeneratingGameException {
-            if (ball == null || platform == null || scene == null || bricks.isEmpty() || barriers.isEmpty()) {
-                throw GeneratingGameException.uninitObjects();
-            }
-        }
-
-
-    }
 }

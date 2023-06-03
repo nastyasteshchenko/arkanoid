@@ -42,16 +42,16 @@ abstract class Barrier {
             return collisionPlace;
         }
 
-        double distanceY = vertical.getValue().getDistanceBallCrossingLine(circleEquation, horizontal.getKey());
         double distanceX = horizontal.getValue().getDistanceBallCrossingLine(circleEquation, vertical.getKey());
+        double distanceY = vertical.getValue().getDistanceBallCrossingLine(circleEquation, horizontal.getKey());
 
         return distanceX <= distanceY ? vertical.getKey() : horizontal.getKey();
     }
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();
 
-    static boolean inSegment(double a, double b, double x) {
-        return a <= x && x <= b;
+    static boolean inSegment(double min, double max, double value) {
+        return min <= value && value <= max;
     }
 
     void checkIfCollisions(List<Barrier> barriers) throws GeneratingGameException {

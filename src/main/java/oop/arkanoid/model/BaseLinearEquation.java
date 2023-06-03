@@ -7,10 +7,10 @@ import static oop.arkanoid.model.Barrier.inSegment;
 class BaseLinearEquation implements LinearEquation {
 
     final double k;
-    final double angle;
     final double b;
 
-    final Point xBorders;
+    private final double angle;
+    private final Point xBorders;
 
     BaseLinearEquation(double angle, double b, Point xBorders) {
         this.angle = angle;
@@ -48,7 +48,7 @@ class BaseLinearEquation implements LinearEquation {
     @Override
     public LinearEquation rotate(Point currPoint, CollisionPlace place) {
         if (place.needToChangeDirection) {
-            return new BaseLinearEquation(-180 - angle, countB(180 - angle, currPoint), xBorders);
+            return new BaseLinearEquation(-180 - angle, countB(-180 - angle, currPoint), xBorders);
         } else {
             return new BaseLinearEquation(-angle, countB(-angle, currPoint), xBorders);
         }

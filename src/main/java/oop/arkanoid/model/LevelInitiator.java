@@ -27,7 +27,7 @@ public class LevelInitiator {
         return builder.build();
     }
 
-    private void setWalls(GameLevel.Builder builder, double sceneWidth, double sceneHeight) {
+    private void setWalls(GameLevel.Builder builder, double sceneWidth, double sceneHeight) throws GeneratingGameException {
         builder.addWall(createPoint(0, 0), createPoint(0, sceneHeight), CollisionPlace.LEFT);
         builder.addWall(createPoint(sceneWidth, 0), createPoint(0, sceneHeight), CollisionPlace.RIGHT);
         builder.addWall(createPoint(0, 0), createPoint(sceneWidth, 0), CollisionPlace.BOTTOM);

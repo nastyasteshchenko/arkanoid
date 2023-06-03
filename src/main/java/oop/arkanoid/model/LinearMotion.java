@@ -9,9 +9,9 @@ class LinearMotion {
     final double step;
     Point currPoint;
 
-    LinearMotion(BaseLinearEquation linearEquation, MotionDirection horizontalDirection, double step, Point startPos) {
+    LinearMotion(BaseLinearEquation linearEquation, MotionDirection direction, double step, Point startPos) {
         this.linearEquation = linearEquation;
-        this.direction = horizontalDirection;
+        this.direction = direction;
         this.step = step;
         currPoint = startPos;
     }
