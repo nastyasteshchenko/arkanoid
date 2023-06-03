@@ -2,21 +2,15 @@ package oop.arkanoid.model;
 
 import java.util.List;
 
-class XLinearEquation implements LinearEquation {
+import static oop.arkanoid.model.Barrier.inSegment;
 
-    private final double x;
-    final Point yBorders;
-
-    XLinearEquation(double x, Point yBorders) {
-        this.x = x;
-        this.yBorders = yBorders;
-    }
+record XLinearEquation(double x, Point yBorders) implements LinearEquation {
 
     @Override
     public boolean hasIntersection(CircleEquation circleEquation) {
         List<Double> ys = circleEquation.getY(x);
         for (Double y : ys) {
-            if (GameLevel.Builder.inSegment(yBorders.x(), yBorders.y(), y)) {
+            if (inSegment(yBorders.x(), yBorders.y(), y)) {
                 return true;
             }
         }
@@ -42,7 +36,7 @@ class XLinearEquation implements LinearEquation {
     public double getDistanceBallCrossingLine(CircleEquation circleEquation, CollisionPlace place) {
         List<Double> ys = circleEquation.getY(x);
         for (Double y : ys) {
-            if (GameLevel.Builder.inSegment(yBorders.x(), yBorders.y(), y)) {
+            if (inSegment(yBorders.x(), yBorders.y(), y)) {
                 if (place == CollisionPlace.TOP) {
                     return Math.abs(y - yBorders.x());
                 } else {

@@ -3,6 +3,8 @@ package oop.arkanoid.model;
 import javafx.util.Pair;
 
 import java.util.EnumMap;
+import java.util.List;
+
 
 abstract class Barrier {
 
@@ -32,7 +34,7 @@ abstract class Barrier {
             }
         }
 
-        if (collisionPlace==null) {
+        if (collisionPlace == null) {
             return null;
         }
 
@@ -48,4 +50,24 @@ abstract class Barrier {
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();
 
+    static boolean inSegment(double a, double b, double x) {
+        return a <= x && x <= b;
+    }
+
+    void checkIfCollisions(List<Barrier> barriers) throws GeneratingGameException {
+        if (barriers.stream().anyMatch(this::hasCollisionWithObject)) {
+            throw GeneratingGameException.collisionWithOtherObjects();
+        }
+    }
+
+    void checkIfOutOfScene(Point scene) throws GeneratingGameException {
+        if (!inSegment(0, scene.x(), position.x()) || !inSegment(0, scene.y(), position.y()) || !inSegment(0, scene.x(), position.x() + size.x()) || !inSegment(0, scene.y(), position.y() + size.y())) {
+            throw GeneratingGameException.outOfScene();
+        }
+    }
+
+    private boolean hasCollisionWithObject(Barrier barrier) {
+        return (inSegment(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x()) || inSegment(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x() + size.x()))
+                && (inSegment(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y()) || inSegment(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y() + size.y()));
+    }
 }

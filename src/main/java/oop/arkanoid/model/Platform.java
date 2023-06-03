@@ -25,6 +25,12 @@ class Platform extends Barrier {
 
     }
 
+    void isCollisionWithBall(CircleEquation circleEquation) throws GeneratingGameException {
+        if (!linearEquations.get(CollisionPlace.TOP).hasIntersection(circleEquation)){
+            throw GeneratingGameException.ballIsNotOnPlatform();
+        }
+    }
+
     @Override
     EnumMap<CollisionPlace, LinearEquation> getLinearEquations() {
         return linearEquations;

@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static oop.arkanoid.model.Barrier.inSegment;
+
 public class GameLevel {
     private final List<Brick> destroyableBricks;
     private final Platform platform;
@@ -35,9 +37,9 @@ public class GameLevel {
     }
 
     public double updatePlatformPosition(double x) {
-        if (Builder.inSegment(0, platform.size.x() / 2, x)) {
+        if (inSegment(0, platform.size.x() / 2, x)) {
             platform.update(0);
-        } else if (Builder.inSegment(scene.x() - platform.size.x() / 2, scene.x(), x)) {
+        } else if (inSegment(scene.x() - platform.size.x() / 2, scene.x(), x)) {
             platform.update(scene.x() - platform.size.x());
         } else {
             platform.update(x - platform.size.x() / 2);
@@ -49,6 +51,7 @@ public class GameLevel {
         if (destroyableBricks.isEmpty()) {
             return GameStates.GAME_WIN;
         } else if (ball.position.y() > scene.y()) {
+            System.out.println(ball.position.y());
             return GameStates.GAME_LOSE;
         } else {
             return GameStates.GAME_IN_PROCESS;
@@ -133,7 +136,6 @@ public class GameLevel {
         Builder ball(Point position, double radius) {
             double angle = Math.random() * 60 + 100;
             BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.countB(angle, position), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-
             ball = new Ball(radius, position, new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 0, position));
             return this;
         }
@@ -141,8 +143,8 @@ public class GameLevel {
         @SuppressWarnings("UnusedReturnValue")
         Builder addDestroyableBrick(Point position, Point size, int health) throws GeneratingGameException {
             Brick brick = new Brick(position, size, new Health(health));
-            checkIfOutOfScene(brick.position, size);
-            checkIfCollisions(brick);
+            brick.checkIfOutOfScene(scene);
+            brick.checkIfCollisions(barriers);
             bricks.add(brick);
             barriers.add(brick);
             return this;
@@ -151,8 +153,8 @@ public class GameLevel {
         @SuppressWarnings("UnusedReturnValue")
         Builder addImmortalBrick(Point position, Point size) throws GeneratingGameException {
             Brick brick = new Brick(position, size, Health.createImmortal());
-            checkIfOutOfScene(brick.position, size);
-            checkIfCollisions(brick);
+            brick.checkIfOutOfScene(scene);
+            brick.checkIfCollisions(barriers);
             barriers.add(brick);
             return this;
         }
@@ -166,17 +168,11 @@ public class GameLevel {
 
         GameLevel build() throws GeneratingGameException {
 
-            //  checkIfBallOnPlatform();
+            platform.isCollisionWithBall(new CircleEquation(ball.position, ball.radius + 2));
             checkUninitObjects();
 
             return new GameLevel(ball, platform, bricks, barriers, scene);
         }
-
-//        private void checkIfBallOnPlatform() throws GeneratingGameException {
-//            if (!ball.motion(platform)) {
-//                throw GeneratingGameException.ballIsNotOnPlatform();
-//            }
-//        }
 
         private void checkUninitObjects() throws GeneratingGameException {
             if (ball == null || platform == null || scene == null || bricks.isEmpty() || barriers.isEmpty()) {
@@ -184,25 +180,6 @@ public class GameLevel {
             }
         }
 
-        static boolean inSegment(double a, double b, double x) {
-            return a <= x && x <= b;
-        }
 
-        private void checkIfOutOfScene(Point position, Point size) throws GeneratingGameException {
-            if (!inSegment(0, scene.x(), position.x()) || !inSegment(0, scene.y(), position.y()) || !inSegment(0, scene.x(), position.x() + size.x()) || !inSegment(0, scene.y(), position.y() + size.y())) {
-                throw GeneratingGameException.outOfScene();
-            }
-        }
-
-        private void checkIfCollisions(Barrier barrier) throws GeneratingGameException {
-            if (barriers.stream().anyMatch(b -> hasCollision(barrier, b))) {
-                throw GeneratingGameException.collisionWithOtherObjects();
-            }
-        }
-
-        private boolean hasCollision(Barrier b1, Barrier b2) {
-            return (inSegment(b2.position.x(), b2.position.x() + b2.size.x(), b1.position.x()) || inSegment(b2.position.x(), b2.position.x() + b2.size.x(), b1.position.x() + b1.size.x()))
-                    && (inSegment(b2.position.y(), b2.position.y() + b2.size.y(), b1.position.y()) || inSegment(b2.position.y(), b2.position.y() + b2.size.y(), b1.position.y() + b1.size.y()));
-        }
     }
 }
