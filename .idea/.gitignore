@@ -8,3 +8,11 @@
 /dataSources.local.xml
 
 *.jar
+
+.idea
+
+*.gradle
+
+gredlew
+
+gradlew.bat
