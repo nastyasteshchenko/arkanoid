@@ -1,16 +1,38 @@
 package oop.arkanoid.model;
 
+import java.util.EnumMap;
+
 class Platform extends Barrier {
+
+    private final EnumMap<CollisionPlace, LinearEquation> linearEquations = new EnumMap<>(CollisionPlace.class);
+
     Platform(Point position, Point size) {
         super(position, size);
-        Trajectory trajectory = new Trajectory(new Point(1, 0), new Point(position.x(), position.x() + size.x()), new Point(position.y(), position.y()));
-        trajectory.recountB(new Point(position.x(), position.y()));
-        trajectories.put(StraightSides.TOP_SIDE, trajectory);
+
+        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position.y(), new Point(position.x(), position.x() + size.x())));
+        linearEquations.put(CollisionPlace.LEFT, LinearEquation.xLinearMotionEquation(position.x(), new Point(position.y(), position.y() + size.y())));
+        linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xLinearMotionEquation(position.x() + size.x(), new Point(position.y(), position.y() + size.y())));
+    }
+
+
+    void update(double x) {
+        position.setX(x);
+        linearEquations.clear();
+
+        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position.y(), new Point(position.x(), position.x() + size.x())));
+        linearEquations.put(CollisionPlace.LEFT, LinearEquation.xLinearMotionEquation(position.x(), new Point(position.y(), position.y() + size.y())));
+        linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xLinearMotionEquation(position.x() + size.x(), new Point(position.y(), position.y() + size.y())));
+
+    }
+
+    void isCollisionWithBall(CircleEquation circleEquation) throws GeneratingGameException {
+        if (!linearEquations.get(CollisionPlace.TOP).hasIntersection(circleEquation)){
+            throw GeneratingGameException.ballIsNotOnPlatform();
+        }
     }
 
     @Override
-    boolean hasVisibleCollisions(Trajectory trajectory, double radius) {
-        return trajectories.get(StraightSides.TOP_SIDE).hasIntersection(trajectory, radius);
+    EnumMap<CollisionPlace, LinearEquation> getLinearEquations() {
+        return linearEquations;
     }
-
 }

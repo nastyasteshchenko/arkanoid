@@ -1,46 +1,45 @@
 package oop.arkanoid.model;
 
+import java.util.EnumMap;
+import java.util.Objects;
+
 public class Wall extends Barrier {
 
-    private final WallType type;
+    private final LinearEquation linearEquation;
+    private final CollisionPlace collisionPlace;
 
-    Wall(Point position, Point size, WallType type) {
+    Wall(Point position, Point size, CollisionPlace collisionPlace) throws GeneratingGameException {
         super(position, size);
-        this.type = type;
-        setTrajectories(type);
+        this.collisionPlace = collisionPlace;
+        linearEquation = switch (collisionPlace) {
+            case LEFT, RIGHT ->
+                    LinearEquation.xLinearMotionEquation(position.x(), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+            case BOTTOM ->
+                    LinearEquation.linearEquation(0, 0, new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+            case TOP -> throw GeneratingGameException.addingBottomWall();
+        };
+    }
+
+    void checkWall(Point scene, Point wallPosition) throws GeneratingGameException {
+        switch (collisionPlace) {
+            case LEFT, BOTTOM -> {
+                if (wallPosition.x() != 0 || wallPosition.y() != 0) {
+                    throw GeneratingGameException.wrongWallPosition();
+                }
+            }
+            case RIGHT -> {
+                if (!Objects.equals(wallPosition.x(), scene.x()) || wallPosition.y() != 0) {
+                    System.out.println(wallPosition.x() + " " + wallPosition.y());
+                    throw GeneratingGameException.wrongWallPosition();
+                }
+            }
+        }
     }
 
     @Override
-    boolean hasVisibleCollisions(Trajectory trajectory, double radius) {
-        switch (type) {
-            case RIGHT -> {
-                return trajectories.get(StraightSides.LEFT_SIDE).hasIntersection(trajectory, radius);
-            }
-            case LEFT -> {
-                return trajectories.get(StraightSides.RIGHT_SIDE).hasIntersection(trajectory, radius);
-            }
-            case TOP -> {
-                return trajectories.get(StraightSides.BOTTOM_SIDE).hasIntersection(trajectory, radius);
-            }
-            default -> {
-                return false;
-            }
-        }
-    }
-
-    private void setTrajectories(WallType type) {
-        if (type == WallType.TOP) {
-            Trajectory topTrajectory = new Trajectory(new Point(1, 0), new Point(position.x(), position.x() + size.x()), new Point(position.y(), position.y() + size.y()));
-            topTrajectory.b = position.y();
-            trajectories.put(StraightSides.BOTTOM_SIDE, topTrajectory);
-        } else {
-            Trajectory trajectory = new Trajectory(new Point(0, 1), new Point(position.x(), position.x() + size.x()), new Point(position.y(), position.y() + size.y()));
-            trajectory.b = position.x();
-            if (type == WallType.RIGHT) {
-                trajectories.put(StraightSides.LEFT_SIDE, trajectory);
-            } else {
-                trajectories.put(StraightSides.RIGHT_SIDE, trajectory);
-            }
-        }
+    EnumMap<CollisionPlace, LinearEquation> getLinearEquations() {
+        var result = new EnumMap<CollisionPlace, LinearEquation>(CollisionPlace.class);
+        result.put(collisionPlace, linearEquation);
+        return result;
     }
 }

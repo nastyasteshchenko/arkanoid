@@ -9,11 +9,11 @@ public class Point {
         this.y = y;
     }
 
-    public double x() {
+    public Double x() {
         return x;
     }
 
-    public double y() {
+    public Double y() {
         return y;
     }
 
