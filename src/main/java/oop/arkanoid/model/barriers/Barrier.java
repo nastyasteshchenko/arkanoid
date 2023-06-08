@@ -6,6 +6,8 @@ import oop.arkanoid.model.*;
 import java.util.EnumMap;
 import java.util.List;
 
+import static oop.arkanoid.model.RangeChecker.checkRange;
+
 
 public abstract sealed class Barrier permits Wall, Brick, Platform {
 
@@ -51,10 +53,6 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();
 
-    public static boolean inSegment(double min, double max, double value) {
-        return min <= value && value <= max;
-    }
-
     public void checkIfCollisions(List<Barrier> barriers) throws GeneratingGameException {
         if (barriers.stream().anyMatch(this::hasCollisionWithObject)) {
             throw GeneratingGameException.collisionWithOtherObjects();
@@ -62,13 +60,13 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
     }
 
     public void checkIfOutOfScene(Point scene) throws GeneratingGameException {
-        if (!inSegment(0, scene.x(), position.x()) || !inSegment(0, scene.y(), position.y()) || !inSegment(0, scene.x(), position.x() + size.x()) || !inSegment(0, scene.y(), position.y() + size.y())) {
+        if (!checkRange(0, scene.x(), position.x()) || !checkRange(0, scene.y(), position.y()) || !checkRange(0, scene.x(), position.x() + size.x()) || !checkRange(0, scene.y(), position.y() + size.y())) {
             throw GeneratingGameException.outOfScene();
         }
     }
 
     private boolean hasCollisionWithObject(Barrier barrier) {
-        return (inSegment(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x()) || inSegment(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x() + size.x()))
-                && (inSegment(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y()) || inSegment(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y() + size.y()));
+        return (checkRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x()) || checkRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x() + size.x()))
+                && (checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y()) || checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y() + size.y()));
     }
 }

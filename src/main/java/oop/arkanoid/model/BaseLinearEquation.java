@@ -4,8 +4,7 @@ import oop.arkanoid.model.barriers.CollisionPlace;
 
 import java.util.List;
 
-import static oop.arkanoid.model.barriers.Barrier.inSegment;
-
+import static oop.arkanoid.model.RangeChecker.checkRange;
 class BaseLinearEquation implements LinearEquation {
 
     final double k;
@@ -35,7 +34,7 @@ class BaseLinearEquation implements LinearEquation {
                 circleEquation.center().x() * circleEquation.center().x() - circleEquation.radius() * circleEquation.radius() + Math.pow(b - circleEquation.center().y(), 2));
 
         for (Double root : qEquation.roots) {
-            if (inSegment(xBorders.x(), xBorders.y(), root)) {
+            if (checkRange(xBorders.x(), xBorders.y(), root)) {
                 return true;
             }
         }
@@ -66,7 +65,7 @@ class BaseLinearEquation implements LinearEquation {
         List<Double> xs = circleEquation.getX(b);
 
         for (Double x : xs) {
-            if (inSegment(xBorders.x(), xBorders.y(), x)) {
+            if (checkRange(xBorders.x(), xBorders.y(), x)) {
                 if (place == CollisionPlace.LEFT) {
                     return Math.abs(x - xBorders.x());
                 } else {

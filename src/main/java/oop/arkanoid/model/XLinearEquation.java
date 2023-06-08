@@ -4,7 +4,7 @@ import oop.arkanoid.model.barriers.CollisionPlace;
 
 import java.util.List;
 
-import static oop.arkanoid.model.barriers.Barrier.inSegment;
+import static oop.arkanoid.model.RangeChecker.checkRange;
 
 record XLinearEquation(double x, Point yBorders) implements LinearEquation {
 
@@ -12,7 +12,7 @@ record XLinearEquation(double x, Point yBorders) implements LinearEquation {
     public boolean hasIntersection(CircleEquation circleEquation) {
         List<Double> ys = circleEquation.getY(x);
         for (Double y : ys) {
-            if (inSegment(yBorders.x(), yBorders.y(), y)) {
+            if (checkRange(yBorders.x(), yBorders.y(), y)) {
                 return true;
             }
         }
@@ -38,7 +38,7 @@ record XLinearEquation(double x, Point yBorders) implements LinearEquation {
     public double getDistanceBallCrossingLine(CircleEquation circleEquation, CollisionPlace place) {
         List<Double> ys = circleEquation.getY(x);
         for (Double y : ys) {
-            if (inSegment(yBorders.x(), yBorders.y(), y)) {
+            if (checkRange(yBorders.x(), yBorders.y(), y)) {
                 if (place == CollisionPlace.TOP) {
                     return Math.abs(y - yBorders.x());
                 } else {

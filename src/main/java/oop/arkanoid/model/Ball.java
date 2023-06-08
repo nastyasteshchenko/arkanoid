@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ball {
+
     public final double radius;
     Point position;
     private LinearMotion motion;

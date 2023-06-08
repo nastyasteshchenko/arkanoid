@@ -6,7 +6,7 @@ import oop.arkanoid.model.barriers.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static oop.arkanoid.model.barriers.Barrier.inSegment;
+import static oop.arkanoid.model.RangeChecker.checkRange;
 
 public class GameLevel {
     private final List<Brick> destroyableBricks;
@@ -38,9 +38,9 @@ public class GameLevel {
     }
 
     public double updatePlatformPosition(double x) {
-        if (inSegment(0, platform.size.x() / 2, x)) {
+        if (checkRange(0, platform.size.x() / 2, x)) {
             platform.update(0);
-        } else if (inSegment(sceneSize.x() - platform.size.x() / 2, sceneSize.x(), x)) {
+        } else if (checkRange(sceneSize.x() - platform.size.x() / 2, sceneSize.x(), x)) {
             platform.update(sceneSize.x() - platform.size.x());
         } else {
             platform.update(x - platform.size.x() / 2);
