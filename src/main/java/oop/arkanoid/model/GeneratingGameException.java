@@ -18,11 +18,11 @@ public class GeneratingGameException extends Exception {
         return new GeneratingGameException("Ball is not on the platform");
     }
 
-    static GeneratingGameException wrongWallPosition() {
+    public static GeneratingGameException wrongWallPosition() {
         return new GeneratingGameException("Wrong wall position");
     }
 
-    static GeneratingGameException addingBottomWall() {
+    public static GeneratingGameException addingBottomWall() {
         return new GeneratingGameException("Can't add bottom wall");
     }
 
