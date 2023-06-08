@@ -93,20 +93,18 @@ public class GameLevel {
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        Builder addDestroyableBrick(Point position, Point size, int health) throws GeneratingGameException {
-            Brick brick = new Brick(position, size, new Health(health));
+        Builder addBrick(Point position, Point size, int health) throws GeneratingGameException {
+            Brick brick;
+            if (health == -1) {
+                brick = new Brick(position, size, Health.createImmortal());
+            } else {
+                brick = new Brick(position, size, new Health(health));
+            }
             brick.checkIfOutOfScene(sceneSize);
             brick.checkIfCollisions(barriers);
-            bricks.add(brick);
-            barriers.add(brick);
-            return this;
-        }
-
-        @SuppressWarnings("UnusedReturnValue")
-        Builder addImmortalBrick(Point position, Point size) throws GeneratingGameException {
-            Brick brick = new Brick(position, size, Health.createImmortal());
-            brick.checkIfOutOfScene(sceneSize);
-            brick.checkIfCollisions(barriers);
+            if (health != -1) {
+                bricks.add(brick);
+            }
             barriers.add(brick);
             return this;
         }
@@ -134,46 +132,16 @@ public class GameLevel {
         }
     }
 
-    public ArrayList<Point> getStandardBricks() {
-        ArrayList<Point> bricks = new ArrayList<>();
-        this.destroyableBricks.stream().filter(brick -> brick.health.getValue() == 1).forEach(brick -> bricks.add(brick.position));
-        return bricks;
-    }
-
-    public ArrayList<Point> getDoubleHitBricks() {
-        ArrayList<Point> bricks = new ArrayList<>();
-        this.destroyableBricks.stream().filter(brick -> brick.health.getValue() == 2).forEach(brick -> bricks.add(brick.position));
-        return bricks;
-    }
-
-    public ArrayList<Point> getImmortalBricks() {
-        ArrayList<Point> bricks = new ArrayList<>();
-        barriers.stream().filter(barrier -> barrier instanceof Brick && ((Brick) barrier).health instanceof Health.Immortal).forEach(brick -> bricks.add(brick.position));
-        return bricks;
+    public List<Barrier> getBarriers() {
+        return barriers;
     }
 
     public int getScore() {
         return score;
     }
 
-    public Point getBrickSize() {
-        return destroyableBricks.get(0).size;
-    }
-
-    public Point getBallPosition() {
-        return ball.position;
-    }
-
-    public double getBallRadius() {
-        return ball.radius;
-    }
-
-    public Point getPlatformSize() {
-        return platform.size;
-    }
-
-    public Point getPlatformPosition() {
-        return platform.position;
+    public Ball getBall() {
+        return ball;
     }
 
     public Point getSceneSize() {

@@ -8,8 +8,8 @@ import oop.arkanoid.model.barriers.Platform;
 import java.util.ArrayList;
 import java.util.List;
 
-class Ball {
-    final double radius;
+public class Ball {
+    public final double radius;
     Point position;
     private LinearMotion motion;
 
@@ -69,5 +69,9 @@ class Ball {
         if (hasChangedDirection) {
             bricksToDelete.forEach(barriers::remove);
         }
+    }
+
+    public Point getPosition() {
+        return position;
     }
 }

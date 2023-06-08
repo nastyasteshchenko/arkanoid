@@ -13,9 +13,14 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import oop.arkanoid.model.Ball;
 import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
 import oop.arkanoid.model.Point;
+import oop.arkanoid.model.barriers.Barrier;
+import oop.arkanoid.model.barriers.Brick;
+import oop.arkanoid.model.barriers.Health;
+import oop.arkanoid.model.barriers.Platform;
 import oop.arkanoid.view.LevelView;
 
 import java.io.*;
@@ -220,21 +225,29 @@ public class Presenter {
     private static void setGameView(JsonObject paramsForLevel) {
         LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
 
-        builder.ball(model.getBallPosition(), model.getBallRadius())
-                .platform(model.getPlatformPosition(), model.getPlatformSize())
-                .gameScene(model.getSceneSize());
+        List<Barrier> barriers = model.getBarriers();
+        for (Barrier barrier : barriers) {
+            if (barrier instanceof Platform platform) {
+                builder.platform(platform.position, platform.size);
+                continue;
+            }
+            if (barrier instanceof Brick brick) {
+                if (brick.health instanceof Health.Immortal) {
+                    builder.addImmortalBrick(brick.position, brick.size);
+                    continue;
+                }
+                if (brick.health.getValue() == 1) {
+                    builder.addStandardBrick(brick.position, brick.size);
+                    continue;
+                }
+                if (brick.health.getValue() == 2) {
+                    builder.addDoubleHitBrick(brick.position, brick.size);
+                }
+            }
+        }
 
-        Point brickSize = model.getBrickSize();
-
-        ArrayList<Point> standardBricks = model.getStandardBricks();
-
-        standardBricks.forEach(b -> builder.addStandardBrick(b, brickSize));
-
-        ArrayList<Point> immortalBricks = model.getImmortalBricks();
-        immortalBricks.forEach(b -> builder.addImmortalBrick(b, brickSize));
-
-        ArrayList<Point> doubleHitBricks = model.getDoubleHitBricks();
-        doubleHitBricks.forEach(b -> builder.addDoubleHitBrick(b, brickSize));
+        Ball ball = model.getBall();
+        builder.ball(ball.getPosition(), ball.radius).gameScene(model.getSceneSize());
 
         builder.highScore(records.getAsJsonObject("records").get("level" + currentLevel).getAsInt());
 

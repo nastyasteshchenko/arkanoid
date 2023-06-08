@@ -41,16 +41,13 @@ public class LevelInitiator {
         JsonArray bricksArray = bricks.getAsJsonArray("bricks");
         for (JsonElement elem : bricksArray) {
             JsonObject brick = elem.getAsJsonObject();
-            switch (brick.get("type").getAsString()) {
-                case "dh" ->
-                        builder.addDestroyableBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
-                                createPoint(brickWidth, brickHeight), 2);
-                case "s" ->
-                        builder.addDestroyableBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
-                                createPoint(brickWidth, brickHeight), 1);
-                case "im" ->
-                        builder.addImmortalBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
-                                createPoint(brickWidth, brickHeight));
+            switch (brick.get("health").getAsString()) {
+                case "-1" -> builder.addBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
+                        createPoint(brickWidth, brickHeight), -1);
+                case "1" -> builder.addBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
+                        createPoint(brickWidth, brickHeight), 1);
+                case "2" -> builder.addBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
+                        createPoint(brickWidth, brickHeight), 2);
             }
         }
     }
