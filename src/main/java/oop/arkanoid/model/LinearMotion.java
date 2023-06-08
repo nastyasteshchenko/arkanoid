@@ -1,5 +1,7 @@
 package oop.arkanoid.model;
 
+import oop.arkanoid.model.barriers.CollisionPlace;
+
 import java.util.List;
 
 class LinearMotion {

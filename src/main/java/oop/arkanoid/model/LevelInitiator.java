@@ -3,6 +3,7 @@ package oop.arkanoid.model;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import oop.arkanoid.model.barriers.CollisionPlace;
 
 public class LevelInitiator {
 

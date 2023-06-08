@@ -1,22 +1,23 @@
-package oop.arkanoid.model;
+package oop.arkanoid.model.barriers;
 
 import javafx.util.Pair;
+import oop.arkanoid.model.*;
 
 import java.util.EnumMap;
 import java.util.List;
 
 
-abstract class Barrier {
+public abstract sealed class Barrier permits Wall, Brick, Platform {
 
-    final Point position;
-    final Point size;
+    public final Point position;
+    public final Point size;
 
     Barrier(Point position, Point size) {
         this.position = position;
         this.size = size;
     }
 
-    final CollisionPlace findCollision(CircleEquation circleEquation) {
+    public CollisionPlace findCollision(CircleEquation circleEquation) {
         CollisionPlace collisionPlace = null;
 
         Pair<CollisionPlace, LinearEquation> vertical = null;
@@ -50,17 +51,17 @@ abstract class Barrier {
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();
 
-    static boolean inSegment(double min, double max, double value) {
+    public static boolean inSegment(double min, double max, double value) {
         return min <= value && value <= max;
     }
 
-    void checkIfCollisions(List<Barrier> barriers) throws GeneratingGameException {
+    public void checkIfCollisions(List<Barrier> barriers) throws GeneratingGameException {
         if (barriers.stream().anyMatch(this::hasCollisionWithObject)) {
             throw GeneratingGameException.collisionWithOtherObjects();
         }
     }
 
-    void checkIfOutOfScene(Point scene) throws GeneratingGameException {
+    public void checkIfOutOfScene(Point scene) throws GeneratingGameException {
         if (!inSegment(0, scene.x(), position.x()) || !inSegment(0, scene.y(), position.y()) || !inSegment(0, scene.x(), position.x() + size.x()) || !inSegment(0, scene.y(), position.y() + size.y())) {
             throw GeneratingGameException.outOfScene();
         }

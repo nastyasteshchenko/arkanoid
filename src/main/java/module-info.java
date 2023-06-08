@@ -9,4 +9,6 @@ module oop.arkanoid {
     opens oop.arkanoid.model to javafx.fxml;
     exports oop.arkanoid.view;
     opens oop.arkanoid.view to javafx.fxml;
+    exports oop.arkanoid.model.barriers;
+    opens oop.arkanoid.model.barriers to javafx.fxml;
 }

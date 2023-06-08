@@ -1,11 +1,12 @@
 package oop.arkanoid.model;
 
 import com.google.gson.JsonObject;
+import oop.arkanoid.model.barriers.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static oop.arkanoid.model.Barrier.inSegment;
+import static oop.arkanoid.model.barriers.Barrier.inSegment;
 
 public class GameLevel {
     private final List<Brick> destroyableBricks;
@@ -65,7 +66,7 @@ public class GameLevel {
         this.speed = speed;
     }
 
-    static void increaseScore(int value) {
+    public static void increaseScore(int value) {
         score += value;
     }
 
@@ -133,7 +134,6 @@ public class GameLevel {
         }
     }
 
-    //Тут не объединила в один метод, так как возвращаю только координаты кирпичей
     public ArrayList<Point> getStandardBricks() {
         ArrayList<Point> bricks = new ArrayList<>();
         this.destroyableBricks.stream().filter(brick -> brick.health.getValue() == 1).forEach(brick -> bricks.add(brick.position));

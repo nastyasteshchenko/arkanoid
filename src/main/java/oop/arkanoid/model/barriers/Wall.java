@@ -1,14 +1,16 @@
-package oop.arkanoid.model;
+package oop.arkanoid.model.barriers;
+
+import oop.arkanoid.model.*;
 
 import java.util.EnumMap;
 import java.util.Objects;
 
-public class Wall extends Barrier {
+public final class Wall extends Barrier {
 
     private final LinearEquation linearEquation;
     private final CollisionPlace collisionPlace;
 
-    Wall(Point position, Point size, CollisionPlace collisionPlace) throws GeneratingGameException {
+    public Wall(Point position, Point size, CollisionPlace collisionPlace) throws GeneratingGameException {
         super(position, size);
         this.collisionPlace = collisionPlace;
         linearEquation = switch (collisionPlace) {
@@ -20,7 +22,7 @@ public class Wall extends Barrier {
         };
     }
 
-    void checkWall(Point scene, Point wallPosition) throws GeneratingGameException {
+    public void checkWall(Point scene, Point wallPosition) throws GeneratingGameException {
         switch (collisionPlace) {
             case LEFT, BOTTOM -> {
                 if (wallPosition.x() != 0 || wallPosition.y() != 0) {
@@ -34,6 +36,19 @@ public class Wall extends Barrier {
                 }
             }
         }
+    }
+
+    @Override
+    public CollisionPlace findCollision(CircleEquation circleEquation) {
+
+        var linearEquations = getLinearEquations();
+        for (var entry : linearEquations.entrySet()) {
+            if (entry.getValue().hasIntersection(circleEquation)) {
+             return entry.getKey();
+            }
+        }
+
+        return null;
     }
 
     @Override

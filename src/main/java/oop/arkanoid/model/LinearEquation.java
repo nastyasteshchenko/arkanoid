@@ -1,6 +1,8 @@
 package oop.arkanoid.model;
 
-interface LinearEquation {
+import oop.arkanoid.model.barriers.CollisionPlace;
+
+public interface LinearEquation {
 
     boolean hasIntersection(CircleEquation circleEquation);
 

@@ -1,8 +1,10 @@
 package oop.arkanoid.model;
 
+import oop.arkanoid.model.barriers.CollisionPlace;
+
 import java.util.List;
 
-import static oop.arkanoid.model.Barrier.inSegment;
+import static oop.arkanoid.model.barriers.Barrier.inSegment;
 
 record XLinearEquation(double x, Point yBorders) implements LinearEquation {
 

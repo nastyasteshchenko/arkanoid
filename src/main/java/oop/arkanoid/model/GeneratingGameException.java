@@ -6,15 +6,15 @@ public class GeneratingGameException extends Exception {
         super(message);
     }
 
-    static GeneratingGameException collisionWithOtherObjects() {
+    public static GeneratingGameException collisionWithOtherObjects() {
         return new GeneratingGameException("Detected collision with other object");
     }
 
-    static GeneratingGameException outOfScene() {
+    public static GeneratingGameException outOfScene() {
         return new GeneratingGameException("Detected object is out of scene");
     }
 
-    static GeneratingGameException ballIsNotOnPlatform() {
+    public static GeneratingGameException ballIsNotOnPlatform() {
         return new GeneratingGameException("Ball is not on the platform");
     }
 

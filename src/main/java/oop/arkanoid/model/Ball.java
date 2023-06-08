@@ -1,5 +1,10 @@
 package oop.arkanoid.model;
 
+import oop.arkanoid.model.barriers.Barrier;
+import oop.arkanoid.model.barriers.Brick;
+import oop.arkanoid.model.barriers.CollisionPlace;
+import oop.arkanoid.model.barriers.Platform;
+
 import java.util.ArrayList;
 import java.util.List;
 

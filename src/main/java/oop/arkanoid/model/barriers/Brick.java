@@ -1,16 +1,17 @@
-package oop.arkanoid.model;
+package oop.arkanoid.model.barriers;
 
 import oop.arkanoid.Notifications;
+import oop.arkanoid.model.*;
 
 import java.util.EnumMap;
 
-class Brick extends Barrier implements Destroyable {
+public final class Brick extends Barrier implements Destroyable {
     private final int score;
-    final Health health;
+    public final Health health;
 
     private final EnumMap<CollisionPlace, LinearEquation> linearEquations = new EnumMap<>(CollisionPlace.class);
 
-    Brick(Point position, Point size, Health health) {
+    public Brick(Point position, Point size, Health health) {
         super(position, size);
         this.health = health;
         score = health.getValue() * 5;
