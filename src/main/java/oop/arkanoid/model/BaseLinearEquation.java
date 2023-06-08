@@ -32,6 +32,7 @@ class BaseLinearEquation implements LinearEquation {
         QuadraticEquation qEquation = new QuadraticEquation(1 + k * k, 2 * (k * (b - circleEquation.center().y()) - circleEquation.center().x()),
                 circleEquation.center().x() * circleEquation.center().x() - circleEquation.radius() * circleEquation.radius() + Math.pow(b - circleEquation.center().y(), 2));
 
+        //TODO gопробовать вынести логику в Barrier#findCollision
         for (Double root : qEquation.roots) {
             if (inSegment(xBorders.x(), xBorders.y(), root)) {
                 return true;

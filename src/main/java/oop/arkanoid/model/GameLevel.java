@@ -8,11 +8,14 @@ import java.util.List;
 import static oop.arkanoid.model.Barrier.inSegment;
 
 public class GameLevel {
+    // TODO попробовать избавиться и вычислять налету
     private final List<Brick> destroyableBricks;
     private final Platform platform;
     private final List<Barrier> barriers;
     private final Ball ball;
     private final Point sceneSize;
+    // TODO убрать static. Если нет других вариантов, сделать подписку на событие DESTROY.
+    // TODO подумать, удалять ли подписчиков в Notifications
     private static int score;
     private double speed;
 
@@ -119,7 +122,7 @@ public class GameLevel {
         }
 
         GameLevel build() throws GeneratingGameException {
-
+            // TODO проверить коллизию платформы с кирпичами
             platform.isCollisionWithBall(new CircleEquation(ball.position, ball.radius + 2));
             checkUninitObjects();
 
@@ -133,6 +136,7 @@ public class GameLevel {
         }
     }
 
+    // TODO надо объединить и вовзращать List<Brick>, в котором
     //Тут не объединила в один метод, так как возвращаю только координаты кирпичей
     public ArrayList<Point> getStandardBricks() {
         ArrayList<Point> bricks = new ArrayList<>();
@@ -160,6 +164,7 @@ public class GameLevel {
         return destroyableBricks.get(0).size;
     }
 
+    // TODO возращать Ball
     public Point getBallPosition() {
         return ball.position;
     }
@@ -168,6 +173,7 @@ public class GameLevel {
         return ball.radius;
     }
 
+    // TODO возвращать Platform
     public Point getPlatformSize() {
         return platform.size;
     }

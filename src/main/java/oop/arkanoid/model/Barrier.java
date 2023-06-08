@@ -50,6 +50,7 @@ abstract class Barrier {
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();
 
+    // TODO вынести в утилитный класс, переименовать,как в jdu
     static boolean inSegment(double min, double max, double value) {
         return min <= value && value <= max;
     }
