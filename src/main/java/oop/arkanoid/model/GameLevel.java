@@ -9,7 +9,6 @@ import java.util.List;
 import static oop.arkanoid.model.RangeChecker.checkRange;
 
 public class GameLevel {
-    private final List<Brick> destroyableBricks;
     private final Platform platform;
     private final List<Barrier> barriers;
     private final Ball ball;
@@ -17,10 +16,9 @@ public class GameLevel {
     private static int score;
     private double speed;
 
-    GameLevel(Ball ball, Platform platform, List<Brick> bricks, List<Barrier> barriers, Point scene) {
+    GameLevel(Ball ball, Platform platform, List<Barrier> barriers, Point scene) {
         this.ball = ball;
         this.platform = platform;
-        this.destroyableBricks = bricks;
         this.barriers = barriers;
         this.sceneSize = scene;
         score = 0;
@@ -28,13 +26,7 @@ public class GameLevel {
     }
 
     public Point nextBallPosition() {
-        Point newBallPos = ball.move(speed, barriers);
-
-        ArrayList<Brick> toRemove = new ArrayList<>();
-        destroyableBricks.stream().filter(brick -> !barriers.contains(brick)).forEach(toRemove::add);
-        toRemove.forEach(destroyableBricks::remove);
-
-        return newBallPos;
+        return ball.move(speed, barriers);
     }
 
     public double updatePlatformPosition(double x) {
@@ -49,7 +41,7 @@ public class GameLevel {
     }
 
     public GameStates gameState() {
-        if (destroyableBricks.isEmpty()) {
+        if (barriers.stream().noneMatch(barrier -> barrier instanceof Brick brick && !(brick.health instanceof Health.Immortal))) {
             return GameStates.GAME_WIN;
         } else if (ball.position.y() > sceneSize.y()) {
             return GameStates.GAME_LOSE;
@@ -71,7 +63,6 @@ public class GameLevel {
     }
 
     static class Builder {
-        private final List<Brick> bricks = new ArrayList<>();
         private final List<Barrier> barriers = new ArrayList<>();
         private Platform platform;
         private Ball ball;
@@ -102,9 +93,6 @@ public class GameLevel {
             }
             brick.checkIfOutOfScene(sceneSize);
             brick.checkIfCollisions(barriers);
-            if (health != -1) {
-                bricks.add(brick);
-            }
             barriers.add(brick);
             return this;
         }
@@ -122,11 +110,11 @@ public class GameLevel {
             platform.isCollisionWithBall(new CircleEquation(ball.position, ball.radius + 2));
             checkUninitObjects();
 
-            return new GameLevel(ball, platform, bricks, barriers, sceneSize);
+            return new GameLevel(ball, platform, barriers, sceneSize);
         }
 
         private void checkUninitObjects() throws GeneratingGameException {
-            if (ball == null || platform == null || sceneSize == null || bricks.isEmpty() || barriers.isEmpty()) {
+            if (ball == null || platform == null || sceneSize == null || barriers.isEmpty()) {
                 throw GeneratingGameException.uninitObjects();
             }
         }

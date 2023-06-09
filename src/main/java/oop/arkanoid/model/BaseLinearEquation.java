@@ -4,7 +4,6 @@ import oop.arkanoid.model.barriers.CollisionPlace;
 
 import java.util.List;
 
-import static oop.arkanoid.model.RangeChecker.checkRange;
 public class BaseLinearEquation implements LinearEquation {
 
     final double k;
@@ -18,16 +17,16 @@ public class BaseLinearEquation implements LinearEquation {
         this.b = b;
     }
 
+    @Override
+    public List<Double> getIntersectionPoints(CircleEquation circleEquation) {
+
     /*
         { (x-centerX)^2 + (y - centerY)^2 = R^2
         { y=kx+b
 
        [1+k^2]x^2 + [2(k(b-centerY) - centerX)]x + [centerX^2 - R^2 + (b - centerY)^2] = 0
-
     */
 
-    @Override
-    public List<Double> getIntersectionPoints(CircleEquation circleEquation) {
         QuadraticEquation qEquation = new QuadraticEquation(1 + k * k, 2 * (k * (b - circleEquation.center().y()) - circleEquation.center().x()),
                 circleEquation.center().x() * circleEquation.center().x() - circleEquation.radius() * circleEquation.radius() + Math.pow(b - circleEquation.center().y(), 2));
         return qEquation.roots;
