@@ -27,9 +27,15 @@ public class BaseLinearEquation implements LinearEquation {
        [1+k^2]x^2 + [2(k(b-centerY) - centerX)]x + [centerX^2 - R^2 + (b - centerY)^2] = 0
     */
 
-        QuadraticEquation qEquation = new QuadraticEquation(1 + k * k, 2 * (k * (b - circleEquation.center().y()) - circleEquation.center().x()),
-                circleEquation.center().x() * circleEquation.center().x() - circleEquation.radius() * circleEquation.radius() + Math.pow(b - circleEquation.center().y(), 2));
-        return qEquation.roots;
+        double centerX = circleEquation.center().x();
+        double centerY = circleEquation.center().y();
+        double radius = circleEquation.radius();
+
+        double a = 1 + k * k;
+        double b = 2 * (k * (this.b - centerY) - centerX);
+        double c = centerX * centerX - radius * radius + Math.pow(this.b - centerY, 2);
+
+        return new QuadraticEquation(a, b, c).roots;
     }
 
     @Override

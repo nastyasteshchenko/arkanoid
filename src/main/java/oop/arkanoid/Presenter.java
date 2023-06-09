@@ -16,7 +16,6 @@ import javafx.util.Duration;
 import oop.arkanoid.model.Ball;
 import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
-import oop.arkanoid.model.Point;
 import oop.arkanoid.model.barriers.Barrier;
 import oop.arkanoid.model.barriers.Brick;
 import oop.arkanoid.model.barriers.Health;
