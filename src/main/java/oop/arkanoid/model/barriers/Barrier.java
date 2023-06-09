@@ -55,21 +55,11 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
             return horizontal.getKey();
         }
 
-        double distanceX;
-        if (horizontal.getKey() == CollisionPlace.LEFT) {
-            distanceX = Math.abs(horizontal.getValue() - position.x());
-        } else {
-            distanceX = Math.abs(horizontal.getValue() - position.x() - size.x());
-        }
+        double distanceX = getDistanceX(horizontal);
 
-        double distanceY;
-        if (vertical.getKey() == CollisionPlace.TOP) {
-            distanceY = Math.abs(vertical.getValue() - position.y());
-        } else {
-            distanceY = Math.abs(vertical.getValue() - position.y() - size.y());
-        }
+        double distanceY = getDistanceY(vertical);
 
-       return distanceX <= distanceY ? vertical.getKey() : horizontal.getKey();
+        return distanceX <= distanceY ? vertical.getKey() : horizontal.getKey();
     }
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();
@@ -89,5 +79,25 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
     private boolean hasCollisionWithObject(Barrier barrier) {
         return (checkRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x()) || checkRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x() + size.x()))
                 && (checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y()) || checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y() + size.y()));
+    }
+
+    private double getDistanceY(Pair<CollisionPlace, Double> vertical) {
+        double distanceY;
+        if (vertical.getKey() == CollisionPlace.TOP) {
+            distanceY = Math.abs(vertical.getValue() - position.y());
+        } else {
+            distanceY = Math.abs(vertical.getValue() - position.y() - size.y());
+        }
+        return distanceY;
+    }
+
+    private double getDistanceX(Pair<CollisionPlace, Double> horizontal) {
+        double distanceX;
+        if (horizontal.getKey() == CollisionPlace.LEFT) {
+            distanceX = Math.abs(horizontal.getValue() - position.x());
+        } else {
+            distanceX = Math.abs(horizontal.getValue() - position.x() - size.x());
+        }
+        return distanceX;
     }
 }
