@@ -13,16 +13,14 @@ public class GameLevel {
     private final List<Barrier> barriers;
     private final Ball ball;
     private final Point sceneSize;
-    private int score;
-    private double speed;
+    private int score = 0;
+    private double speed = 1.5;
 
     GameLevel(Ball ball, Platform platform, List<Barrier> barriers, Point scene) {
         this.ball = ball;
         this.platform = platform;
         this.barriers = barriers;
         this.sceneSize = scene;
-        score = 0;
-        speed = 1.5;
     }
 
     public Point nextBallPosition() {
