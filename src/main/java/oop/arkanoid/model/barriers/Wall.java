@@ -15,9 +15,9 @@ public final class Wall extends Barrier {
         this.collisionPlace = collisionPlace;
         linearEquation = switch (collisionPlace) {
             case LEFT, RIGHT ->
-                    LinearEquation.xLinearMotionEquation(position.x(), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+                    LinearEquation.xLinearMotionEquation(position.x());
             case BOTTOM ->
-                    LinearEquation.linearEquation(0, 0, new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+                    LinearEquation.linearEquation(0, 0);
             case TOP -> throw GeneratingGameException.addingBottomWall();
         };
     }
@@ -43,7 +43,7 @@ public final class Wall extends Barrier {
 
         var linearEquations = getLinearEquations();
         for (var entry : linearEquations.entrySet()) {
-            if (entry.getValue().hasIntersection(circleEquation)) {
+            if (!entry.getValue().findIntersectionPoints(circleEquation).isEmpty()) {
              return entry.getKey();
             }
         }

@@ -5,19 +5,17 @@ import oop.arkanoid.model.barriers.CollisionPlace;
 import java.util.List;
 
 import static oop.arkanoid.model.RangeChecker.checkRange;
-class BaseLinearEquation implements LinearEquation {
+public class BaseLinearEquation implements LinearEquation {
 
     final double k;
     final double b;
 
     private final double angle;
-    private final Point xBorders;
 
-    BaseLinearEquation(double angle, double b, Point xBorders) {
+    BaseLinearEquation(double angle, double b) {
         this.angle = angle;
         this.k = Math.tan(Math.toRadians(angle));
         this.b = b;
-        this.xBorders = xBorders;
     }
 
     /*
@@ -29,16 +27,10 @@ class BaseLinearEquation implements LinearEquation {
     */
 
     @Override
-    public boolean hasIntersection(CircleEquation circleEquation) {
+    public List<Double> findIntersectionPoints(CircleEquation circleEquation) {
         QuadraticEquation qEquation = new QuadraticEquation(1 + k * k, 2 * (k * (b - circleEquation.center().y()) - circleEquation.center().x()),
                 circleEquation.center().x() * circleEquation.center().x() - circleEquation.radius() * circleEquation.radius() + Math.pow(b - circleEquation.center().y(), 2));
-
-        for (Double root : qEquation.roots) {
-            if (checkRange(xBorders.x(), xBorders.y(), root)) {
-                return true;
-            }
-        }
-        return false;
+        return qEquation.roots;
     }
 
     @Override
@@ -49,32 +41,17 @@ class BaseLinearEquation implements LinearEquation {
     @Override
     public LinearEquation rotate(Point currPoint, CollisionPlace place) {
         if (place.needToChangeDirection) {
-            return new BaseLinearEquation(-180 - angle, countB(-180 - angle, currPoint), xBorders);
+            return new BaseLinearEquation(-180 - angle, countB(-180 - angle, currPoint));
         } else {
-            return new BaseLinearEquation(-angle, countB(-angle, currPoint), xBorders);
+            return new BaseLinearEquation(-angle, countB(-angle, currPoint));
         }
     }
 
     @Override
     public LinearEquation rotate(Point currPoint, double diffXBetweenBallAndCenterPlatform) {
-        return new BaseLinearEquation(-90 - diffXBetweenBallAndCenterPlatform, countB(-90 - diffXBetweenBallAndCenterPlatform, currPoint), xBorders);
+        return new BaseLinearEquation(-90 - diffXBetweenBallAndCenterPlatform, countB(-90 - diffXBetweenBallAndCenterPlatform, currPoint));
     }
 
-    @Override
-    public double getDistanceBallCrossingLine(CircleEquation circleEquation, CollisionPlace place) {
-        List<Double> xs = circleEquation.getX(b);
-
-        for (Double x : xs) {
-            if (checkRange(xBorders.x(), xBorders.y(), x)) {
-                if (place == CollisionPlace.LEFT) {
-                    return Math.abs(x - xBorders.x());
-                } else {
-                    return Math.abs(x - xBorders.y());
-                }
-            }
-        }
-        return 0;
-    }
 
     static double countB(double angle, Point position) {
         return position.y() - position.x() * Math.tan(Math.toRadians(angle));

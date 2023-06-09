@@ -11,9 +11,9 @@ public final class Platform extends Barrier {
     public Platform(Point position, Point size) {
         super(position, size);
 
-        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position.y(), new Point(position.x(), position.x() + size.x())));
-        linearEquations.put(CollisionPlace.LEFT, LinearEquation.xLinearMotionEquation(position.x(), new Point(position.y(), position.y() + size.y())));
-        linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xLinearMotionEquation(position.x() + size.x(), new Point(position.y(), position.y() + size.y())));
+        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position.y()));
+        linearEquations.put(CollisionPlace.LEFT, LinearEquation.xLinearMotionEquation(position.x()));
+        linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xLinearMotionEquation(position.x() + size.x()));
     }
 
 
@@ -21,14 +21,14 @@ public final class Platform extends Barrier {
         position.setX(x);
         linearEquations.clear();
 
-        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position.y(), new Point(position.x(), position.x() + size.x())));
-        linearEquations.put(CollisionPlace.LEFT, LinearEquation.xLinearMotionEquation(position.x(), new Point(position.y(), position.y() + size.y())));
-        linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xLinearMotionEquation(position.x() + size.x(), new Point(position.y(), position.y() + size.y())));
+        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position.y()));
+        linearEquations.put(CollisionPlace.LEFT, LinearEquation.xLinearMotionEquation(position.x()));
+        linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xLinearMotionEquation(position.x() + size.x()));
 
     }
 
     public void isCollisionWithBall(CircleEquation circleEquation) throws GeneratingGameException {
-        if (!linearEquations.get(CollisionPlace.TOP).hasIntersection(circleEquation)){
+        if (linearEquations.get(CollisionPlace.TOP).findIntersectionPoints(circleEquation).isEmpty()){
             throw GeneratingGameException.ballIsNotOnPlatform();
         }
     }

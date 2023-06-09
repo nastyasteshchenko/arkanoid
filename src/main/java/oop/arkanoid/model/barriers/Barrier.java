@@ -20,35 +20,56 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
     }
 
     public CollisionPlace findCollision(CircleEquation circleEquation) {
-        CollisionPlace collisionPlace = null;
 
-        Pair<CollisionPlace, LinearEquation> vertical = null;
-        Pair<CollisionPlace, LinearEquation> horizontal = null;
+        Pair<CollisionPlace, Double> vertical = null;
+        Pair<CollisionPlace, Double> horizontal = null;
 
         var linearEquations = getLinearEquations();
         for (var entry : linearEquations.entrySet()) {
-            if (entry.getValue().hasIntersection(circleEquation)) {
+            List<Double> intersectionPoints = entry.getValue().findIntersectionPoints(circleEquation);
+            if (!intersectionPoints.isEmpty()) {
                 if (entry.getKey() == CollisionPlace.LEFT || CollisionPlace.RIGHT == entry.getKey()) {
-                    vertical = new Pair<>(entry.getKey(), entry.getValue());
+                    for (Double root : intersectionPoints) {
+                        if (checkRange(position.y(), position.y() + size.y(), root)) {
+                            vertical = new Pair<>(entry.getKey(), root);
+                        }
+                    }
                 } else {
-                    horizontal = new Pair<>(entry.getKey(), entry.getValue());
+                    for (Double root : intersectionPoints) {
+                        if (checkRange(position.x(), position.x() + size.x(), root)) {
+                            horizontal = new Pair<>(entry.getKey(), root);
+                        }
+                    }
                 }
-                collisionPlace = entry.getKey();
             }
         }
 
-        if (collisionPlace == null) {
+        if (vertical==null && horizontal == null) {
             return null;
         }
 
         if (vertical == null || horizontal == null) {
-            return collisionPlace;
+            if (vertical!= null){
+                return vertical.getKey();
+            }
+            return horizontal.getKey();
         }
 
-        double distanceX = horizontal.getValue().getDistanceBallCrossingLine(circleEquation, vertical.getKey());
-        double distanceY = vertical.getValue().getDistanceBallCrossingLine(circleEquation, horizontal.getKey());
+        double distanceX;
+        if (horizontal.getKey() == CollisionPlace.LEFT) {
+            distanceX = Math.abs(horizontal.getValue() - position.x());
+        } else {
+            distanceX = Math.abs(horizontal.getValue() - position.x() - size.x());
+        }
 
-        return distanceX <= distanceY ? vertical.getKey() : horizontal.getKey();
+        double distanceY;
+        if (vertical.getKey() == CollisionPlace.TOP) {
+            distanceY = Math.abs(vertical.getValue() - position.y());
+        } else {
+            distanceY = Math.abs(vertical.getValue() - position.y() - size.y());
+        }
+
+       return distanceX <= distanceY ? vertical.getKey() : horizontal.getKey();
     }
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();

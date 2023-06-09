@@ -12,7 +12,7 @@ class BaseLinearEquationTest {
 
     @Test
     void getY() {
-        BaseLinearEquation baseLinearEquation = new BaseLinearEquation(45, 15, new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+        BaseLinearEquation baseLinearEquation = new BaseLinearEquation(45, 15);
         assertEquals(24, baseLinearEquation.getY(9));
     }
 }
