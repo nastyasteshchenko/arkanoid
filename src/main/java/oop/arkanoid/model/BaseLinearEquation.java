@@ -27,7 +27,7 @@ public class BaseLinearEquation implements LinearEquation {
     */
 
     @Override
-    public List<Double> findIntersectionPoints(CircleEquation circleEquation) {
+    public List<Double> getIntersectionPoints(CircleEquation circleEquation) {
         QuadraticEquation qEquation = new QuadraticEquation(1 + k * k, 2 * (k * (b - circleEquation.center().y()) - circleEquation.center().x()),
                 circleEquation.center().x() * circleEquation.center().x() - circleEquation.radius() * circleEquation.radius() + Math.pow(b - circleEquation.center().y(), 2));
         return qEquation.roots;

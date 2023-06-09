@@ -43,7 +43,7 @@ public final class Wall extends Barrier {
 
         var linearEquations = getLinearEquations();
         for (var entry : linearEquations.entrySet()) {
-            if (!entry.getValue().findIntersectionPoints(circleEquation).isEmpty()) {
+            if (!entry.getValue().getIntersectionPoints(circleEquation).isEmpty()) {
              return entry.getKey();
             }
         }

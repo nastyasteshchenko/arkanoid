@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface LinearEquation {
 
-    List<Double> findIntersectionPoints(CircleEquation circleEquation);
+    List<Double> getIntersectionPoints(CircleEquation circleEquation);
 
     double getY(double x);
 

@@ -26,7 +26,7 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
 
         var linearEquations = getLinearEquations();
         for (var entry : linearEquations.entrySet()) {
-            List<Double> intersectionPoints = entry.getValue().findIntersectionPoints(circleEquation);
+            List<Double> intersectionPoints = entry.getValue().getIntersectionPoints(circleEquation);
             if (!intersectionPoints.isEmpty()) {
                 if (entry.getKey() == CollisionPlace.LEFT || CollisionPlace.RIGHT == entry.getKey()) {
                     for (Double root : intersectionPoints) {
@@ -55,9 +55,9 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
             return horizontal.getKey();
         }
 
-        double distanceX = getDistanceX(horizontal);
+        double distanceX = getDistanceXFromEdge(horizontal);
 
-        double distanceY = getDistanceY(vertical);
+        double distanceY = getDistanceYFromEdge(vertical);
 
         return distanceX <= distanceY ? vertical.getKey() : horizontal.getKey();
     }
@@ -81,23 +81,19 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
                 && (checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y()) || checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y() + size.y()));
     }
 
-    private double getDistanceY(Pair<CollisionPlace, Double> vertical) {
-        double distanceY;
+    private double getDistanceYFromEdge(Pair<CollisionPlace, Double> vertical) {
         if (vertical.getKey() == CollisionPlace.TOP) {
-            distanceY = Math.abs(vertical.getValue() - position.y());
+            return Math.abs(vertical.getValue() - position.y());
         } else {
-            distanceY = Math.abs(vertical.getValue() - position.y() - size.y());
+            return Math.abs(vertical.getValue() - position.y() - size.y());
         }
-        return distanceY;
     }
 
-    private double getDistanceX(Pair<CollisionPlace, Double> horizontal) {
-        double distanceX;
+    private double getDistanceXFromEdge(Pair<CollisionPlace, Double> horizontal) {
         if (horizontal.getKey() == CollisionPlace.LEFT) {
-            distanceX = Math.abs(horizontal.getValue() - position.x());
+            return Math.abs(horizontal.getValue() - position.x());
         } else {
-            distanceX = Math.abs(horizontal.getValue() - position.x() - size.x());
+            return Math.abs(horizontal.getValue() - position.x() - size.x());
         }
-        return distanceX;
     }
 }

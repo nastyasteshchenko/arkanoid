@@ -7,7 +7,7 @@ import java.util.List;
 public record XLinearEquation(double x) implements LinearEquation {
 
     @Override
-    public List<Double> findIntersectionPoints(CircleEquation circleEquation) {
+    public List<Double> getIntersectionPoints(CircleEquation circleEquation) {
         return circleEquation.getY(x);
     }
 

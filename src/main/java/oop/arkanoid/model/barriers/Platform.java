@@ -28,7 +28,7 @@ public final class Platform extends Barrier {
     }
 
     public void isCollisionWithBall(CircleEquation circleEquation) throws GeneratingGameException {
-        if (linearEquations.get(CollisionPlace.TOP).findIntersectionPoints(circleEquation).isEmpty()){
+        if (linearEquations.get(CollisionPlace.TOP).getIntersectionPoints(circleEquation).isEmpty()){
             throw GeneratingGameException.ballIsNotOnPlatform();
         }
     }
