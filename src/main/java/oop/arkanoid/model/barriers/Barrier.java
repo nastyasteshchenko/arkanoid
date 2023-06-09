@@ -8,7 +8,6 @@ import java.util.List;
 
 import static oop.arkanoid.model.RangeChecker.checkRange;
 
-
 public abstract sealed class Barrier permits Wall, Brick, Platform {
 
     public final Point position;
@@ -27,29 +26,27 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
         var linearEquations = getLinearEquations();
         for (var entry : linearEquations.entrySet()) {
             List<Double> intersectionPoints = entry.getValue().getIntersectionPoints(circleEquation);
-            if (!intersectionPoints.isEmpty()) {
-                if (entry.getKey() == CollisionPlace.LEFT || CollisionPlace.RIGHT == entry.getKey()) {
-                    for (Double root : intersectionPoints) {
-                        if (checkRange(position.y(), position.y() + size.y(), root)) {
-                            vertical = new Pair<>(entry.getKey(), root);
-                        }
+            if (entry.getKey() == CollisionPlace.LEFT || CollisionPlace.RIGHT == entry.getKey()) {
+                for (Double root : intersectionPoints) {
+                    if (checkRange(position.y(), position.y() + size.y(), root)) {
+                        vertical = new Pair<>(entry.getKey(), root);
                     }
-                } else {
-                    for (Double root : intersectionPoints) {
-                        if (checkRange(position.x(), position.x() + size.x(), root)) {
-                            horizontal = new Pair<>(entry.getKey(), root);
-                        }
+                }
+            } else {
+                for (Double root : intersectionPoints) {
+                    if (checkRange(position.x(), position.x() + size.x(), root)) {
+                        horizontal = new Pair<>(entry.getKey(), root);
                     }
                 }
             }
         }
 
-        if (vertical==null && horizontal == null) {
+        if (vertical == null && horizontal == null) {
             return null;
         }
 
         if (vertical == null || horizontal == null) {
-            if (vertical!= null){
+            if (vertical != null) {
                 return vertical.getKey();
             }
             return horizontal.getKey();
