@@ -13,7 +13,7 @@ public class GameLevel {
     private final List<Barrier> barriers;
     private final Ball ball;
     private final Point sceneSize;
-    private static int score;
+    private int score;
     private double speed;
 
     GameLevel(Ball ball, Platform platform, List<Barrier> barriers, Point scene) {
@@ -58,7 +58,7 @@ public class GameLevel {
         this.speed = speed;
     }
 
-    public static void increaseScore(int value) {
+    public void increaseScore(int value) {
         score += value;
     }
 
