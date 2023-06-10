@@ -31,7 +31,6 @@ public final class Wall extends Barrier {
             }
             case RIGHT -> {
                 if (!Objects.equals(wallPosition.x(), scene.x()) || wallPosition.y() != 0) {
-                    System.out.println(wallPosition.x() + " " + wallPosition.y());
                     throw GeneratingGameException.wrongWallPosition();
                 }
             }
@@ -40,14 +39,12 @@ public final class Wall extends Barrier {
 
     @Override
     public CollisionPlace findCollision(CircleEquation circleEquation) {
-
         var linearEquations = getLinearEquations();
         for (var entry : linearEquations.entrySet()) {
             if (!entry.getValue().getIntersectionPoints(circleEquation).isEmpty()) {
              return entry.getKey();
             }
         }
-
         return null;
     }
 

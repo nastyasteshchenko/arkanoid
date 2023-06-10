@@ -41,7 +41,7 @@ public class GameLevel {
     public GameStates gameState() {
         if (barriers.stream().noneMatch(barrier -> barrier instanceof Brick brick && !(brick.health instanceof Health.Immortal))) {
             return GameStates.GAME_WIN;
-        } else if (ball.position.y() > sceneSize.y()) {
+        } else if (ball.getPosition().y() > sceneSize.y()) {
             return GameStates.GAME_LOSE;
         } else {
             return GameStates.GAME_IN_PROCESS;
@@ -101,7 +101,7 @@ public class GameLevel {
         }
 
         GameLevel build() throws GeneratingGameException {
-            platform.isCollisionWithBall(new CircleEquation(ball.position, ball.radius + 2));
+            platform.isCollisionWithBall(new CircleEquation(ball.getPosition(), ball.radius + 2));
             checkUninitObjects();
             return new GameLevel(ball, platform, barriers, sceneSize);
         }

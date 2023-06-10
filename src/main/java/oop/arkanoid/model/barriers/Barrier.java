@@ -18,6 +18,8 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
         this.size = size;
     }
 
+    abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();
+
     public CollisionPlace findCollision(CircleEquation circleEquation) {
 
         Pair<CollisionPlace, Double> vertical = null;
@@ -30,7 +32,8 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
                 if ((entry.getKey() == CollisionPlace.LEFT || entry.getKey() == CollisionPlace.RIGHT) && checkRange(position.y(), position.y() + size.y(), root)) {
                     vertical = new Pair<>(entry.getKey(), root);
                     break;
-                } else if ((entry.getKey() == CollisionPlace.TOP || entry.getKey() == CollisionPlace.BOTTOM) && checkRange(position.x(), position.x() + size.x(), root)) {
+                }
+                if ((entry.getKey() == CollisionPlace.TOP || entry.getKey() == CollisionPlace.BOTTOM) && checkRange(position.x(), position.x() + size.x(), root)) {
                     horizontal = new Pair<>(entry.getKey(), root);
                     break;
                 }
@@ -43,14 +46,13 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
 
         if (horizontal == null) {
             return vertical.getKey();
-        } else if (vertical == null) {
+        }
+        if (vertical == null) {
             return horizontal.getKey();
         }
 
         return getDistanceXFromEdge(horizontal) <= getDistanceYFromEdge(vertical) ? vertical.getKey() : horizontal.getKey();
     }
-
-    abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();
 
     public void checkIfCollisions(List<Barrier> barriers) throws GeneratingGameException {
         if (barriers.stream().anyMatch(this::hasCollisionWithObject)) {

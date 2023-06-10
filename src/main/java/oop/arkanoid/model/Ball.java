@@ -11,15 +11,13 @@ import java.util.List;
 public class Ball {
 
     public final double radius;
-    Point position;
     private LinearMotion motion;
 
     Ball(double radius, Point startPos) {
         this.radius = radius;
-        this.position = startPos;
         double angle = Math.random() * 60 + 100;
-        BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.countB(angle, position));
-        this.motion = new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 0, position);
+        BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.countB(angle, startPos));
+        this.motion = new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 0, startPos);
     }
 
     Point move(double step, List<Barrier> barriers) {
@@ -28,12 +26,11 @@ public class Ball {
 
         motion = motion.changeStepIfNeeded(step);
 
-        this.position = motion.nextPoint();
-        return this.position;
+        return motion.nextPoint();
     }
 
     private void detectCollisions(List<Barrier> barriers) {
-        CircleEquation circleEquation = new CircleEquation(position, radius);
+        CircleEquation circleEquation = new CircleEquation(motion.currPoint, radius);
 
         List<Brick> bricksToDelete = new ArrayList<>();
         boolean hasChangedDirection = false;
@@ -46,7 +43,7 @@ public class Ball {
 
             if (!hasChangedDirection) {
                 if (barrier instanceof Platform) {
-                    double diffXBetweenBallAndCenterPlatform = barrier.position.x() + barrier.size.x() / 2 - position.x();
+                    double diffXBetweenBallAndCenterPlatform = barrier.position.x() + barrier.size.x() / 2 - motion.currPoint.x();
                     motion = motion.flipDirection(diffXBetweenBallAndCenterPlatform);
                     motion = motion.rotate(diffXBetweenBallAndCenterPlatform);
                 } else {
@@ -72,6 +69,6 @@ public class Ball {
     }
 
     public Point getPosition() {
-        return position;
+        return motion.currPoint;
     }
 }
