@@ -19,10 +19,9 @@ public class LevelInitiator {
         JsonObject scene = paramsForLevel.getAsJsonObject("scene");
         double sceneWidth = scene.get("width").getAsDouble();
         double sceneHeight = scene.get("height").getAsDouble();
-        GameLevel.Builder builder = new GameLevel.Builder(new Point(sceneWidth, sceneHeight)).ball(createPoint(ball.get("x").getAsDouble(), ball.get("y").getAsDouble()),
-                        ball.get("radius").getAsDouble())
-                .platform(createPoint(platform.get("x").getAsDouble(), platform.get("y").getAsDouble()),
-                        createPoint(platform.get("width").getAsDouble(), platform.get("height").getAsDouble()));
+        GameLevel.Builder builder = new GameLevel.Builder(new Point(sceneWidth, sceneHeight)).
+                ball(createPoint(ball.get("x").getAsDouble(), ball.get("y").getAsDouble()), ball.get("radius").getAsDouble())
+                .platform(createPoint(platform.get("x").getAsDouble(), platform.get("y").getAsDouble()), createPoint(platform.get("width").getAsDouble(), platform.get("height").getAsDouble()));
         setBricks(builder);
         setWalls(builder, sceneWidth, sceneHeight);
         return builder.build();
@@ -48,6 +47,7 @@ public class LevelInitiator {
                         createPoint(brickWidth, brickHeight), 1);
                 case 2 -> builder.addBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
                         createPoint(brickWidth, brickHeight), 2);
+                default -> throw GeneratingGameException.unsupportedHealth();
             }
         }
     }

@@ -26,6 +26,10 @@ public class GeneratingGameException extends Exception {
         return new GeneratingGameException("Can't add bottom wall");
     }
 
+    public static GeneratingGameException unsupportedHealth() {
+        return new GeneratingGameException("Unsupported health");
+    }
+
     static GeneratingGameException uninitObjects() {
         return new GeneratingGameException("Some objects are uninitialized");
     }

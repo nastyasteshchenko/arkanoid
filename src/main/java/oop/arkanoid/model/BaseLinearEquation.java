@@ -8,7 +8,6 @@ public class BaseLinearEquation implements LinearEquation {
 
     final double k;
     final double b;
-
     private final double angle;
 
     BaseLinearEquation(double angle, double b) {
@@ -45,11 +44,8 @@ public class BaseLinearEquation implements LinearEquation {
 
     @Override
     public LinearEquation rotate(Point currPoint, CollisionPlace place) {
-        if (place.needToChangeDirection) {
-            return new BaseLinearEquation(-180 - angle, countB(-180 - angle, currPoint));
-        } else {
-            return new BaseLinearEquation(-angle, countB(-angle, currPoint));
-        }
+        double angle = place.needToChangeDirection ? -180 - this.angle : -this.angle;
+        return new BaseLinearEquation(angle, countB(angle, currPoint));
     }
 
     @Override

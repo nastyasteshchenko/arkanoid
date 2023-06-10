@@ -17,7 +17,6 @@ public class Ball {
     Ball(double radius, Point startPos) {
         this.radius = radius;
         this.position = startPos;
-
         double angle = Math.random() * 60 + 100;
         BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.countB(angle, position));
         this.motion = new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 0, position);
@@ -44,8 +43,8 @@ public class Ball {
             if (collision == null) {
                 continue;
             }
-            if (!hasChangedDirection) {
 
+            if (!hasChangedDirection) {
                 if (barrier instanceof Platform) {
                     double diffXBetweenBallAndCenterPlatform = barrier.position.x() + barrier.size.x() / 2 - position.x();
                     motion = motion.flipDirection(diffXBetweenBallAndCenterPlatform);

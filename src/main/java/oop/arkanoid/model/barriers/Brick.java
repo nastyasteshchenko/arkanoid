@@ -8,7 +8,6 @@ import java.util.EnumMap;
 public final class Brick extends Barrier implements Destroyable {
     private final int score;
     public final Health health;
-
     private final EnumMap<CollisionPlace, LinearEquation> linearEquations = new EnumMap<>(CollisionPlace.class);
 
     public Brick(Point position, Point size, Health health) {

@@ -70,18 +70,11 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
     }
 
     private double getDistanceYFromEdge(Pair<CollisionPlace, Double> vertical) {
-        if (vertical.getKey() == CollisionPlace.TOP) {
-            return Math.abs(vertical.getValue() - position.y());
-        } else {
-            return Math.abs(vertical.getValue() - position.y() - size.y());
-        }
+        return vertical.getKey() == CollisionPlace.TOP ? Math.abs(vertical.getValue() - position.y()) : Math.abs(vertical.getValue() - position.y() - size.y());
     }
 
     private double getDistanceXFromEdge(Pair<CollisionPlace, Double> horizontal) {
-        if (horizontal.getKey() == CollisionPlace.LEFT) {
-            return Math.abs(horizontal.getValue() - position.x());
-        } else {
-            return Math.abs(horizontal.getValue() - position.x() - size.x());
-        }
+        return horizontal.getKey() == CollisionPlace.LEFT ? Math.abs(horizontal.getValue() - position.x()) : Math.abs(horizontal.getValue() - position.x() - size.x());
     }
+
 }
