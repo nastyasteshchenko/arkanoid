@@ -208,19 +208,6 @@ public class Presenter {
         return paramsForLevel;
     }
 
-    private static void loadErrorScene(String errorMsg) {
-        try {
-            Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("FXML/error-scene.fxml")));
-            Text error = new Text(errorMsg);
-            setErrorText(error);
-            root.getChildren().add(error);
-            changeScene(new Scene(root));
-        } catch (IOException e) {
-//TODO some report in file?
-        }
-
-    }
-
     private static void setGameView(JsonObject paramsForLevel) {
         LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
 
