@@ -27,6 +27,7 @@ import java.io.*;
 import java.util.*;
 
 import static oop.arkanoid.Arkanoid.changeScene;
+import static oop.arkanoid.Arkanoid.createAlert;
 import static oop.arkanoid.view.LevelView.setErrorText;
 
 public class Presenter {
@@ -63,13 +64,9 @@ public class Presenter {
         }
     }
 
-    static void checkGeneratingAllLevels() {
+    static void checkGeneratingAllLevels() throws GeneratingGameException {
         for (; currentLevel < AMOUNT_OF_LEVELS + 1; currentLevel++) {
-            try {
-                model = GameLevel.initLevel(loadFileWithParamsForLevel());
-            } catch (GeneratingGameException e) {
-                loadErrorScene(e.getMessage());
-            }
+            model = GameLevel.initLevel(loadFileWithParamsForLevel());
         }
         currentLevel = 1;
     }
@@ -81,12 +78,12 @@ public class Presenter {
             gameLoseScene = loadNewScene("FXML/game-over-scene.fxml");
             gameWinScene = loadNewScene("FXML/game-win-scene.fxml");
         } catch (IOException e) {
-            loadErrorScene(e.getMessage());
+            createAlert(e);
         }
         try (JsonReader reader = new JsonReader(new FileReader("src/main/resources/oop/arkanoid/records.json"))) {
             records = GSON_LOADER.fromJson(reader, JsonObject.class);
         } catch (IOException e) {
-            loadErrorScene(e.getMessage());
+            createAlert(e);
         }
     }
 
@@ -132,7 +129,7 @@ public class Presenter {
             }
             changeScene(new Scene(root));
         } catch (IOException e) {
-            loadErrorScene(e.getMessage());
+            createAlert(e);
         }
     }
 
@@ -153,7 +150,7 @@ public class Presenter {
         try (JsonWriter writer = new JsonWriter(new FileWriter("src/main/resources/oop/arkanoid/records.json"))) {
             GSON_LOADER.toJson(records, writer);
         } catch (IOException e) {
-            loadErrorScene(e.getMessage());
+            createAlert(e);
         }
         changeScene(gameWinScene);
     }
@@ -170,7 +167,7 @@ public class Presenter {
         try {
             model = GameLevel.initLevel(paramsForLevel);
         } catch (GeneratingGameException e) {
-            loadErrorScene(e.getMessage());
+            createAlert(e);
         }
 
         setGameView(paramsForLevel);
@@ -206,7 +203,7 @@ public class Presenter {
         try (JsonReader reader = new JsonReader(new FileReader(jsonFileName))) {
             paramsForLevel = GSON_LOADER.fromJson(reader, JsonObject.class);
         } catch (IOException e) {
-            loadErrorScene(e.getMessage());
+            createAlert(e);
         }
         return paramsForLevel;
     }

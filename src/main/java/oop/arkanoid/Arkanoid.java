@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+import static oop.arkanoid.AlertCreationUtil.alert;
+
 public class Arkanoid extends Application {
     private static Stage stage;
 
@@ -24,15 +26,14 @@ public class Arkanoid extends Application {
             Presenter.checkGeneratingAllLevels();
         } catch (Exception e) {
             //TODO: make util class
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error initializing resources");
-            alert.setContentText("Error: " + e.getMessage());
-            alert.showAndWait();
-            stage.close();
+            createAlert(e);
             return;
         }
         stage.show();
+    }
+
+    static void createAlert(Exception errorMsg) {
+        alert(stage, errorMsg);
     }
 
     static void changeScene(Scene scene) {
