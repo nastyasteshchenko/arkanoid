@@ -6,7 +6,7 @@ import oop.arkanoid.model.*;
 import java.util.EnumMap;
 import java.util.List;
 
-import static oop.arkanoid.model.RangeChecker.checkRange;
+import static oop.arkanoid.model.RangeCheckerUtil.checkRange;
 
 public abstract sealed class Barrier permits Wall, Brick, Platform {
 
@@ -71,7 +71,7 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
         return (checkRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x()) ||
                 checkRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x() + size.x())) &&
                 (checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y()) ||
-                checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y() + size.y()));
+                        checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y() + size.y()));
     }
 
     private double getDistanceYFromEdge(Pair<CollisionPlace, Double> vertical) {

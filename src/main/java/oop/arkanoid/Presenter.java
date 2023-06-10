@@ -28,7 +28,6 @@ import java.util.*;
 
 import static oop.arkanoid.Arkanoid.changeScene;
 import static oop.arkanoid.Arkanoid.createAlert;
-import static oop.arkanoid.view.LevelView.setErrorText;
 
 public class Presenter {
     private static final Gson GSON_LOADER = new GsonBuilder().setPrettyPrinting().create();

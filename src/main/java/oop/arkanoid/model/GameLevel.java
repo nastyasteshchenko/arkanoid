@@ -6,7 +6,7 @@ import oop.arkanoid.model.barriers.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static oop.arkanoid.model.RangeChecker.checkRange;
+import static oop.arkanoid.model.RangeCheckerUtil.checkRange;
 
 public class GameLevel {
     private final Platform platform;

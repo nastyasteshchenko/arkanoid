@@ -210,14 +210,6 @@ public class LevelView {
         text.setStyle("-fx-font-size: " + scoreText.get("fontSize").getAsString());
     }
 
-    public static void setErrorText(Text error) {
-        error.setFont(Font.font("Droid Sans Mono"));
-        error.setFill(Color.valueOf("#680707"));
-        error.setStyle("-fx-font-size: 16");
-        error.setX(25);
-        error.setY(100);
-    }
-
     public Scene getGameScene() {
         return gameScene;
     }
