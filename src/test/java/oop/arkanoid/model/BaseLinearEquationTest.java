@@ -28,29 +28,32 @@ class BaseLinearEquationTest {
     }
 
     @Test
-    void rotateByVerticalCollision(){
+    void rotateByVerticalCollision() {
         BaseLinearEquation baseLinearEquation = new BaseLinearEquation(45, 15);
-        baseLinearEquation = (BaseLinearEquation) baseLinearEquation.rotate(new Point(15,15), CollisionPlace.RIGHT);
+        baseLinearEquation = (BaseLinearEquation) baseLinearEquation.rotate(new Point(15, 15), CollisionPlace.RIGHT);
         assertEquals(Math.tan(Math.toRadians(-225)), baseLinearEquation.k);
+        assertEquals(BaseLinearEquation.countB(-225, new Point(15, 15)), baseLinearEquation.b);
     }
 
     @Test
-    void rotateByHorizontalCollision(){
+    void rotateByHorizontalCollision() {
         BaseLinearEquation baseLinearEquation = new BaseLinearEquation(45, 15);
-        baseLinearEquation = (BaseLinearEquation) baseLinearEquation.rotate(new Point(15,15), CollisionPlace.TOP);
+        baseLinearEquation = (BaseLinearEquation) baseLinearEquation.rotate(new Point(15, 15), CollisionPlace.TOP);
         assertEquals(Math.tan(Math.toRadians(-45)), baseLinearEquation.k);
+        assertEquals(BaseLinearEquation.countB(-45, new Point(15, 15)), baseLinearEquation.b);
     }
 
     @Test
-    void rotateByPlatform(){
+    void rotateByPlatform() {
         BaseLinearEquation baseLinearEquation = new BaseLinearEquation(45, 15);
-        baseLinearEquation = (BaseLinearEquation) baseLinearEquation.rotate(new Point(15,15), 10);
+        baseLinearEquation = (BaseLinearEquation) baseLinearEquation.rotate(new Point(15, 15), 10);
         assertEquals(Math.tan(Math.toRadians(-100)), baseLinearEquation.k);
+        assertEquals(BaseLinearEquation.countB(-100, new Point(15, 15)), baseLinearEquation.b);
     }
 
     @Test
-    void countB(){
-        assertEquals(70,BaseLinearEquation.countB(-60, new Point(0, 70)));
+    void countB() {
+        assertEquals(70, BaseLinearEquation.countB(-60, new Point(0, 70)));
 
     }
 }
