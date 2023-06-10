@@ -1,6 +1,7 @@
 package oop.arkanoid;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -25,17 +26,18 @@ import oop.arkanoid.view.LevelView;
 import java.io.*;
 import java.util.*;
 
+import static oop.arkanoid.Arkanoid.changeScene;
 import static oop.arkanoid.view.LevelView.setErrorText;
 
 public class Presenter {
-    private static final Gson GSON_LOADER = new Gson();
+    private static final Gson GSON_LOADER = new GsonBuilder().setPrettyPrinting().create();
     private static JsonObject records;
     private static int currentLevel = 1;
     private static final int AMOUNT_OF_LEVELS = 3;
     private static Timeline animation;
     private static LevelView gameView;
     private static GameLevel model;
-    private static boolean gameIsStarted;
+    private static boolean gameIsStarted = false;
     private static boolean isPause = false;
     private static Scene mainScene;
     private static Scene aboutScene;
@@ -111,12 +113,12 @@ public class Presenter {
 
     @FXML
     protected void backToMainScene() {
-        Arkanoid.changeScene(mainScene);
+        changeScene(mainScene);
     }
 
     @FXML
     protected void watchAboutGame() {
-        Arkanoid.changeScene(aboutScene);
+        changeScene(aboutScene);
     }
 
     @FXML
@@ -128,7 +130,7 @@ public class Presenter {
                 LevelView.setRecordText(levelScore, records, "level" + level);
                 root.getChildren().add(levelScore);
             }
-            Arkanoid.changeScene(new Scene(root));
+            changeScene(new Scene(root));
         } catch (IOException e) {
             loadErrorScene(e.getMessage());
         }
@@ -153,7 +155,7 @@ public class Presenter {
         } catch (IOException e) {
             loadErrorScene(e.getMessage());
         }
-        Arkanoid.changeScene(gameWinScene);
+        changeScene(gameWinScene);
     }
 
     private void setRecord() {
@@ -173,7 +175,7 @@ public class Presenter {
 
         setGameView(paramsForLevel);
 
-        Arkanoid.changeScene(gameView.getGameScene());
+        changeScene(gameView.getGameScene());
 
         startAnimation();
 
@@ -215,7 +217,7 @@ public class Presenter {
             Text error = new Text(errorMsg);
             setErrorText(error);
             root.getChildren().add(error);
-            Arkanoid.changeScene(new Scene(root));
+            changeScene(new Scene(root));
         } catch (IOException e) {
 //TODO some report in file?
         }

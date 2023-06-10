@@ -61,14 +61,17 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
     }
 
     public void checkIfOutOfScene(Point scene) throws GeneratingGameException {
-        if (!checkRange(0, scene.x(), position.x()) || !checkRange(0, scene.y(), position.y()) || !checkRange(0, scene.x(), position.x() + size.x()) || !checkRange(0, scene.y(), position.y() + size.y())) {
+        if (!checkRange(0, scene.x(), position.x()) || !checkRange(0, scene.y(), position.y()) ||
+                !checkRange(0, scene.x(), position.x() + size.x()) || !checkRange(0, scene.y(), position.y() + size.y())) {
             throw GeneratingGameException.outOfScene();
         }
     }
 
     private boolean hasCollisionWithObject(Barrier barrier) {
-        return (checkRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x()) || checkRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x() + size.x()))
-                && (checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y()) || checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y() + size.y()));
+        return (checkRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x()) ||
+                checkRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x() + size.x())) &&
+                (checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y()) ||
+                checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y() + size.y()));
     }
 
     private double getDistanceYFromEdge(Pair<CollisionPlace, Double> vertical) {

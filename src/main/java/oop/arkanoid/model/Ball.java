@@ -20,6 +20,10 @@ public class Ball {
         this.motion = new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 0, startPos);
     }
 
+    public Point getPosition() {
+        return motion.currPoint;
+    }
+
     Point move(double step, List<Barrier> barriers) {
 
         detectCollisions(barriers);
@@ -68,7 +72,4 @@ public class Ball {
         }
     }
 
-    public Point getPosition() {
-        return motion.currPoint;
-    }
 }
