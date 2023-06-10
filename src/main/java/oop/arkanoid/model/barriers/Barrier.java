@@ -26,17 +26,13 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
         var linearEquations = getLinearEquations();
         for (var entry : linearEquations.entrySet()) {
             List<Double> intersectionPoints = entry.getValue().getIntersectionPoints(circleEquation);
-            if (entry.getKey() == CollisionPlace.LEFT || CollisionPlace.RIGHT == entry.getKey()) {
-                for (Double root : intersectionPoints) {
-                    if (checkRange(position.y(), position.y() + size.y(), root)) {
-                        vertical = new Pair<>(entry.getKey(), root);
-                    }
-                }
-            } else {
-                for (Double root : intersectionPoints) {
-                    if (checkRange(position.x(), position.x() + size.x(), root)) {
-                        horizontal = new Pair<>(entry.getKey(), root);
-                    }
+            for (Double root : intersectionPoints) {
+                if ((entry.getKey() == CollisionPlace.LEFT || entry.getKey() == CollisionPlace.RIGHT) && checkRange(position.y(), position.y() + size.y(), root)) {
+                    vertical = new Pair<>(entry.getKey(), root);
+                    break;
+                } else if ((entry.getKey() == CollisionPlace.TOP || entry.getKey() == CollisionPlace.BOTTOM) && checkRange(position.x(), position.x() + size.x(), root)) {
+                    horizontal = new Pair<>(entry.getKey(), root);
+                    break;
                 }
             }
         }
@@ -45,18 +41,13 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
             return null;
         }
 
-        if (vertical == null || horizontal == null) {
-            if (vertical != null) {
-                return vertical.getKey();
-            }
+        if (horizontal == null) {
+            return vertical.getKey();
+        } else if (vertical == null) {
             return horizontal.getKey();
         }
 
-        double distanceX = getDistanceXFromEdge(horizontal);
-
-        double distanceY = getDistanceYFromEdge(vertical);
-
-        return distanceX <= distanceY ? vertical.getKey() : horizontal.getKey();
+        return getDistanceXFromEdge(horizontal) <= getDistanceYFromEdge(vertical) ? vertical.getKey() : horizontal.getKey();
     }
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();
