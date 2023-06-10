@@ -47,4 +47,10 @@ class BaseLinearEquationTest {
         baseLinearEquation = (BaseLinearEquation) baseLinearEquation.rotate(new Point(15,15), 10);
         assertEquals(Math.tan(Math.toRadians(-100)), baseLinearEquation.k);
     }
+
+    @Test
+    void countB(){
+        assertEquals(70,BaseLinearEquation.countB(-60, new Point(0, 70)));
+
+    }
 }
