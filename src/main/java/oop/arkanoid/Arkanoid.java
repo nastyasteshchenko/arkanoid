@@ -3,6 +3,7 @@ package oop.arkanoid;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -13,13 +14,24 @@ public class Arkanoid extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        Scene startScene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-scene.fxml"))));
+        Scene startScene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("FXML/main-scene.fxml"))));
         stage.setTitle("Arkanoid");
         stage.setScene(startScene);
         Arkanoid.stage = stage;
         Arkanoid.stage.setResizable(false);
-        Presenter.loadResourcesBeforeStartApp();
-        Presenter.checkGeneratingAllLevels();
+        try {
+            Presenter.loadResourcesBeforeStartApp();
+            Presenter.checkGeneratingAllLevels();
+        } catch (Exception e) {
+            //TODO: make util class
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error initializing resources");
+            alert.setContentText("Error: " + e.getMessage());
+            alert.showAndWait();
+            stage.close();
+            return;
+        }
         stage.show();
     }
 

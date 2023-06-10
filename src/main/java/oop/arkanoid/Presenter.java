@@ -76,10 +76,10 @@ public class Presenter {
 
     static void loadResourcesBeforeStartApp() {
         try {
-            mainScene = loadNewScene("main-scene.fxml");
-            aboutScene = loadNewScene("about-scene.fxml");
-            gameLoseScene = loadNewScene("game-over-scene.fxml");
-            gameWinScene = loadNewScene("game-win-scene.fxml");
+            mainScene = loadNewScene("FXML/main-scene.fxml");
+            aboutScene = loadNewScene("FXML/about-scene.fxml");
+            gameLoseScene = loadNewScene("FXML/game-over-scene.fxml");
+            gameWinScene = loadNewScene("FXML/game-win-scene.fxml");
         } catch (IOException e) {
             loadErrorScene(e.getMessage());
         }
@@ -124,7 +124,7 @@ public class Presenter {
     @FXML
     protected void watchRecords() {
         try {
-            Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("records-scene.fxml")));
+            Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("FXML/records-scene.fxml")));
             for (int level = 1; level < AMOUNT_OF_LEVELS + 1; level++) {
                 Text levelScore = new Text(records.getAsJsonObject("records").get("level" + level).getAsString());
                 LevelView.setRecordText(levelScore, records, "level" + level);
@@ -200,7 +200,7 @@ public class Presenter {
     }
 
     private static JsonObject loadFileWithParamsForLevel() {
-        String jsonFileName = "src/main/resources/oop/arkanoid/level" + currentLevel + ".json";
+        String jsonFileName = "src/main/resources/oop/arkanoid/Levels/level" + currentLevel + ".json";
 
         JsonObject paramsForLevel = new JsonObject();
         try (JsonReader reader = new JsonReader(new FileReader(jsonFileName))) {
@@ -213,7 +213,7 @@ public class Presenter {
 
     private static void loadErrorScene(String errorMsg) {
         try {
-            Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("error-scene.fxml")));
+            Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("FXML/error-scene.fxml")));
             Text error = new Text(errorMsg);
             setErrorText(error);
             root.getChildren().add(error);
