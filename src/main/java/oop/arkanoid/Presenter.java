@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -30,10 +29,8 @@ import static oop.arkanoid.Arkanoid.changeScene;
 import static oop.arkanoid.Arkanoid.createAlert;
 
 public class Presenter {
-    private static final Gson GSON_LOADER = new GsonBuilder().setPrettyPrinting().create();
-    private static JsonObject records;
-    private static int currentLevel = 1;
-    private static final int AMOUNT_OF_LEVELS = 3;
+    private static ScoresManager scoresManager;
+    private static LevelsManager levelsManager;
     private static Timeline animation;
     private static LevelView gameView;
     private static GameLevel model;
@@ -43,6 +40,7 @@ public class Presenter {
     private static Scene aboutScene;
     private static Scene gameLoseScene;
     private static Scene gameWinScene;
+    private static Scene recordsScene;
 
     public static void startPlayingGame() {
         gameIsStarted = true;
@@ -64,23 +62,38 @@ public class Presenter {
     }
 
     static void checkGeneratingAllLevels() throws GeneratingGameException {
-        for (; currentLevel < AMOUNT_OF_LEVELS + 1; currentLevel++) {
-            model = GameLevel.initLevel(loadFileWithParamsForLevel());
-        }
-        currentLevel = 1;
+        levelsManager.checkGeneratingAllLevels();
     }
 
     static void loadResourcesBeforeStartApp() {
+        try {
+            scoresManager = new ScoresManager();
+            levelsManager = new LevelsManager();
+        } catch (Exception e) {
+            createAlert(e);
+        }
+
         try {
             mainScene = loadNewScene("FXML/main-scene.fxml");
             aboutScene = loadNewScene("FXML/about-scene.fxml");
             gameLoseScene = loadNewScene("FXML/game-over-scene.fxml");
             gameWinScene = loadNewScene("FXML/game-win-scene.fxml");
-        } catch (IOException e) {
-            createAlert(e);
-        }
-        try (JsonReader reader = new JsonReader(new FileReader("src/main/resources/oop/arkanoid/records.json"))) {
-            records = GSON_LOADER.fromJson(reader, JsonObject.class);
+
+            try (JsonReader reader = new JsonReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream("records_scene.json"))))) {
+                Gson GSON_LOADER = new GsonBuilder().setPrettyPrinting().create();
+                JsonObject records = GSON_LOADER.fromJson(reader, JsonObject.class);
+
+                Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("FXML/records-scene.fxml")));
+                Collection<ScoresManager.LevelScore> scores = scoresManager.getScores();
+
+                for (ScoresManager.LevelScore score : scores) {
+                    Text levelScore = new Text(String.valueOf(score.score()));
+                    LevelView.setRecordText(levelScore, records, score.levelName());
+                    root.getChildren().add(levelScore);
+                }
+
+                recordsScene = new Scene(root);
+            }
         } catch (IOException e) {
             createAlert(e);
         }
@@ -119,17 +132,7 @@ public class Presenter {
 
     @FXML
     protected void watchRecords() {
-        try {
-            Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource("FXML/records-scene.fxml")));
-            for (int level = 1; level < AMOUNT_OF_LEVELS + 1; level++) {
-                Text levelScore = new Text(records.getAsJsonObject("records").get("level" + level).getAsString());
-                LevelView.setRecordText(levelScore, records, "level" + level);
-                root.getChildren().add(levelScore);
-            }
-            changeScene(new Scene(root));
-        } catch (IOException e) {
-            createAlert(e);
-        }
+        changeScene(recordsScene);
     }
 
     private void gameLose() {
@@ -138,30 +141,23 @@ public class Presenter {
 
     private void gameWin() {
         prepareForGameOver(gameWinScene);
-        currentLevel++;
+        levelsManager.increaseLevel();
     }
 
     private void prepareForGameOver(Scene gameWinScene) {
         animation.stop();
         setRecord();
         gameIsStarted = false;
-
-        try (JsonWriter writer = new JsonWriter(new FileWriter("src/main/resources/oop/arkanoid/records.json"))) {
-            GSON_LOADER.toJson(records, writer);
-        } catch (IOException e) {
-            createAlert(e);
-        }
         changeScene(gameWinScene);
     }
 
     private void setRecord() {
-        if (model.getScore() > records.getAsJsonObject("records").get("level" + currentLevel).getAsInt()) {
-            records.getAsJsonObject("records").addProperty("level" + currentLevel, model.getScore());
-        }
+        scoresManager.writeScore("level" + levelsManager.getCurrentLevel(), model.getScore());
+        scoresManager.storeRecords();
     }
 
     private void startLevel() {
-        JsonObject paramsForLevel = loadFileWithParamsForLevel();
+        JsonObject paramsForLevel = levelsManager.getCurrentLevelJsonObject();
 
         try {
             model = GameLevel.initLevel(paramsForLevel);
@@ -195,18 +191,6 @@ public class Presenter {
         return new Scene(FXMLLoader.load(Objects.requireNonNull(Presenter.class.getResource(fileName))));
     }
 
-    private static JsonObject loadFileWithParamsForLevel() {
-        String jsonFileName = "src/main/resources/oop/arkanoid/Levels/level" + currentLevel + ".json";
-
-        JsonObject paramsForLevel = new JsonObject();
-        try (JsonReader reader = new JsonReader(new FileReader(jsonFileName))) {
-            paramsForLevel = GSON_LOADER.fromJson(reader, JsonObject.class);
-        } catch (IOException e) {
-            createAlert(e);
-        }
-        return paramsForLevel;
-    }
-
     private static void setGameView(JsonObject paramsForLevel) {
         LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
 
@@ -234,7 +218,7 @@ public class Presenter {
         Ball ball = model.getBall();
         builder.ball(ball.getPosition(), ball.radius).gameScene(model.getSceneSize());
 
-        builder.highScore(records.getAsJsonObject("records").get("level" + currentLevel).getAsInt());
+        builder.highScore(scoresManager.getScore("level" + levelsManager.getCurrentLevel()));
 
         gameView = builder.build();
     }

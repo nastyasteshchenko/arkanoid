@@ -1,36 +1,64 @@
 package oop.arkanoid;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
+import oop.arkanoid.model.GameLevel;
+import oop.arkanoid.model.GeneratingGameException;
+
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.NotDirectoryException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public class LevelsManager {
+    private static int currentLevel = 1;
+    private int amountOfLevels = 0;
     private final static String pathToLevels = "Levels";
-    private final Map<String, File> availableLevels = new HashMap<>();
+    private final Map<String, JsonObject> availableLevels = new HashMap<>();
 
-    public LevelsManager() throws NotDirectoryException {
-        File levelsDir = new File(Objects.requireNonNull(this.getClass().getResource(pathToLevels)).getFile());
+    public LevelsManager() throws IOException {
+
+        File levelsDir = new File("src/main/resources/oop/arkanoid/" + pathToLevels);
+
         if (!levelsDir.isDirectory()) {
             throw new NotDirectoryException("Expected \"Levels\" directory, but got file");
         }
+
+        Gson gson = new Gson();
+
         for (File f : Objects.requireNonNull(levelsDir.listFiles())) {
             if (f.isDirectory()) {
                 continue;
             }
-            if (f.canRead()) {
-                availableLevels.put(f.getName(), f);
+
+            amountOfLevels++;
+
+            try (JsonReader reader = new JsonReader(new FileReader(f))) {
+                JsonObject paramsForLevel = gson.fromJson(reader, JsonObject.class);
+                availableLevels.put(f.getName(), paramsForLevel);
             }
         }
     }
 
-    public Set<String> getLevelsNameAsSet() {
-        return availableLevels.keySet();
+    public int getCurrentLevel() {
+        return currentLevel;
     }
 
-    public File getLevelFileByName(String name) {
-        return availableLevels.get(name);
+    void checkGeneratingAllLevels() throws GeneratingGameException {
+        for (JsonObject object : availableLevels.values()) {
+            GameLevel.initLevel(object);
+        }
+    }
+
+    public void increaseLevel() {
+        currentLevel++;
+    }
+
+    public JsonObject getCurrentLevelJsonObject() {
+        return availableLevels.get("level" + currentLevel + ".json");
     }
 }

@@ -1,44 +1,55 @@
 package oop.arkanoid;
 
 import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class ScoresManager {
-    private record LevelScore(String levelName, String player, int score) {}
+
+    public record LevelScore(String levelName, int score){}
     private final static String pathToRecordsFile = "records.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<String, LevelScore> scores = new HashMap<>();
-    private final File scoresJson;
-    public ScoresManager() throws FileNotFoundException {
-        scoresJson = new File(Objects.requireNonNull(this.getClass().getResource(pathToRecordsFile)).getFile());
-        if (scoresJson.isDirectory()) {
-            throw new FileNotFoundException("Expected .json file, but got a directory");
-        }
-        try (FileReader fileReader = new FileReader(scoresJson)) {
+
+    public ScoresManager() {
+        try (JsonReader fileReader = new JsonReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(pathToRecordsFile))))) {
             JsonArray mainJa = gson.fromJson(fileReader, JsonArray.class);
             for (JsonElement je : mainJa) {
-                LevelScore levelScore = gson.fromJson(je, LevelScore.class);
-                scores.put(levelScore.levelName(), levelScore);
+                JsonObject jsonObject = je.getAsJsonObject();
+                LevelScore levelScore = new LevelScore(jsonObject.get("levelName").getAsString(), jsonObject.get("score").getAsInt());
+                scores.put(levelScore.levelName, levelScore);
             }
         } catch (IOException e) {
             //?
         }
     }
 
-    public void writeScore(String levelName, String player, int scoreValue) {
-        scores.put(levelName, new LevelScore(levelName, player, scoreValue));
+
+    public void writeScore(String levelName, int scoreValue) {
+        if (scoreValue > scores.get(levelName).score) {
+            scores.put(levelName, new LevelScore(levelName, scoreValue));
+        }
+    }
+
+    public int getScore(String levelName){
+        return scores.get(levelName).score;
+    }
+
+    public Collection<LevelScore> getScores(){
+        return scores.values();
     }
 
     public void storeRecords() {
-        try (JsonWriter jsonWriter = new JsonWriter(new FileWriter(scoresJson))) {
+        try (JsonWriter jsonWriter = new JsonWriter(new FileWriter("src/main/resources/oop/arkanoid/" + pathToRecordsFile))) {
             jsonWriter.beginArray();
             for (LevelScore levelScore : scores.values()) {
-                gson.toJson(levelScore, LevelScore.class, jsonWriter);
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("levelName", levelScore.levelName());
+                jsonObject.addProperty("score", levelScore.score());
+                gson.toJson(jsonObject, jsonWriter);
             }
             jsonWriter.endArray();
         } catch (IOException e) {

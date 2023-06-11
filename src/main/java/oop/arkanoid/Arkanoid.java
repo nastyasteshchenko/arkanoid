@@ -25,7 +25,6 @@ public class Arkanoid extends Application {
             Presenter.loadResourcesBeforeStartApp();
             Presenter.checkGeneratingAllLevels();
         } catch (Exception e) {
-            //TODO: make util class
             createAlert(e);
             return;
         }
