@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class LevelsManager {
     private static int currentLevel = 1;
-    private int amountOfLevels = 0;
+    //private int amountOfLevels = 0;
     private final static String pathToLevels = "Levels";
     private final Map<String, JsonObject> availableLevels = new HashMap<>();
 
@@ -35,7 +35,7 @@ public class LevelsManager {
                 continue;
             }
 
-            amountOfLevels++;
+            //amountOfLevels++;
 
             try (JsonReader reader = new JsonReader(new FileReader(f))) {
                 JsonObject paramsForLevel = gson.fromJson(reader, JsonObject.class);
