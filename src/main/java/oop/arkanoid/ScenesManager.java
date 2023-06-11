@@ -10,7 +10,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import oop.arkanoid.view.LevelView;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

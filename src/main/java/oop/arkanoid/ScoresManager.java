@@ -7,6 +7,8 @@ import com.google.gson.stream.JsonWriter;
 import java.io.*;
 import java.util.*;
 
+import static oop.arkanoid.Arkanoid.createAlert;
+
 public class ScoresManager {
 
     public record LevelScore(String levelName, int score){}
@@ -23,7 +25,7 @@ public class ScoresManager {
                 scores.put(levelScore.levelName, levelScore);
             }
         } catch (IOException e) {
-            //?
+            createAlert(e);
         }
     }
 
@@ -34,7 +36,7 @@ public class ScoresManager {
         }
     }
 
-    public int getScore(String levelName){
+    public int getScoreForLevel(String levelName){
         return scores.get(levelName).score;
     }
 
@@ -53,7 +55,7 @@ public class ScoresManager {
             }
             jsonWriter.endArray();
         } catch (IOException e) {
-            //?
+            createAlert(e);
         }
     }
 }

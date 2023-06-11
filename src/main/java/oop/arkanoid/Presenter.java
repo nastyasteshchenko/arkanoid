@@ -186,7 +186,7 @@ public class Presenter {
         Ball ball = model.getBall();
         builder.ball(ball.getPosition(), ball.radius).gameScene(model.getSceneSize());
 
-        builder.highScore(scoresManager.getScore(levelsManager.getCurrentLevel()));
+        builder.highScore(scoresManager.getScoreForLevel(levelsManager.getCurrentLevel()));
 
         gameView = builder.build();
     }
