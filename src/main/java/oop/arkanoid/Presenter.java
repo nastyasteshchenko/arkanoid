@@ -123,7 +123,7 @@ public class Presenter {
     }
 
     private void setRecord() {
-        scoresManager.writeScore("level" + levelsManager.getCurrentLevel(), model.getScore());
+        scoresManager.writeScore(levelsManager.getCurrentLevel(), model.getScore());
         scoresManager.storeRecords();
     }
 
@@ -186,7 +186,7 @@ public class Presenter {
         Ball ball = model.getBall();
         builder.ball(ball.getPosition(), ball.radius).gameScene(model.getSceneSize());
 
-        builder.highScore(scoresManager.getScore("level" + levelsManager.getCurrentLevel()));
+        builder.highScore(scoresManager.getScore(levelsManager.getCurrentLevel()));
 
         gameView = builder.build();
     }

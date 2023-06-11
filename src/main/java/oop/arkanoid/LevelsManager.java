@@ -44,8 +44,8 @@ public class LevelsManager {
         }
     }
 
-    public int getCurrentLevel() {
-        return currentLevel;
+    public String getCurrentLevel() {
+        return "level" + currentLevel;
     }
 
     void checkGeneratingAllLevels() throws GeneratingGameException {
