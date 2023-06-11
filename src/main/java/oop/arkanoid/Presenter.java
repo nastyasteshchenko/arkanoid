@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.util.Duration;
@@ -56,24 +55,20 @@ public class Presenter {
         levelsManager.checkGeneratingAllLevels();
     }
 
-    static void loadResourcesBeforeStartApp() {
-        try {
-            scoresManager = new ScoresManager();
-            levelsManager = new LevelsManager();
-        } catch (Exception e) {
-            createAlert(e);
-        }
-
-        try {
-            scenesManager = new ScenesManager(scoresManager);
-        } catch (IOException e) {
-            createAlert(e);
-        }
+    static void loadResourcesBeforeStartApp() throws IOException {
+        levelsManager = new LevelsManager();
+        scoresManager = new ScoresManager();
+        scenesManager = new ScenesManager(scoresManager);
     }
 
     @FXML
     protected void backToMenu() {
-        loadResourcesBeforeStartApp();
+        try {
+            scoresManager = new ScoresManager();
+            scenesManager.changeRecordsScene(scoresManager);
+        } catch (Exception e) {
+            createAlert(e);
+        }
         changeScene(scenesManager.getScene("main"));
     }
 
@@ -148,9 +143,7 @@ public class Presenter {
         }
 
         setGameView(paramsForLevel);
-
         changeScene(gameView.getGameScene());
-
         startAnimation();
 
     }

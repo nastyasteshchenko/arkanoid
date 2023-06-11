@@ -38,6 +38,11 @@ class ScenesManager {
         return scenes.get(name);
     }
 
+    void changeRecordsScene(ScoresManager scoresManager) throws IOException {
+        scenes.remove("records");
+        addRecordsScene(scoresManager);
+    }
+
     private void addRecordsScene(ScoresManager scoresManager) throws IOException {
         try (JsonReader reader = new JsonReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream("records_scene.json"))))) {
             Gson GSON_LOADER = new GsonBuilder().setPrettyPrinting().create();
@@ -56,6 +61,7 @@ class ScenesManager {
             scenes.put("records", new Scene(root));
         }
     }
+
 
     private static void setTextParams(JsonObject records, ScoresManager.LevelScore score, Text levelScore) {
         JsonObject scoreText = records.getAsJsonObject("scoreLabel").getAsJsonObject(score.levelName());

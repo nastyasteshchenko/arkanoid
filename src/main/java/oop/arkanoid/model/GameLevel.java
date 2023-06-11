@@ -72,7 +72,7 @@ public class GameLevel {
 
         Builder platform(Point position, Point size) throws GeneratingGameException {
             platform = new Platform(position, size);
-            platform.checkIfCollisions(barriers);
+            platform.checkIfCollisionsWithOtherObjects(barriers);
             platform.checkIfOutOfScene(sceneSize);
             barriers.add(platform);
             return this;
@@ -87,7 +87,7 @@ public class GameLevel {
         Builder addBrick(Point position, Point size, int health) throws GeneratingGameException {
             Brick brick = health == -1 ? new Brick(position, size, Health.createImmortal()) : new Brick(position, size, new Health(health));
             brick.checkIfOutOfScene(sceneSize);
-            brick.checkIfCollisions(barriers);
+            brick.checkIfCollisionsWithOtherObjects(barriers);
             barriers.add(brick);
             return this;
         }
