@@ -55,6 +55,10 @@ class LevelsManager {
     }
 
     JsonObject getCurrentLevelJsonObject() {
-        return availableLevels.get(getCurrentLevel() + ".json");
+        JsonObject object = availableLevels.get(getCurrentLevel() + ".json");
+        if (object == null) {
+            currentLevel = 1;
+        }
+        return object;
     }
 }

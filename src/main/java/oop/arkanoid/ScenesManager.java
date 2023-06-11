@@ -28,6 +28,7 @@ class ScenesManager {
         scenes.put("about", loadNewScene(pathToLevels + "about-scene.fxml"));
         scenes.put("game_over", loadNewScene(pathToLevels + "game-over-scene.fxml"));
         scenes.put("game_win", loadNewScene(pathToLevels + "game-win-scene.fxml"));
+        scenes.put("game_passed", loadNewScene(pathToLevels + "game-passed-scene.fxml"));
 
         addRecordsScene(scoresManager);
 

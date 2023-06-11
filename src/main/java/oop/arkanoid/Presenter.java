@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.util.Duration;
@@ -71,6 +72,12 @@ public class Presenter {
     }
 
     @FXML
+    protected void backToMenu() {
+        loadResourcesBeforeStartApp();
+        changeScene(scenesManager.getScene("main"));
+    }
+
+    @FXML
     protected void restartGame() {
         startLevel();
     }
@@ -129,6 +136,10 @@ public class Presenter {
 
     private void startLevel() {
         JsonObject paramsForLevel = levelsManager.getCurrentLevelJsonObject();
+
+        if (paramsForLevel == null) {
+            changeScene(scenesManager.getScene("game_passed"));
+        }
 
         try {
             model = GameLevel.initLevel(paramsForLevel);
