@@ -1,20 +1,27 @@
 package oop.arkanoid.model;
 
+import oop.arkanoid.model.barriers.Barrier;
+import oop.arkanoid.model.barriers.Brick;
+import oop.arkanoid.model.barriers.CollisionPlace;
+import oop.arkanoid.model.barriers.Platform;
+
 import java.util.ArrayList;
 import java.util.List;
 
-class Ball {
-    final double radius;
-    Point position;
+public class Ball {
+
+    public final double radius;
     private LinearMotion motion;
 
     Ball(double radius, Point startPos) {
         this.radius = radius;
-        this.position = startPos;
-
         double angle = Math.random() * 60 + 100;
-        BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.countB(angle, position), new Point(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-        this.motion = new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 0, position);
+        BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.countB(angle, startPos));
+        this.motion = new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 0, startPos);
+    }
+
+    public Point getPosition() {
+        return motion.currPoint;
     }
 
     Point move(double step, List<Barrier> barriers) {
@@ -23,12 +30,11 @@ class Ball {
 
         motion = motion.changeStepIfNeeded(step);
 
-        this.position = motion.nextPoint();
-        return this.position;
+        return motion.nextPoint();
     }
 
     private void detectCollisions(List<Barrier> barriers) {
-        CircleEquation circleEquation = new CircleEquation(position, radius);
+        CircleEquation circleEquation = new CircleEquation(motion.currPoint, radius);
 
         List<Brick> bricksToDelete = new ArrayList<>();
         boolean hasChangedDirection = false;
@@ -38,10 +44,10 @@ class Ball {
             if (collision == null) {
                 continue;
             }
-            if (!hasChangedDirection) {
 
+            if (!hasChangedDirection) {
                 if (barrier instanceof Platform) {
-                    double diffXBetweenBallAndCenterPlatform = barrier.position.x() + barrier.size.x() / 2 - position.x();
+                    double diffXBetweenBallAndCenterPlatform = barrier.position.x() + barrier.size.x() / 2 - motion.currPoint.x();
                     motion = motion.flipDirection(diffXBetweenBallAndCenterPlatform);
                     motion = motion.rotate(diffXBetweenBallAndCenterPlatform);
                 } else {
@@ -65,4 +71,5 @@ class Ball {
             bricksToDelete.forEach(barriers::remove);
         }
     }
+
 }

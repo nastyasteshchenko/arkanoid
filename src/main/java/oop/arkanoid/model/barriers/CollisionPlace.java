@@ -1,13 +1,13 @@
-package oop.arkanoid.model;
+package oop.arkanoid.model.barriers;
 
-enum CollisionPlace {
+public enum CollisionPlace {
 
     BOTTOM(false),
     TOP(false),
     LEFT(true),
     RIGHT(true);
 
-    final boolean needToChangeDirection;
+    public final boolean needToChangeDirection;
 
     CollisionPlace(boolean needToChangeDirection) {
         this.needToChangeDirection = needToChangeDirection;

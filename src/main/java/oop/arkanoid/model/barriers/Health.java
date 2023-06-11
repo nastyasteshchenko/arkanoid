@@ -1,13 +1,13 @@
-package oop.arkanoid.model;
+package oop.arkanoid.model.barriers;
 
-class Health {
+public class Health {
     private int value;
 
-    Health(int value) {
+    public Health(int value) {
         this.value = value;
     }
 
-    static Health createImmortal() {
+    public static Health createImmortal() {
         return new Immortal();
     }
 
@@ -19,7 +19,7 @@ class Health {
         value--;
     }
 
-    static class Immortal extends Health {
+    public static class Immortal extends Health {
         Immortal() {
             super(1);
         }
@@ -29,7 +29,7 @@ class Health {
         }
     }
 
-    int getValue() {
+    public int getValue() {
         return value;
     }
 }

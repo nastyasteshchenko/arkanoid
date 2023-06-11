@@ -1,8 +1,12 @@
 package oop.arkanoid.model;
 
-interface LinearEquation {
+import oop.arkanoid.model.barriers.CollisionPlace;
 
-    boolean hasIntersection(CircleEquation circleEquation);
+import java.util.List;
+
+public interface LinearEquation {
+
+    List<Double> getIntersectionPoints(CircleEquation circleEquation);
 
     double getY(double x);
 
@@ -10,14 +14,12 @@ interface LinearEquation {
 
     LinearEquation rotate(Point currPoint, double diffBetweenBallAndCenterPlatform);
 
-    static LinearEquation linearEquation(double angle, double b, Point xBorders) {
-        return new BaseLinearEquation(angle, b, xBorders);
+    static LinearEquation linearEquation(double angle, double b) {
+        return new BaseLinearEquation(angle, b);
     }
 
-    static LinearEquation xLinearMotionEquation(double x, Point yBorders) {
-        return new XLinearEquation(x, yBorders);
+    static LinearEquation xLinearMotionEquation(double x) {
+        return new XLinearEquation(x);
     }
-
-    double getDistanceBallCrossingLine(CircleEquation circleEquation, CollisionPlace place);
 
 }

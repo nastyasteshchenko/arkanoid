@@ -6,24 +6,28 @@ public class GeneratingGameException extends Exception {
         super(message);
     }
 
-    static GeneratingGameException collisionWithOtherObjects() {
+    public static GeneratingGameException collisionWithOtherObjects() {
         return new GeneratingGameException("Detected collision with other object");
     }
 
-    static GeneratingGameException outOfScene() {
+    public static GeneratingGameException outOfScene() {
         return new GeneratingGameException("Detected object is out of scene");
     }
 
-    static GeneratingGameException ballIsNotOnPlatform() {
+    public static GeneratingGameException ballIsNotOnPlatform() {
         return new GeneratingGameException("Ball is not on the platform");
     }
 
-    static GeneratingGameException wrongWallPosition() {
+    public static GeneratingGameException wrongWallPosition() {
         return new GeneratingGameException("Wrong wall position");
     }
 
-    static GeneratingGameException addingBottomWall() {
+    public static GeneratingGameException addingBottomWall() {
         return new GeneratingGameException("Can't add bottom wall");
+    }
+
+    public static GeneratingGameException unsupportedHealth() {
+        return new GeneratingGameException("Unsupported health");
     }
 
     static GeneratingGameException uninitObjects() {

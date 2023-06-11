@@ -4,7 +4,6 @@ import java.util.List;
 
 class QuadraticEquation {
 
-    // ax^2 + bx + c = 0
     final double a;
     final double b;
     final double c;
@@ -12,6 +11,9 @@ class QuadraticEquation {
     final List<Double> roots;
 
     QuadraticEquation(double a, double b, double c) {
+
+        // ax^2 + bx + c = 0
+
         this.a = a;
         this.b = b;
         this.c = c;
