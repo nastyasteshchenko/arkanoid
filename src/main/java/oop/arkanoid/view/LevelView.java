@@ -201,15 +201,6 @@ public class LevelView {
         removeBrick(bricks.stream().filter(i -> point.x() == i.getX() && point.y() == i.getY()).findFirst().get());
     }
 
-    public static void setRecordText(Text text, JsonObject params, String level) {
-        JsonObject scoreText = params.getAsJsonObject("scoreLabel").getAsJsonObject(level);
-        text.setX(scoreText.get("x").getAsDouble());
-        text.setY(scoreText.get("y").getAsDouble());
-        text.setFont(Font.font(scoreText.get("font").getAsString()));
-        text.setFill(Color.valueOf(scoreText.get("color").getAsString()));
-        text.setStyle("-fx-font-size: " + scoreText.get("fontSize").getAsString());
-    }
-
     public Scene getGameScene() {
         return gameScene;
     }

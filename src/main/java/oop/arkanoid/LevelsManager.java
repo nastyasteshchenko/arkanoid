@@ -14,13 +14,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class LevelsManager {
+class LevelsManager {
     private static int currentLevel = 1;
-    //private int amountOfLevels = 0;
     private final static String pathToLevels = "Levels";
     private final Map<String, JsonObject> availableLevels = new HashMap<>();
 
-    public LevelsManager() throws IOException {
+    LevelsManager() throws IOException {
 
         File levelsDir = new File("src/main/resources/oop/arkanoid/" + pathToLevels);
 
@@ -35,16 +34,13 @@ public class LevelsManager {
                 continue;
             }
 
-            //amountOfLevels++;
-
             try (JsonReader reader = new JsonReader(new FileReader(f))) {
-                JsonObject paramsForLevel = gson.fromJson(reader, JsonObject.class);
-                availableLevels.put(f.getName(), paramsForLevel);
+                availableLevels.put(f.getName(), gson.fromJson(reader, JsonObject.class));
             }
         }
     }
 
-    public String getCurrentLevel() {
+    String getCurrentLevel() {
         return "level" + currentLevel;
     }
 
@@ -54,11 +50,11 @@ public class LevelsManager {
         }
     }
 
-    public void increaseLevel() {
+    void increaseLevel() {
         currentLevel++;
     }
 
-    public JsonObject getCurrentLevelJsonObject() {
-        return availableLevels.get("level" + currentLevel + ".json");
+    JsonObject getCurrentLevelJsonObject() {
+        return availableLevels.get(getCurrentLevel() + ".json");
     }
 }
