@@ -11,8 +11,8 @@ public class Health {
         return new Immortal();
     }
 
-    boolean isAlive() {
-        return value > 0;
+    boolean isDead() {
+        return value <= 0;
     }
 
     void decrease() {

@@ -2,9 +2,7 @@ package oop.arkanoid.model;
 
 public interface Destroyable {
 
-    //TODO rename isDead
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    boolean isAlive();
+    boolean isDead();
     Point position();
     void onHit();
     //TODO delete

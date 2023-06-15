@@ -61,7 +61,7 @@ public class Ball {
 
             if (barrier instanceof Brick brick) {
                 brick.onHit();
-                if (!brick.isAlive()) {
+                if (brick.isDead()) {
                     bricksToDelete.add(brick);
                 }
             }

@@ -22,8 +22,8 @@ public final class Brick extends Barrier implements Destroyable {
     }
 
     @Override
-    public boolean isAlive() {
-        return health.isAlive();
+    public boolean isDead() {
+        return health.isDead();
     }
 
     @Override
@@ -39,7 +39,7 @@ public final class Brick extends Barrier implements Destroyable {
     @Override
     public void onHit() {
         health.decrease();
-        if (!isAlive()) {
+        if (isDead()) {
             Notifications.getInstance().publish(Notifications.EventType.DESTROY, this);
         }
     }
