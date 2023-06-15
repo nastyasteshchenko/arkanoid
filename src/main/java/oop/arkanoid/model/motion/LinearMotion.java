@@ -32,15 +32,20 @@ public class LinearMotion {
 
         QuadraticEquation qEquation = new QuadraticEquation(a, b, c);
 
-        Double firstRoot = qEquation.roots.get(0);
-        Double secondRoot = qEquation.roots.get(1);
+        double firstRoot = qEquation.roots.get(0);
+        double secondRoot = qEquation.roots.get(1);
+
+        double newX;
 
         if (direction == MotionDirection.LEFT) {
-            currPoint.setX(firstRoot <= currPoint.x() ? firstRoot : secondRoot);
+            newX = firstRoot <= currPoint.x() ? firstRoot : secondRoot;
         } else {
-            currPoint.setX(firstRoot >= currPoint.x() ? firstRoot : secondRoot);
+            newX = firstRoot >= currPoint.x() ? firstRoot : secondRoot;
         }
-        currPoint.setY(linearEquation.getY(currPoint.x()));
+
+        double newY = linearEquation.getY(newX);
+
+        currPoint = new Point(newX, newY);
 
         return currPoint;
     }

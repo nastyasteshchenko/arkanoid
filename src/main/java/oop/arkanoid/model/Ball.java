@@ -48,7 +48,7 @@ public class Ball {
 
             if (!hasChangedDirection) {
                 if (barrier instanceof Platform) {
-                    double diffXBetweenBallAndCenterPlatform = barrier.position.x() + barrier.size.x() / 2 - motion.currPoint.x();
+                    double diffXBetweenBallAndCenterPlatform = barrier.position().x() + barrier.size.x() / 2 - motion.currPoint.x();
                     motion = motion.flipDirection(diffXBetweenBallAndCenterPlatform);
                     motion = motion.rotate(diffXBetweenBallAndCenterPlatform);
                 } else {

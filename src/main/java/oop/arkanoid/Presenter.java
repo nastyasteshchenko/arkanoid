@@ -170,20 +170,20 @@ public class Presenter {
         List<Barrier> barriers = model.getBarriers();
         for (Barrier barrier : barriers) {
             if (barrier instanceof Platform platform) {
-                builder.platform(platform.position, platform.size);
+                builder.platform(platform.position(), platform.size);
                 continue;
             }
             if (barrier instanceof Brick brick) {
                 if (brick.health instanceof Health.Immortal) {
-                    builder.addImmortalBrick(brick.position, brick.size);
+                    builder.addImmortalBrick(brick.position(), brick.size);
                     continue;
                 }
                 if (brick.health.getValue() == 1) {
-                    builder.addStandardBrick(brick.position, brick.size);
+                    builder.addStandardBrick(brick.position(), brick.size);
                     continue;
                 }
                 if (brick.health.getValue() == 2) {
-                    builder.addDoubleHitBrick(brick.position, brick.size);
+                    builder.addDoubleHitBrick(brick.position(), brick.size);
                 }
             }
         }

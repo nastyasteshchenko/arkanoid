@@ -11,7 +11,8 @@ import static oop.arkanoid.model.ModelUtils.isInRange;
 
 public abstract sealed class Barrier permits Wall, Brick, Platform {
 
-    public final Point position;
+    Point position;
+
     public final Point size;
 
     Barrier(Point position, Point size) {
@@ -20,6 +21,10 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
     }
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();
+
+    public Point position(){
+        return position;
+    }
 
     public CollisionPlace findCollision(CircleEquation circleEquation) {
 

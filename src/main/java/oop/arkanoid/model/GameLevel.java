@@ -35,7 +35,7 @@ public class GameLevel {
         } else {
             platform.update(x - platform.size.x() / 2);
         }
-        return platform.position.x();
+        return platform.position().x();
     }
 
     public GameState gameState() {

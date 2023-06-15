@@ -19,7 +19,7 @@ public final class Platform extends Barrier {
 
 
     public void update(double x) {
-        position.setX(x);
+        position = new Point(x, position.y());
         linearEquations.clear();
 
         linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position.y()));
