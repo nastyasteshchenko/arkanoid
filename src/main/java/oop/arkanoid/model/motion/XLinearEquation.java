@@ -20,12 +20,7 @@ public record XLinearEquation(double x) implements LinearEquation {
     }
 
     @Override
-    public LinearEquation rotate(Point currPoint, CollisionPlace place) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public LinearEquation rotate(Point currPoint, double diffBetweenBallAndCenterPlatform) {
+    public LinearEquation rotate(double angle, Point currPoint) {
         throw new UnsupportedOperationException();
     }
 

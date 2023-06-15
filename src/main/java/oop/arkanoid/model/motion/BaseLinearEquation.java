@@ -13,7 +13,7 @@ public class BaseLinearEquation implements LinearEquation {
 
     final double k;
     final double b;
-    private final double angle;
+    final double angle;
 
     public BaseLinearEquation(double angle, double b) {
         this.angle = angle;
@@ -48,14 +48,9 @@ public class BaseLinearEquation implements LinearEquation {
     }
 
     @Override
-    public LinearEquation rotate(Point currPoint, CollisionPlace place) {
-        double angle = place.needToChangeDirection ? -180 - this.angle : -this.angle;
+    public LinearEquation rotate(double angle, Point currPoint) {
         return LinearEquation.linearEquation(angle, currPoint);
     }
 
-    @Override
-    public LinearEquation rotate(Point currPoint, double diffXBetweenBallAndCenterPlatform) {
-        return LinearEquation.linearEquation(-90 - diffXBetweenBallAndCenterPlatform, currPoint);
-    }
 }
 

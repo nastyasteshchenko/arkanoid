@@ -16,9 +16,7 @@ public interface LinearEquation {
     double getY(double x);
 
     //TODO: передавать в аргументы угол, который считается ранее
-    LinearEquation rotate(Point currPoint, CollisionPlace place);
-
-    LinearEquation rotate(Point currPoint, double diffBetweenBallAndCenterPlatform);
+    LinearEquation rotate(double angle, Point currPoint);
 
     static LinearEquation linearEquation(double angle, Point position) {
         double b = position.y() - position.x() * tan(angle);

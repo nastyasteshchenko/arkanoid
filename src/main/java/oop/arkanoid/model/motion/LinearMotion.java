@@ -6,8 +6,8 @@ import oop.arkanoid.model.barrier.CollisionPlace;
 
 public class LinearMotion {
 
-    final BaseLinearEquation linearEquation;
-    final MotionDirection direction;
+    public final BaseLinearEquation linearEquation;
+    public final MotionDirection direction;
     final double step;
     public Point currPoint;
 
@@ -58,11 +58,11 @@ public class LinearMotion {
         return new LinearMotion(linearEquation, direction.flipByPlatform(diffXBetweenBallAndCenterPlatform), step, currPoint);
     }
 
-    public LinearMotion rotate(CollisionPlace place) {
-        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, place), direction, step, currPoint);
+    public LinearMotion rotate(double angle) {
+        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(angle, currPoint), direction, step, currPoint);
     }
 
-    public LinearMotion rotate(double diffXBetweenBallAndCenterPlatform) {
-        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(currPoint, diffXBetweenBallAndCenterPlatform), direction, step, currPoint);
+    public double getAngle(){
+        return linearEquation.angle;
     }
 }

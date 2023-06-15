@@ -51,12 +51,14 @@ public class Ball {
                 if (barrier instanceof Platform) {
                     double diffXBetweenBallAndCenterPlatform = barrier.position().x() + barrier.size.x() / 2 - motion.currPoint.x();
                     motion = motion.flipDirection(diffXBetweenBallAndCenterPlatform);
-                    motion = motion.rotate(diffXBetweenBallAndCenterPlatform);
+                    double angle = - 90 - diffXBetweenBallAndCenterPlatform;
+                    motion = motion.rotate(angle);
                 } else {
                     if (collision.needToChangeDirection) {
                         motion = motion.flipDirection();
                     }
-                    motion = motion.rotate(collision);
+                    double angle = collision.needToChangeDirection ? -180 - motion.getAngle() : -motion.getAngle();
+                    motion = motion.rotate(angle);
                 }
                 hasChangedDirection = true;
             }
