@@ -69,7 +69,7 @@ class LevelsManager {
     }
 
     GameLevel initLevel() throws GeneratingGameException {
-        JsonObject paramsForLevel = availableLevels.get(getCurrentLevel() + ".json");
+        JsonObject paramsForLevel = getCurrentLevelJsonObject();
         if (paramsForLevel == null) {
             return null;
         }
