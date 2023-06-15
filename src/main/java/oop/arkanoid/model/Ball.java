@@ -52,6 +52,7 @@ public class Ball {
                     double diffXBetweenBallAndCenterPlatform = barrier.position().x() + barrier.size.x() / 2 - motion.currPoint.x();
                     flipDirectionByPlatform(diffXBetweenBallAndCenterPlatform);
                     motion = motion.rotate(-90 - diffXBetweenBallAndCenterPlatform);
+
                 } else {
                     if (collision.needToChangeDirection) {
                         motion = motion.flipDirection();
@@ -59,6 +60,7 @@ public class Ball {
                     double angle = collision.needToChangeDirection ? -180 - motion.getAngle() : -motion.getAngle();
                     motion = motion.rotate(angle);
                 }
+
                 hasChangedDirection = true;
             }
 

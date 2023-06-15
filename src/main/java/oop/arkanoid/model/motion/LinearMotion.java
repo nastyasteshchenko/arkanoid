@@ -2,7 +2,6 @@ package oop.arkanoid.model.motion;
 
 import oop.arkanoid.model.Point;
 import oop.arkanoid.model.QuadraticEquation;
-import oop.arkanoid.model.barrier.CollisionPlace;
 
 public class LinearMotion {
 

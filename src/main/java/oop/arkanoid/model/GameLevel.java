@@ -115,7 +115,7 @@ public class GameLevel {
 
         private void checkUninitializedObjects() throws GeneratingGameException {
             if (ball == null || platform == null || sceneSize == null || barriers.isEmpty()) {
-                throw GeneratingGameException.uninitObjects();
+                throw GeneratingGameException.uninitializedObjects();
             }
         }
     }

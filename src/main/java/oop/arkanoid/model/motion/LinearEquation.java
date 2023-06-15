@@ -8,14 +8,12 @@ import java.util.List;
 
 import static oop.arkanoid.model.ModelUtils.tan;
 
-//TODO: объединить в motion????
 public interface LinearEquation {
 
     List<Double> getIntersectionPoints(CircleEquation circleEquation);
 
     double getY(double x);
 
-    //TODO: передавать в аргументы угол, который считается ранее
     LinearEquation rotate(double angle, Point currPoint);
 
     static LinearEquation linearEquation(double angle, Point position) {

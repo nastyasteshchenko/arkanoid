@@ -5,7 +5,7 @@ public class ModelUtils {
         return min <= value && value <= max;
     }
 
-    public static double tan(double angle){
+    public static double tan(double angle) {
         return Math.tan(Math.toRadians(angle));
     }
 
