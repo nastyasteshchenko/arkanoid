@@ -29,7 +29,7 @@ public class Notifications {
 
     public void subscribe(EventType eventType, Consumer<Destroyable> handler) {
         List<Subscriber> subscribers = this.subscribers.computeIfAbsent(eventType, v -> new ArrayList<>());
-        subscribers.add(new Subscriber(handler));
+        subscribers.add(0, new Subscriber(handler));
     }
 
     static class Subscriber {

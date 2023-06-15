@@ -86,7 +86,6 @@ public class Presenter {
     @FXML
     protected void startGame() {
         Notifications.getInstance().subscribe(Notifications.EventType.DESTROY, destroyable -> {
-            model.increaseScore(destroyable.score());
             gameView.deleteBrick(destroyable.position());
             gameView.drawScore(model.getScore());
         });

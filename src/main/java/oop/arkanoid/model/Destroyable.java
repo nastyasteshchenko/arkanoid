@@ -6,7 +6,6 @@ public interface Destroyable {
     boolean isImmortal();
     Point position();
     void onHit();
-    //TODO delete
     int score();
 
 }

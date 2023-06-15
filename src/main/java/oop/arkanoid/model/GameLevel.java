@@ -1,5 +1,6 @@
 package oop.arkanoid.model;
 
+import oop.arkanoid.Notifications;
 import oop.arkanoid.model.barrier.*;
 
 import java.util.ArrayList;
@@ -15,6 +16,10 @@ public class GameLevel {
     private int score = 0;
 
     GameLevel(Ball ball, Platform platform, List<Barrier> barriers, Point sceneSize) {
+        Notifications.getInstance().subscribe(Notifications.EventType.DESTROY, destroyable -> {
+            score += destroyable.score();
+        });
+
         this.ball = ball;
         this.platform = platform;
         this.barriers = barriers;
@@ -46,11 +51,6 @@ public class GameLevel {
         }
     }
 
-    //подписываться на уведомления
-    public void increaseScore(int value) {
-        score += value;
-    }
-
     public List<Barrier> getBarriers() {
         return barriers;
     }
@@ -66,6 +66,7 @@ public class GameLevel {
     public Point getSceneSize() {
         return sceneSize;
     }
+
 
     public static class Builder {
         private final List<Barrier> barriers = new ArrayList<>();
