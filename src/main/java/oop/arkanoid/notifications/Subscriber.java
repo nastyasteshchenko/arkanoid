@@ -1,4 +1,4 @@
-package oop.arkanoid;
+package oop.arkanoid.notifications;
 
 import oop.arkanoid.model.Destroyable;
 

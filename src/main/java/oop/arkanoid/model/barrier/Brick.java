@@ -1,6 +1,6 @@
 package oop.arkanoid.model.barrier;
 
-import oop.arkanoid.NotificationsAboutDestroy;
+import oop.arkanoid.notifications.NotificationsAboutDestroy;
 import oop.arkanoid.model.*;
 import oop.arkanoid.model.motion.LinearEquation;
 

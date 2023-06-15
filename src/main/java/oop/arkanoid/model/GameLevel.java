@@ -1,7 +1,7 @@
 package oop.arkanoid.model;
 
-import oop.arkanoid.NotificationsAboutDestroy;
-import oop.arkanoid.Subscriber;
+import oop.arkanoid.notifications.NotificationsAboutDestroy;
+import oop.arkanoid.notifications.Subscriber;
 import oop.arkanoid.model.barrier.*;
 
 import java.util.ArrayList;

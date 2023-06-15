@@ -15,6 +15,8 @@ import oop.arkanoid.model.barrier.Barrier;
 import oop.arkanoid.model.barrier.Brick;
 import oop.arkanoid.model.barrier.Health;
 import oop.arkanoid.model.barrier.Platform;
+import oop.arkanoid.notifications.NotificationsAboutDestroy;
+import oop.arkanoid.notifications.Subscriber;
 import oop.arkanoid.view.LevelView;
 
 import java.io.*;

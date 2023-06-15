@@ -13,4 +13,6 @@ module oop.arkanoid {
     opens oop.arkanoid.model.barrier to javafx.fxml;
     exports oop.arkanoid.model.motion;
     opens oop.arkanoid.model.motion to javafx.fxml;
+    exports oop.arkanoid.notifications;
+    opens oop.arkanoid.notifications to javafx.fxml;
 }
