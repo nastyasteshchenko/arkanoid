@@ -1,5 +1,8 @@
-package oop.arkanoid.model;
+package oop.arkanoid.model.motion;
 
+import oop.arkanoid.model.CircleEquation;
+import oop.arkanoid.model.Point;
+import oop.arkanoid.model.QuadraticEquation;
 import oop.arkanoid.model.barrier.CollisionPlace;
 
 import java.util.List;
@@ -10,7 +13,7 @@ public class BaseLinearEquation implements LinearEquation {
     final double b;
     private final double angle;
 
-    BaseLinearEquation(double angle, double b) {
+    public BaseLinearEquation(double angle, double b) {
         this.angle = angle;
         this.k = Math.tan(Math.toRadians(angle));
         this.b = b;
@@ -54,7 +57,7 @@ public class BaseLinearEquation implements LinearEquation {
     }
 
 
-    static double countB(double angle, Point position) {
+    public static double countB(double angle, Point position) {
         return position.y() - position.x() * Math.tan(Math.toRadians(angle));
     }
 }

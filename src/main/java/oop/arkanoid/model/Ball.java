@@ -4,6 +4,9 @@ import oop.arkanoid.model.barrier.Barrier;
 import oop.arkanoid.model.barrier.Brick;
 import oop.arkanoid.model.barrier.CollisionPlace;
 import oop.arkanoid.model.barrier.Platform;
+import oop.arkanoid.model.motion.BaseLinearEquation;
+import oop.arkanoid.model.motion.LinearMotion;
+import oop.arkanoid.model.motion.MotionDirection;
 
 import java.util.ArrayList;
 import java.util.List;

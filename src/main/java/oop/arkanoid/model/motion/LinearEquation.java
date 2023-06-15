@@ -1,5 +1,7 @@
-package oop.arkanoid.model;
+package oop.arkanoid.model.motion;
 
+import oop.arkanoid.model.CircleEquation;
+import oop.arkanoid.model.Point;
 import oop.arkanoid.model.barrier.CollisionPlace;
 
 import java.util.List;

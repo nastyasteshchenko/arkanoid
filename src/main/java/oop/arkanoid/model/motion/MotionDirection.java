@@ -1,6 +1,6 @@
-package oop.arkanoid.model;
+package oop.arkanoid.model.motion;
 
-enum MotionDirection {
+public enum MotionDirection {
     LEFT,
     RIGHT;
 

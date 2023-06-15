@@ -1,6 +1,7 @@
 package oop.arkanoid.model.barrier;
 
 import oop.arkanoid.model.*;
+import oop.arkanoid.model.motion.LinearEquation;
 
 import java.util.EnumMap;
 import java.util.Objects;

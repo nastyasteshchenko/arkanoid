@@ -1,5 +1,6 @@
 package oop.arkanoid.model;
 
+import oop.arkanoid.model.motion.XLinearEquation;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
