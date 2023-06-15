@@ -131,19 +131,17 @@ public class Presenter {
     }
 
     private void startLevel() {
-        JsonObject paramsForLevel = levelsManager.getCurrentLevelJsonObject();
-
-        if (paramsForLevel == null) {
-            changeScene(scenesManager.getScene("game_passed"));
-        }
 
         try {
-            model = GameLevel.initLevel(paramsForLevel);
+            model = levelsManager.initLevel();
+            if (model == null) {
+                changeScene(scenesManager.getScene("game_passed"));
+            }
         } catch (GeneratingGameException e) {
             createAlert(e);
         }
 
-        setGameView(paramsForLevel);
+        setGameView(levelsManager.getCurrentLevelJsonObject());
         changeScene(gameView.getGameScene());
         startAnimation();
 
