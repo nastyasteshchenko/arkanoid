@@ -136,6 +136,7 @@ public class Presenter implements Subscriber {
             model = levelsManager.initLevel();
             if (model == null) {
                 changeScene(scenesManager.getScene("game_passed"));
+                return;
             }
         } catch (GeneratingGameException e) {
             createAlert(e);
