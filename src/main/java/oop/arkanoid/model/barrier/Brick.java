@@ -28,11 +28,6 @@ public final class Brick extends Barrier implements Destroyable {
     }
 
     @Override
-    public Point position() {
-        return position;
-    }
-
-    @Override
     public int score() {
         return score;
     }
