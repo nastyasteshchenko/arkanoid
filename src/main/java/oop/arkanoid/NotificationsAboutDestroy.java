@@ -5,15 +5,15 @@ import oop.arkanoid.model.Destroyable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DestroyingNotifications {
+public class NotificationsAboutDestroy {
 
-    private static DestroyingNotifications instance;
+    private static NotificationsAboutDestroy instance;
 
     final List<Subscriber> subscribers = new ArrayList<>();
 
-    public static DestroyingNotifications getInstance() {
+    public static NotificationsAboutDestroy getInstance() {
         if (instance == null) {
-            instance = new DestroyingNotifications();
+            instance = new NotificationsAboutDestroy();
         }
         return instance;
     }

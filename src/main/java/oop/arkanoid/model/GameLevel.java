@@ -1,6 +1,6 @@
 package oop.arkanoid.model;
 
-import oop.arkanoid.DestroyingNotifications;
+import oop.arkanoid.NotificationsAboutDestroy;
 import oop.arkanoid.Subscriber;
 import oop.arkanoid.model.barrier.*;
 
@@ -17,7 +17,7 @@ public class GameLevel implements Subscriber {
     private int score = 0;
 
     GameLevel(Ball ball, Platform platform, List<Barrier> barriers, Point sceneSize) {
-        DestroyingNotifications.getInstance().subscribe(this);
+        NotificationsAboutDestroy.getInstance().subscribe(this);
 
         this.ball = ball;
         this.platform = platform;
@@ -47,7 +47,7 @@ public class GameLevel implements Subscriber {
 
     public GameState gameState() {
         if (barriers.stream().filter(barrier -> barrier instanceof Brick).allMatch(barrier -> ((Brick) barrier).isImmortal())) {
-            DestroyingNotifications.getInstance().unsubscribe(this);
+            NotificationsAboutDestroy.getInstance().unsubscribe(this);
             return GameState.WIN;
         } else if (ball.getPosition().y() > sceneSize.y()) {
             return GameState.LOSE;

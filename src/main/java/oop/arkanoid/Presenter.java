@@ -87,7 +87,7 @@ public class Presenter implements Subscriber {
 
     @FXML
     protected void startGame() {
-        DestroyingNotifications.getInstance().subscribe(this);
+        NotificationsAboutDestroy.getInstance().subscribe(this);
 
         startLevel();
     }
