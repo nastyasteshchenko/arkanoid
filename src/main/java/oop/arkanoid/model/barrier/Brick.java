@@ -28,6 +28,11 @@ public final class Brick extends Barrier implements Destroyable {
     }
 
     @Override
+    public boolean isImmortal() {
+        return health instanceof Health.Immortal;
+    }
+
+    @Override
     public int score() {
         return score;
     }

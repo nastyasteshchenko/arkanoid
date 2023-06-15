@@ -39,8 +39,7 @@ public class GameLevel {
     }
 
     public GameState gameState() {
-        //TODO подумать, написать более понятно, написать метод который возвращает иммортал брик или нет
-        if (barriers.stream().noneMatch(barrier -> barrier instanceof Brick brick && !(brick.health instanceof Health.Immortal))) {
+        if (barriers.stream().filter(barrier -> barrier instanceof Brick).allMatch(barrier -> ((Brick) barrier).isImmortal())) {
             return GameState.WIN;
         } else if (ball.getPosition().y() > sceneSize.y()) {
             return GameState.LOSE;
