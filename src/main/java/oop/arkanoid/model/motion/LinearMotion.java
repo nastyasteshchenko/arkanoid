@@ -50,14 +50,6 @@ public class LinearMotion {
         return currPoint;
     }
 
-    //TODO: delete or unused
-    LinearMotion changeStepIfNeeded(double newStep) {
-        if (step == newStep) {
-            return this;
-        }
-        return new LinearMotion(linearEquation, direction, newStep, currPoint);
-    }
-
     public LinearMotion flipDirection() {
         return new LinearMotion(linearEquation, direction.flip(), step, currPoint);
     }
