@@ -6,6 +6,8 @@ import oop.arkanoid.model.barrier.CollisionPlace;
 
 import java.util.List;
 
+import static oop.arkanoid.model.ModelUtils.tan;
+
 //TODO: объединить в motion????
 public interface LinearEquation {
 
@@ -18,8 +20,8 @@ public interface LinearEquation {
 
     LinearEquation rotate(Point currPoint, double diffBetweenBallAndCenterPlatform);
 
-    //TODO подумать над тем чтобы считать b внутри функции
-    static LinearEquation linearEquation(double angle, double b) {
+    static LinearEquation linearEquation(double angle, Point position) {
+        double b = position.y() - position.x() * tan(angle);
         return new BaseLinearEquation(angle, b);
     }
 

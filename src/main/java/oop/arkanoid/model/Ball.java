@@ -5,6 +5,7 @@ import oop.arkanoid.model.barrier.Brick;
 import oop.arkanoid.model.barrier.CollisionPlace;
 import oop.arkanoid.model.barrier.Platform;
 import oop.arkanoid.model.motion.BaseLinearEquation;
+import oop.arkanoid.model.motion.LinearEquation;
 import oop.arkanoid.model.motion.LinearMotion;
 import oop.arkanoid.model.motion.MotionDirection;
 
@@ -19,7 +20,7 @@ public class Ball {
     Ball(double radius, Point startPos) {
         this.radius = radius;
         double angle = Math.random() * 60 + 100;
-        BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.countB(angle, startPos));
+        BaseLinearEquation ballLineEquation = (BaseLinearEquation) LinearEquation.linearEquation(angle, startPos);
         this.motion = new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 1.5, startPos);
     }
 

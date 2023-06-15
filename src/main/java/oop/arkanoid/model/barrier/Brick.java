@@ -16,8 +16,8 @@ public final class Brick extends Barrier implements Destroyable {
         this.health = health;
         score = health.getValue() * 5;
 
-        linearEquations.put(CollisionPlace.BOTTOM, LinearEquation.linearEquation(0, position.y() + size.y()));
-        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position.y()));
+        linearEquations.put(CollisionPlace.BOTTOM, LinearEquation.linearEquation(0, new Point(position.x(), position.y() + size.y())));
+        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position));
         linearEquations.put(CollisionPlace.LEFT, LinearEquation.xLinearMotionEquation(position.x()));
         linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xLinearMotionEquation(position.x() + size.x()));
     }

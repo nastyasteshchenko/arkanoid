@@ -50,17 +50,12 @@ public class BaseLinearEquation implements LinearEquation {
     @Override
     public LinearEquation rotate(Point currPoint, CollisionPlace place) {
         double angle = place.needToChangeDirection ? -180 - this.angle : -this.angle;
-        return new BaseLinearEquation(angle, countB(angle, currPoint));
+        return LinearEquation.linearEquation(angle, currPoint);
     }
 
     @Override
     public LinearEquation rotate(Point currPoint, double diffXBetweenBallAndCenterPlatform) {
-        return new BaseLinearEquation(-90 - diffXBetweenBallAndCenterPlatform, countB(-90 - diffXBetweenBallAndCenterPlatform, currPoint));
-    }
-
-
-    public static double countB(double angle, Point position) {
-        return position.y() - position.x() * tan(angle);
+        return LinearEquation.linearEquation(-90 - diffXBetweenBallAndCenterPlatform, currPoint);
     }
 }
 

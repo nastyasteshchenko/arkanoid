@@ -18,7 +18,7 @@ public final class Wall extends Barrier {
             case LEFT, RIGHT ->
                     LinearEquation.xLinearMotionEquation(position.x());
             case BOTTOM ->
-                    LinearEquation.linearEquation(0, 0);
+                    LinearEquation.linearEquation(0, new Point(0,0));
             case TOP -> throw GeneratingGameException.addingBottomWall();
         };
     }

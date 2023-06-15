@@ -12,7 +12,7 @@ public final class Platform extends Barrier {
     public Platform(Point position, Point size) {
         super(position, size);
 
-        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position.y()));
+        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position));
         linearEquations.put(CollisionPlace.LEFT, LinearEquation.xLinearMotionEquation(position.x()));
         linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xLinearMotionEquation(position.x() + size.x()));
     }
@@ -22,7 +22,7 @@ public final class Platform extends Barrier {
         position = new Point(x, position.y());
         linearEquations.clear();
 
-        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position.y()));
+        linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position));
         linearEquations.put(CollisionPlace.LEFT, LinearEquation.xLinearMotionEquation(position.x()));
         linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xLinearMotionEquation(position.x() + size.x()));
 
