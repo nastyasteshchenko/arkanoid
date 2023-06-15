@@ -7,6 +7,8 @@ import oop.arkanoid.model.barrier.CollisionPlace;
 
 import java.util.List;
 
+import static oop.arkanoid.model.ModelUtils.tan;
+
 public class BaseLinearEquation implements LinearEquation {
 
     final double k;
@@ -15,7 +17,7 @@ public class BaseLinearEquation implements LinearEquation {
 
     public BaseLinearEquation(double angle, double b) {
         this.angle = angle;
-        this.k = Math.tan(Math.toRadians(angle));
+        this.k = tan(angle);
         this.b = b;
     }
 
@@ -58,7 +60,7 @@ public class BaseLinearEquation implements LinearEquation {
 
 
     public static double countB(double angle, Point position) {
-        return position.y() - position.x() * Math.tan(Math.toRadians(angle));
+        return position.y() - position.x() * tan(angle);
     }
 }
 
