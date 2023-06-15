@@ -54,10 +54,6 @@ public class LinearMotion {
         return new LinearMotion(linearEquation, direction.flip(), step, currPoint);
     }
 
-    public LinearMotion flipDirection(double diffXBetweenBallAndCenterPlatform) {
-        return new LinearMotion(linearEquation, direction.flipByPlatform(diffXBetweenBallAndCenterPlatform), step, currPoint);
-    }
-
     public LinearMotion rotate(double angle) {
         return new LinearMotion((BaseLinearEquation) linearEquation.rotate(angle, currPoint), direction, step, currPoint);
     }

@@ -50,9 +50,8 @@ public class Ball {
             if (!hasChangedDirection) {
                 if (barrier instanceof Platform) {
                     double diffXBetweenBallAndCenterPlatform = barrier.position().x() + barrier.size.x() / 2 - motion.currPoint.x();
-                    motion = motion.flipDirection(diffXBetweenBallAndCenterPlatform);
-                    double angle = - 90 - diffXBetweenBallAndCenterPlatform;
-                    motion = motion.rotate(angle);
+                    flipDirectionByPlatform(diffXBetweenBallAndCenterPlatform);
+                    motion = motion.rotate(-90 - diffXBetweenBallAndCenterPlatform);
                 } else {
                     if (collision.needToChangeDirection) {
                         motion = motion.flipDirection();
@@ -73,6 +72,13 @@ public class Ball {
 
         if (hasChangedDirection) {
             bricksToDelete.forEach(barriers::remove);
+        }
+    }
+
+    private void flipDirectionByPlatform(double diffXBetweenBallAndCenterPlatform) {
+        if (motion.direction == MotionDirection.RIGHT && diffXBetweenBallAndCenterPlatform > 0
+                || motion.direction == MotionDirection.LEFT && diffXBetweenBallAndCenterPlatform <= 0) {
+            motion = motion.flipDirection();
         }
     }
 

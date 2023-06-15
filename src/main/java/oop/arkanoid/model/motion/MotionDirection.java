@@ -8,8 +8,4 @@ public enum MotionDirection {
         return this == LEFT ? RIGHT : LEFT;
     }
 
-    //TODO: подумать как избавиться от diffXBetweenBallAndCenterPlatform
-    MotionDirection flipByPlatform(double diffXBetweenBallAndCenterPlatform) {
-        return diffXBetweenBallAndCenterPlatform > 0 ? LEFT : RIGHT;
-    }
 }
