@@ -7,7 +7,7 @@ import oop.arkanoid.model.motion.LinearEquation;
 import java.util.EnumMap;
 import java.util.List;
 
-import static oop.arkanoid.model.RangeCheckerUtil.checkRange;
+import static oop.arkanoid.model.ModelUtils.isInRange;
 
 public abstract sealed class Barrier permits Wall, Brick, Platform {
 
@@ -30,11 +30,11 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
         for (var entry : linearEquations.entrySet()) {
             List<Double> intersectionPoints = entry.getValue().getIntersectionPoints(circleEquation);
             for (Double root : intersectionPoints) {
-                if ((entry.getKey() == CollisionPlace.LEFT || entry.getKey() == CollisionPlace.RIGHT) && checkRange(position.y(), position.y() + size.y(), root)) {
+                if ((entry.getKey() == CollisionPlace.LEFT || entry.getKey() == CollisionPlace.RIGHT) && isInRange(position.y(), position.y() + size.y(), root)) {
                     vertical = new Pair<>(entry.getKey(), root);
                     break;
                 }
-                if ((entry.getKey() == CollisionPlace.TOP || entry.getKey() == CollisionPlace.BOTTOM) && checkRange(position.x(), position.x() + size.x(), root)) {
+                if ((entry.getKey() == CollisionPlace.TOP || entry.getKey() == CollisionPlace.BOTTOM) && isInRange(position.x(), position.x() + size.x(), root)) {
                     horizontal = new Pair<>(entry.getKey(), root);
                     break;
                 }
@@ -62,17 +62,17 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
     }
 
     public void checkIfOutOfScene(Point scene) throws GeneratingGameException {
-        if (!checkRange(0, scene.x(), position.x()) || !checkRange(0, scene.y(), position.y()) ||
-                !checkRange(0, scene.x(), position.x() + size.x()) || !checkRange(0, scene.y(), position.y() + size.y())) {
+        if (!isInRange(0, scene.x(), position.x()) || !isInRange(0, scene.y(), position.y()) ||
+                !isInRange(0, scene.x(), position.x() + size.x()) || !isInRange(0, scene.y(), position.y() + size.y())) {
             throw GeneratingGameException.outOfScene();
         }
     }
 
     private boolean hasCollisionWithObject(Barrier barrier) {
-        return (checkRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x()) ||
-                checkRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x() + size.x())) &&
-                (checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y()) ||
-                        checkRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y() + size.y()));
+        return (isInRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x()) ||
+                isInRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x() + size.x())) &&
+                (isInRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y()) ||
+                        isInRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y() + size.y()));
     }
 
     private double getDistanceYFromEdge(Pair<CollisionPlace, Double> vertical) {

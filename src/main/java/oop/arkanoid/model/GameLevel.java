@@ -6,7 +6,7 @@ import oop.arkanoid.model.barrier.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static oop.arkanoid.model.RangeCheckerUtil.checkRange;
+import static oop.arkanoid.model.ModelUtils.isInRange;
 
 public class GameLevel {
     private final Platform platform;
@@ -28,9 +28,9 @@ public class GameLevel {
     }
 
     public double updatePlatformPosition(double x) {
-        if (checkRange(0, platform.size.x() / 2, x)) {
+        if (isInRange(0, platform.size.x() / 2, x)) {
             platform.update(0);
-        } else if (checkRange(sceneSize.x() - platform.size.x() / 2, sceneSize.x(), x)) {
+        } else if (isInRange(sceneSize.x() - platform.size.x() / 2, sceneSize.x(), x)) {
             platform.update(sceneSize.x() - platform.size.x());
         } else {
             platform.update(x - platform.size.x() / 2);
