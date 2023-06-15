@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.util.Duration;
 import oop.arkanoid.model.Ball;
+import oop.arkanoid.model.Destroyable;
 import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
 import oop.arkanoid.model.barrier.Barrier;
@@ -23,7 +24,7 @@ import static oop.arkanoid.Arkanoid.changeScene;
 import static oop.arkanoid.Arkanoid.createAlert;
 
 //TODO add .gitignore
-public class Presenter {
+public class Presenter implements Subscriber {
     private static ScoresManager scoresManager;
     private static LevelsManager levelsManager;
     private static ScenesManager scenesManager;
@@ -83,12 +84,10 @@ public class Presenter {
         System.exit(0);
     }
 
+
     @FXML
     protected void startGame() {
-        Notifications.getInstance().subscribe(Notifications.EventType.DESTROY, destroyable -> {
-            gameView.deleteBrick(destroyable.position());
-            gameView.drawScore(model.getScore());
-        });
+        DestroyingNotifications.getInstance().subscribe(this);
 
         startLevel();
     }
@@ -193,4 +192,9 @@ public class Presenter {
         gameView = builder.build();
     }
 
+    @Override
+    public void update(Destroyable destroyable) {
+        gameView.deleteBrick(destroyable.position());
+        gameView.drawScore(model.getScore());
+    }
 }
