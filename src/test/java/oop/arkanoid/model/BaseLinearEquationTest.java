@@ -1,6 +1,6 @@
 package oop.arkanoid.model;
 
-import oop.arkanoid.model.barriers.CollisionPlace;
+import oop.arkanoid.model.barrier.CollisionPlace;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,6 +11,7 @@ class BaseLinearEquationTest {
     void hasIntersection() {
         BaseLinearEquation baseLinearEquation = new BaseLinearEquation(0, 15);
         CircleEquation circleEquation = new CircleEquation(new Point(40, 10), 14);
+        //TODO проверять точки
         assertFalse(baseLinearEquation.getIntersectionPoints(circleEquation).isEmpty());
     }
 
@@ -39,6 +40,7 @@ class BaseLinearEquationTest {
     void rotateByHorizontalCollision() {
         BaseLinearEquation baseLinearEquation = new BaseLinearEquation(45, 15);
         baseLinearEquation = (BaseLinearEquation) baseLinearEquation.rotate(new Point(15, 15), CollisionPlace.TOP);
+        //TODO: подумать над тем как сократить, мб утилита
         assertEquals(Math.tan(Math.toRadians(-45)), baseLinearEquation.k);
         assertEquals(BaseLinearEquation.countB(-45, new Point(15, 15)), baseLinearEquation.b);
     }

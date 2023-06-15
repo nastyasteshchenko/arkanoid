@@ -1,4 +1,4 @@
-package oop.arkanoid.model.barriers;
+package oop.arkanoid.model.barrier;
 
 public enum CollisionPlace {
 

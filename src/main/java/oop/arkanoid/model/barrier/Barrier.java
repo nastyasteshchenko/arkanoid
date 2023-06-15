@@ -1,4 +1,4 @@
-package oop.arkanoid.model.barriers;
+package oop.arkanoid.model.barrier;
 
 import javafx.util.Pair;
 import oop.arkanoid.model.*;

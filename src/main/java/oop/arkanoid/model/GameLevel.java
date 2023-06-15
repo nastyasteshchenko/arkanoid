@@ -1,7 +1,7 @@
 package oop.arkanoid.model;
 
 import com.google.gson.JsonObject;
-import oop.arkanoid.model.barriers.*;
+import oop.arkanoid.model.barrier.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,7 @@ public class GameLevel {
     private final Ball ball;
     private final Point sceneSize;
     private int score = 0;
+    //убрать скорость если не изменяется
     private double speed = 1.5;
 
     GameLevel(Ball ball, Platform platform, List<Barrier> barriers, Point sceneSize) {
@@ -38,13 +39,14 @@ public class GameLevel {
         return platform.position.x();
     }
 
-    public GameStates gameState() {
+    public GameState gameState() {
+        //TODO подумать, написать более понятно, написать метод который возвращает иммортал брик или нет
         if (barriers.stream().noneMatch(barrier -> barrier instanceof Brick brick && !(brick.health instanceof Health.Immortal))) {
-            return GameStates.GAME_WIN;
+            return GameState.GAME_WIN;
         } else if (ball.getPosition().y() > sceneSize.y()) {
-            return GameStates.GAME_LOSE;
+            return GameState.GAME_LOSE;
         } else {
-            return GameStates.GAME_IN_PROCESS;
+            return GameState.GAME_IN_PROCESS;
         }
     }
 
@@ -56,10 +58,12 @@ public class GameLevel {
         this.speed = speed;
     }
 
+    //подписываться на уведомления
     public void increaseScore(int value) {
         score += value;
     }
 
+    //опустить вниз
     static class Builder {
         private final List<Barrier> barriers = new ArrayList<>();
         private Platform platform;

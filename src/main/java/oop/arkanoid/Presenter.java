@@ -10,10 +10,10 @@ import javafx.util.Duration;
 import oop.arkanoid.model.Ball;
 import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
-import oop.arkanoid.model.barriers.Barrier;
-import oop.arkanoid.model.barriers.Brick;
-import oop.arkanoid.model.barriers.Health;
-import oop.arkanoid.model.barriers.Platform;
+import oop.arkanoid.model.barrier.Barrier;
+import oop.arkanoid.model.barrier.Brick;
+import oop.arkanoid.model.barrier.Health;
+import oop.arkanoid.model.barrier.Platform;
 import oop.arkanoid.view.LevelView;
 
 import java.io.*;
@@ -22,6 +22,7 @@ import java.util.*;
 import static oop.arkanoid.Arkanoid.changeScene;
 import static oop.arkanoid.Arkanoid.createAlert;
 
+//TODO add .gitignore
 public class Presenter {
     private static ScoresManager scoresManager;
     private static LevelsManager levelsManager;

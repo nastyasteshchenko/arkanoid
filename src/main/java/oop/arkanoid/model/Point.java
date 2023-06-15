@@ -1,6 +1,7 @@
 package oop.arkanoid.model;
 
 public class Point {
+    //сделать final, создавать новую точку
     private double x;
     private double y;
 
@@ -9,6 +10,7 @@ public class Point {
         this.y = y;
     }
 
+    //TODO проверить надо или нет
     public Double x() {
         return x;
     }

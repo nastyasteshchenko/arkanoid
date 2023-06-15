@@ -2,6 +2,7 @@ package oop.arkanoid.model;
 
 import java.util.List;
 
+//TODO javadoc
 class QuadraticEquation {
 
     final double a;

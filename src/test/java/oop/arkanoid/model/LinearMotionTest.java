@@ -1,6 +1,6 @@
 package oop.arkanoid.model;
 
-import oop.arkanoid.model.barriers.CollisionPlace;
+import oop.arkanoid.model.barrier.CollisionPlace;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

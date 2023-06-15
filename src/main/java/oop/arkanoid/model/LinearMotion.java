@@ -1,6 +1,6 @@
 package oop.arkanoid.model;
 
-import oop.arkanoid.model.barriers.CollisionPlace;
+import oop.arkanoid.model.barrier.CollisionPlace;
 
 class LinearMotion {
 
@@ -43,6 +43,7 @@ class LinearMotion {
         return currPoint;
     }
 
+    //TODO: delete or unused
     LinearMotion changeStepIfNeeded(double newStep) {
         if (step == newStep) {
             return this;

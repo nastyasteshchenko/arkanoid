@@ -1,6 +1,6 @@
 package oop.arkanoid.model;
 
-import oop.arkanoid.model.barriers.CollisionPlace;
+import oop.arkanoid.model.barrier.CollisionPlace;
 
 import java.util.List;
 
