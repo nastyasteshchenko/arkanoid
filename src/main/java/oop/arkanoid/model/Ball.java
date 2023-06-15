@@ -17,18 +17,16 @@ public class Ball {
         this.radius = radius;
         double angle = Math.random() * 60 + 100;
         BaseLinearEquation ballLineEquation = new BaseLinearEquation(angle, BaseLinearEquation.countB(angle, startPos));
-        this.motion = new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 0, startPos);
+        this.motion = new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 1.5, startPos);
     }
 
     public Point getPosition() {
         return motion.currPoint;
     }
 
-    Point move(double step, List<Barrier> barriers) {
+    Point move(List<Barrier> barriers) {
 
         detectCollisions(barriers);
-
-        motion = motion.changeStepIfNeeded(step);
 
         return motion.nextPoint();
     }

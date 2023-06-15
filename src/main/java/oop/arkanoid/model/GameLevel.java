@@ -15,7 +15,6 @@ public class GameLevel {
     private final Point sceneSize;
     private int score = 0;
     //убрать скорость если не изменяется
-    private double speed = 1.5;
 
     GameLevel(Ball ball, Platform platform, List<Barrier> barriers, Point sceneSize) {
         this.ball = ball;
@@ -25,7 +24,7 @@ public class GameLevel {
     }
 
     public Point nextBallPosition() {
-        return ball.move(speed, barriers);
+        return ball.move(barriers);
     }
 
     public double updatePlatformPosition(double x) {
@@ -52,10 +51,6 @@ public class GameLevel {
 
     public static GameLevel initLevel(JsonObject object) throws GeneratingGameException {
         return new LevelInitiator(object).initLevel();
-    }
-
-    public void updateSpeed(double speed) {
-        this.speed = speed;
     }
 
     //подписываться на уведомления
