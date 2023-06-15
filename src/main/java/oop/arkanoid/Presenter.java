@@ -154,8 +154,8 @@ public class Presenter {
             if (gameIsStarted) {
                 gameView.drawBall(model.nextBallPosition());
                 switch (model.gameState()) {
-                    case GAME_WIN -> gameWin();
-                    case GAME_LOSE -> gameLose();
+                    case WIN -> gameWin();
+                    case LOSE -> gameLose();
                 }
             }
         }));
