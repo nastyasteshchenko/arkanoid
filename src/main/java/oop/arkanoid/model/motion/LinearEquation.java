@@ -2,7 +2,6 @@ package oop.arkanoid.model.motion;
 
 import oop.arkanoid.model.CircleEquation;
 import oop.arkanoid.model.Point;
-import oop.arkanoid.model.barrier.CollisionPlace;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public interface LinearEquation {
 
     static LinearEquation linearEquation(double angle, Point position) {
         double b = position.y() - position.x() * tan(angle);
-        return new BaseLinearEquation(angle, b);
+        return new BaseLinearEquation(angle, b, tan(angle));
     }
 
     static LinearEquation xLinearMotionEquation(double x) {

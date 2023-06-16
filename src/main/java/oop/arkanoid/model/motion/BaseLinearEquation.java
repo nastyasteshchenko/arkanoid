@@ -3,23 +3,10 @@ package oop.arkanoid.model.motion;
 import oop.arkanoid.model.CircleEquation;
 import oop.arkanoid.model.Point;
 import oop.arkanoid.model.QuadraticEquation;
-import oop.arkanoid.model.barrier.CollisionPlace;
 
 import java.util.List;
 
-import static oop.arkanoid.model.ModelUtils.tan;
-
-public class BaseLinearEquation implements LinearEquation {
-
-    final double k;
-    final double b;
-    final double angle;
-
-    public BaseLinearEquation(double angle, double b) {
-        this.angle = angle;
-        this.k = tan(angle);
-        this.b = b;
-    }
+public record BaseLinearEquation(double angle, double b, double k) implements LinearEquation{
 
     @Override
     public List<Double> getIntersectionPoints(CircleEquation circleEquation) {

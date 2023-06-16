@@ -2,8 +2,6 @@ package oop.arkanoid.model.motion;
 
 import oop.arkanoid.model.CircleEquation;
 import oop.arkanoid.model.Point;
-import oop.arkanoid.model.barrier.CollisionPlace;
-import oop.arkanoid.model.motion.LinearEquation;
 
 import java.util.List;
 

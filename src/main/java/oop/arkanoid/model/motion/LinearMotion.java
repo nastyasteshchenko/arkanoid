@@ -5,10 +5,10 @@ import oop.arkanoid.model.QuadraticEquation;
 
 public class LinearMotion {
 
-    public final BaseLinearEquation linearEquation;
     public final MotionDirection direction;
-    final double step;
     public Point currPoint;
+    private final double step;
+    private final BaseLinearEquation linearEquation;
 
     public LinearMotion(BaseLinearEquation linearEquation, MotionDirection direction, double step, Point startPos) {
         this.linearEquation = linearEquation;
@@ -25,9 +25,9 @@ public class LinearMotion {
         [1+k^2]x^2 + [2(k(b-centerY) - centerX)]x + [centerX^2 - R^2 + (b - centerY)^2] = 0
     */
 
-        double a = 1 + linearEquation.k * linearEquation.k;
-        double b = 2 * (linearEquation.k * (linearEquation.b - currPoint.y()) - currPoint.x());
-        double c = currPoint.x() * currPoint.x() - step * step + Math.pow(linearEquation.b - currPoint.y(), 2);
+        double a = 1 + linearEquation.k() * linearEquation.k();
+        double b = 2 * (linearEquation.k() * (linearEquation.b() - currPoint.y()) - currPoint.x());
+        double c = currPoint.x() * currPoint.x() - step * step + Math.pow(linearEquation.b() - currPoint.y(), 2);
 
         QuadraticEquation qEquation = new QuadraticEquation(a, b, c);
 
@@ -57,7 +57,7 @@ public class LinearMotion {
         return new LinearMotion((BaseLinearEquation) linearEquation.rotate(angle, currPoint), direction, step, currPoint);
     }
 
-    public double getAngle(){
-        return linearEquation.angle;
+    public double getMotionAngle(){
+        return linearEquation.angle();
     }
 }

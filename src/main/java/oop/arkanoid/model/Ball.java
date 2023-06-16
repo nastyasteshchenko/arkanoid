@@ -57,7 +57,7 @@ public class Ball {
                     if (collision.needToChangeDirection) {
                         motion = motion.flipDirection();
                     }
-                    double angle = collision.needToChangeDirection ? -180 - motion.getAngle() : -motion.getAngle();
+                    double angle = collision.needToChangeDirection ? -180 - motion.getMotionAngle() : -motion.getMotionAngle();
                     motion = motion.rotate(angle);
                 }
 
