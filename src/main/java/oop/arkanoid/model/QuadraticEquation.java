@@ -13,11 +13,12 @@ public class QuadraticEquation {
     /**
      * Computes solutions to the equation of the form:<br/>
      * ax^2 + bx + c = 0
+     *
      * @param a the quadratic coefficient
      * @param b the linear coefficient
      * @param c the constant coefficient
-     *
      */
+
     public QuadraticEquation(double a, double b, double c) {
 
         this.a = a;

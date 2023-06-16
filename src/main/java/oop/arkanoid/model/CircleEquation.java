@@ -4,6 +4,10 @@ import java.util.List;
 
 public record CircleEquation(Point center, double radius) {
 
+    /**
+     * @param x coordina
+     * @return
+     */
     public List<Double> getY(double x) {
     /*
        (x-a)^2 + (y-b)^2 = R^2, where (a, b) - center of circle
