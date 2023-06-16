@@ -11,7 +11,7 @@ public class QuadraticEquation {
     public final List<Double> roots;
 
     /**
-     * Computes solutions to the equation of the form:<br/>
+     * Calculates solutions to the equation of the form:<br/>
      * ax^2 + bx + c = 0
      *
      * @param a the quadratic coefficient
