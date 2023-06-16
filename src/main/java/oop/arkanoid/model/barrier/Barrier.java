@@ -22,7 +22,7 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
 
     abstract EnumMap<CollisionPlace, LinearEquation> getLinearEquations();
 
-    public Point position(){
+    public Point position() {
         return position;
     }
 
@@ -35,11 +35,11 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
         for (var entry : linearEquations.entrySet()) {
             List<Double> intersectionPoints = entry.getValue().getIntersectionPoints(circleEquation);
             for (Double root : intersectionPoints) {
-                if ((entry.getKey() == CollisionPlace.LEFT || entry.getKey() == CollisionPlace.RIGHT) && isInRange(position.y(), position.y() + size.y(), root)) {
+                if (entry.getKey().needToChangeDirection && isInRange(position.y(), position.y() + size.y(), root)) {
                     vertical = new Pair<>(entry.getKey(), root);
                     break;
                 }
-                if ((entry.getKey() == CollisionPlace.TOP || entry.getKey() == CollisionPlace.BOTTOM) && isInRange(position.x(), position.x() + size.x(), root)) {
+                if (!entry.getKey().needToChangeDirection && isInRange(position.x(), position.x() + size.x(), root)) {
                     horizontal = new Pair<>(entry.getKey(), root);
                     break;
                 }
