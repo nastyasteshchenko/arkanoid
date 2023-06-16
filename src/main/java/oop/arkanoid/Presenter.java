@@ -173,7 +173,7 @@ public class Presenter implements Subscriber {
                 continue;
             }
             if (barrier instanceof Brick brick) {
-                if (brick.health instanceof Health.Immortal) {
+                if (brick.isImmortal()) {
                     builder.addImmortalBrick(brick.position(), brick.size);
                     continue;
                 }
