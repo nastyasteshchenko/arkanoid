@@ -11,6 +11,10 @@ public class Health {
         return new Immortal();
     }
 
+    public int getValue() {
+        return value;
+    }
+
     boolean isDead() {
         return value <= 0;
     }
@@ -19,7 +23,7 @@ public class Health {
         value--;
     }
 
-    public static class Immortal extends Health {
+    static class Immortal extends Health {
         Immortal() {
             super(1);
         }
@@ -27,9 +31,5 @@ public class Health {
         @Override
         void decrease() {
         }
-    }
-
-    public int getValue() {
-        return value;
     }
 }
