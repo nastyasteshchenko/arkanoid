@@ -56,10 +56,21 @@ public class LinearMotion {
         return currPoint;
     }
 
+    /**
+     * Flips direction of ball.
+     *
+     * @return new linear motion with new direction
+     */
     public LinearMotion flipDirection() {
         return new LinearMotion(linearEquation, direction.flip(), step, currPoint);
     }
 
+    /**
+     * Rotates ball motion linear equation.
+     *
+     * @param angle - angle of rotate
+     * @return new linear motion with new linear equation according to new angle
+     */
     public LinearMotion rotate(double angle) {
         return new LinearMotion((BaseLinearEquation) linearEquation.rotate(angle, currPoint), direction, step, currPoint);
     }
