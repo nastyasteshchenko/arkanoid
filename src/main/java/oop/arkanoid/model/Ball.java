@@ -19,8 +19,7 @@ public class Ball {
 
     Ball(double radius, Point startPos) {
         this.radius = radius;
-        double angle = Math.random() * 60 + 100;
-        BaseLinearEquation ballLineEquation = (BaseLinearEquation) LinearEquation.linearEquation(angle, startPos);
+        BaseLinearEquation ballLineEquation = (BaseLinearEquation) LinearEquation.linearEquation(-60, startPos);
         this.motion = new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 1.5, startPos);
     }
 
