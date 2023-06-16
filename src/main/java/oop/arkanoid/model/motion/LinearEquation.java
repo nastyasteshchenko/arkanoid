@@ -16,8 +16,9 @@ public interface LinearEquation {
     LinearEquation rotate(double angle, Point currPoint);
 
     static LinearEquation linearEquation(double angle, Point position) {
-        double b = position.y() - position.x() * tan(angle);
-        return new BaseLinearEquation(angle, b, tan(angle));
+        double k = tan(angle);
+        double b = position.y() - position.x() * k;
+        return new BaseLinearEquation(angle, b, k);
     }
 
     static LinearEquation xLinearMotionEquation(double x) {
