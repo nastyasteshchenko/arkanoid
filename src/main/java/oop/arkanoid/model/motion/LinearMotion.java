@@ -17,13 +17,20 @@ public class LinearMotion {
         currPoint = startPos;
     }
 
-    public Point nextPoint() {
-    /*
-         { (x-centerX)^2 + (y - centerY)^2 = R^2
-         { y=kx+b
+    /**
+     * Calculate next point of motion for ball by solving the system:
+     * <p>
+     * { (x-centerX)^2 + (y - centerY)^2 = R^2<br>
+     * { y=kx+b
+     * <p>
+     * In other words, by solving the quadratic equation:
+     * <p>
+     * [1+k^2]x^2 + [2(k(b-centerY) - centerX)]x + [centerX^2 - R^2 + (b - centerY)^2] = 0
+     *
+     * @return next point for ball motion
+     */
 
-        [1+k^2]x^2 + [2(k(b-centerY) - centerX)]x + [centerX^2 - R^2 + (b - centerY)^2] = 0
-    */
+    public Point nextPoint() {
 
         double a = 1 + linearEquation.k() * linearEquation.k();
         double b = 2 * (linearEquation.k() * (linearEquation.b() - currPoint.y()) - currPoint.x());
@@ -57,7 +64,7 @@ public class LinearMotion {
         return new LinearMotion((BaseLinearEquation) linearEquation.rotate(angle, currPoint), direction, step, currPoint);
     }
 
-    public double getMotionAngle(){
+    public double getMotionAngle() {
         return linearEquation.angle();
     }
 }
