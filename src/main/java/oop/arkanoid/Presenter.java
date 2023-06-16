@@ -24,7 +24,6 @@ import java.util.*;
 import static oop.arkanoid.Arkanoid.changeScene;
 import static oop.arkanoid.Arkanoid.createAlert;
 
-//TODO add .gitignore
 public class Presenter implements Subscriber {
     private static ScoresManager scoresManager;
     private static LevelsManager levelsManager;
@@ -34,6 +33,12 @@ public class Presenter implements Subscriber {
     private static GameLevel model;
     private static boolean gameIsStarted = false;
     private static boolean isPause = false;
+
+    @Override
+    public void update(Destroyable destroyable) {
+        gameView.deleteBrick(destroyable.position());
+        gameView.drawScore(model.getScore());
+    }
 
     public static void startPlayingGame() {
         gameIsStarted = true;
@@ -89,7 +94,6 @@ public class Presenter implements Subscriber {
     @FXML
     protected void startGame() {
         NotificationsAboutDestroy.getInstance().subscribe(this);
-
         startLevel();
     }
 
@@ -192,11 +196,5 @@ public class Presenter implements Subscriber {
         builder.highScore(scoresManager.getScoreForLevel(levelsManager.getCurrentLevel()));
 
         gameView = builder.build();
-    }
-
-    @Override
-    public void update(Destroyable destroyable) {
-        gameView.deleteBrick(destroyable.position());
-        gameView.drawScore(model.getScore());
     }
 }
