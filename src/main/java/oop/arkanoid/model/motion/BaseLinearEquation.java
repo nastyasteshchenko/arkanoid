@@ -24,13 +24,6 @@ public record BaseLinearEquation(double angle, double b, double k) implements Li
     @Override
     public List<Double> getIntersectionPoints(CircleEquation circleEquation) {
 
-    /*
-        { (x-centerX)^2 + (y - centerY)^2 = R^2
-        { y=kx+b
-
-       [1+k^2]x^2 + [2(k(b-centerY) - centerX)]x + [centerX^2 - R^2 + (b - centerY)^2] = 0
-    */
-
         double centerX = circleEquation.center().x();
         double centerY = circleEquation.center().y();
         double radius = circleEquation.radius();
