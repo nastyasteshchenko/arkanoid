@@ -45,8 +45,7 @@ public class GameLevel implements Subscriber {
         return platform.position().x();
     }
 
-    public GameState gameState() {
-        if (barriers.stream().filter(barrier -> barrier instanceof Brick).allMatch(barrier -> ((Brick) barrier).isImmortal())) {
+    public GameState gameState() {if (barriers.stream().filter(barrier -> barrier instanceof Brick).allMatch(brick -> ((Brick) brick).isImmortal())) {
             NotificationsAboutDestroy.getInstance().unsubscribe(this);
             return GameState.WIN;
         } else if (ball.position().y() > sceneSize.y()) {
@@ -71,7 +70,6 @@ public class GameLevel implements Subscriber {
     public Point getSceneSize() {
         return sceneSize;
     }
-
 
     public static class Builder {
         private final List<Barrier> barriers = new ArrayList<>();
