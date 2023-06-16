@@ -85,7 +85,7 @@ public class GameLevel implements Subscriber {
 
         public Builder platform(Point position, Point size) throws GeneratingGameException {
             platform = new Platform(position, size);
-            platform.checkIfCollisionsWithOtherObjects(barriers);
+            platform.checkIfCollisionsWithOtherBarrier(barriers);
             platform.checkIfOutOfScene(sceneSize);
             barriers.add(platform);
             return this;
@@ -100,7 +100,7 @@ public class GameLevel implements Subscriber {
         public Builder addBrick(Point position, Point size, int health) throws GeneratingGameException {
             Brick brick = health == -1 ? new Brick(position, size, Health.createImmortal()) : new Brick(position, size, new Health(health));
             brick.checkIfOutOfScene(sceneSize);
-            brick.checkIfCollisionsWithOtherObjects(barriers);
+            brick.checkIfCollisionsWithOtherBarrier(barriers);
             barriers.add(brick);
             return this;
         }

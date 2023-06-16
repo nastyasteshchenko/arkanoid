@@ -60,8 +60,8 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
         return getDistanceXFromEdge(horizontal) < getDistanceYFromEdge(vertical) ? vertical.getKey() : horizontal.getKey();
     }
 
-    public void checkIfCollisionsWithOtherObjects(List<Barrier> barriers) throws GeneratingGameException {
-        if (barriers.stream().anyMatch(this::hasCollisionWithObject)) {
+    public void checkIfCollisionsWithOtherBarrier(List<Barrier> barriers) throws GeneratingGameException {
+        if (barriers.stream().anyMatch(this::hasCollisionWithBarrier)) {
             throw GeneratingGameException.collisionWithOtherObjects();
         }
     }
@@ -73,7 +73,7 @@ public abstract sealed class Barrier permits Wall, Brick, Platform {
         }
     }
 
-    private boolean hasCollisionWithObject(Barrier barrier) {
+    private boolean hasCollisionWithBarrier(Barrier barrier) {
         return (isInRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x()) ||
                 isInRange(barrier.position.x(), barrier.position.x() + barrier.size.x(), position.x() + size.x())) &&
                 (isInRange(barrier.position.y(), barrier.position.y() + barrier.size.y(), position.y()) ||
