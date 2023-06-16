@@ -3,13 +3,43 @@ package oop.arkanoid.model;
 import oop.arkanoid.model.barrier.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static oop.arkanoid.model.TestUtils.createBarriers;
 import static oop.arkanoid.model.TestUtils.roundToThousandths;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BallTest {
+
+    @Test
+    void deletingStandardBricksTest() {
+        Ball ball = new Ball(15, new Point(14, 114));
+        List<Barrier> barriers = createBarriers();
+        Brick brick = new Brick(new Point(9, 81), new Point(114, 30), new Health(1));
+        barriers.add(brick);
+        ball.move(barriers);
+        assertFalse(barriers.contains(brick));
+    }
+
+    @Test
+    void deletingDoubleHitBricksTest() {
+        Ball ball = new Ball(15, new Point(14, 114));
+        List<Barrier> barriers = createBarriers();
+        Brick brick = new Brick(new Point(9, 81), new Point(114, 30), new Health(2));
+        barriers.add(brick);
+        ball.move(barriers);
+        assertTrue(barriers.contains(brick));
+    }
+
+    @Test
+    void deletingImmortalBricksTest() {
+        Ball ball = new Ball(15, new Point(14, 114));
+        List<Barrier> barriers = createBarriers();
+        Brick brick = new Brick(new Point(9, 81), new Point(114, 30), Health.createImmortal());
+        barriers.add(brick);
+        ball.move(barriers);
+        assertTrue(barriers.contains(brick));
+    }
 
     @Test
     void moveBallWithoutCollisionsTest() {
@@ -21,14 +51,15 @@ class BallTest {
         assertEquals(8.701, roundToThousandths(nextPosition.y()));
     }
 
+
     @Test
     void moveBallWithBottomCollisionTest() {
-        Ball ball = new Ball(15, new Point(150, 165));
+        Ball ball = new Ball(15, new Point(150, 115));
         List<Barrier> barriers = createBarriers();
         Point nextPosition = ball.move(barriers);
         assertSame(ball.position(), nextPosition);
         assertEquals(150.75, roundToThousandths(nextPosition.x()));
-        assertEquals(166.299, roundToThousandths(nextPosition.y()));
+        assertEquals(116.299, roundToThousandths(nextPosition.y()));
     }
 
     @Test
@@ -44,28 +75,22 @@ class BallTest {
 
     @Test
     void moveBallWithTopCollisionTest() {
-        Ball ball = new Ball(15, new Point(165, 85));
+        Ball ball = new Ball(15, new Point(150, 75));
         List<Barrier> barriers = createBarriers();
         Point nextPosition = ball.move(barriers);
         assertSame(ball.position(), nextPosition);
-        assertEquals(165.75, roundToThousandths(nextPosition.x()));
-        assertEquals(86.299, roundToThousandths(nextPosition.y()));
+        assertEquals(150.75, roundToThousandths(nextPosition.x()));
+        assertEquals(76.299, roundToThousandths(nextPosition.y()));
     }
 
     @Test
     void moveBallWithLeftCollisionTest() {
-        Ball ball = new Ball(15, new Point(85, 125));
+        Ball ball = new Ball(15, new Point(113, 90));
         List<Barrier> barriers = createBarriers();
         Point nextPosition = ball.move(barriers);
         assertSame(ball.position(), nextPosition);
-        assertEquals(84.25, roundToThousandths(nextPosition.x()));
-        assertEquals(123.701, roundToThousandths(nextPosition.y()));
+        assertEquals(112.25, roundToThousandths(nextPosition.x()));
+        assertEquals(88.701, roundToThousandths(nextPosition.y()));
     }
 
-    private static List<Barrier> createBarriers() {
-        List<Barrier> barriers = new ArrayList<>();
-        barriers.add(new Brick(new Point(100, 100), new Point(200, 50), new Health(1)));
-        barriers.add(new Brick(new Point(200, 200), new Point(200, 50), new Health(1)));
-        return barriers;
-    }
 }

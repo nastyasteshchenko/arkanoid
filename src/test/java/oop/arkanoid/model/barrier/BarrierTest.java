@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static oop.arkanoid.model.TestUtils.createBarriers;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BarrierTest {
@@ -49,17 +50,15 @@ class BarrierTest {
 
     @Test
     void hasCollisionsWithOtherBarrierTest() {
-        List<Barrier> barriers = new ArrayList<>();
+        List<Barrier> barriers = createBarriers();
         Brick brick = new Brick(new Point(100, 81), new Point(114, 30), new Health(1));
-        createBarriers(barriers);
         assertThrows(GeneratingGameException.class, () -> brick.checkIfCollisionsWithOtherBarrier(barriers));
     }
 
     @Test
     void noCollisionsWithOtherBarrierTest() {
-        List<Barrier> barriers = new ArrayList<>();
+        List<Barrier> barriers = createBarriers();
         Brick brick = new Brick(new Point(9, 81), new Point(114, 30), new Health(1));
-        createBarriers(barriers);
         assertDoesNotThrow(() -> brick.checkIfCollisionsWithOtherBarrier(barriers));
     }
 
@@ -77,11 +76,6 @@ class BarrierTest {
         assertDoesNotThrow(() -> brick.checkIfOutOfScene(sceneSize));
     }
 
-    private static void createBarriers(List<Barrier> barriers) {
-        barriers.add(new Brick(new Point(477, 81), new Point(114, 30), new Health(1)));
-        barriers.add(new Brick(new Point(126, 81), new Point(114, 30), new Health(1)));
-        barriers.add(new Brick(new Point(243, 81), new Point(114, 30), new Health(1)));
-        barriers.add(new Brick(new Point(360, 81), new Point(114, 30), new Health(1)));
-    }
+
 
 }
