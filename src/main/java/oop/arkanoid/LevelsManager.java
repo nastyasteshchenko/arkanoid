@@ -20,12 +20,12 @@ import java.util.Objects;
 
 class LevelsManager {
     private static int currentLevel = 1;
-    private final static String pathToLevels = "Levels";
+    private final static String pathToLevels = "./oop/arkanoid/Levels";
     private final Map<String, JsonObject> availableLevels = new HashMap<>();
 
     LevelsManager() throws IOException {
 
-        File levelsDir = new File("src/main/resources/oop/arkanoid/" + pathToLevels);
+        File levelsDir = new File(Objects.requireNonNull(getClass().getClassLoader().getResource(pathToLevels)).getFile());
 
         if (!levelsDir.isDirectory()) {
             throw new NotDirectoryException("Expected \"Levels\" directory, but got file");
