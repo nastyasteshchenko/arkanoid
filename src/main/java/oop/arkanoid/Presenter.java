@@ -8,12 +8,14 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.util.Duration;
 import oop.arkanoid.model.Ball;
+import oop.arkanoid.model.Destroyable;
 import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
 import oop.arkanoid.model.barrier.Barrier;
 import oop.arkanoid.model.barrier.Brick;
-import oop.arkanoid.model.barrier.Health;
 import oop.arkanoid.model.barrier.Platform;
+import oop.arkanoid.notifications.NotificationsAboutDestroy;
+import oop.arkanoid.notifications.Subscriber;
 import oop.arkanoid.view.LevelView;
 
 import java.io.*;
@@ -22,8 +24,7 @@ import java.util.*;
 import static oop.arkanoid.Arkanoid.changeScene;
 import static oop.arkanoid.Arkanoid.createAlert;
 
-//TODO add .gitignore
-public class Presenter {
+public class Presenter implements Subscriber {
     private static ScoresManager scoresManager;
     private static LevelsManager levelsManager;
     private static ScenesManager scenesManager;
@@ -32,6 +33,12 @@ public class Presenter {
     private static GameLevel model;
     private static boolean gameIsStarted = false;
     private static boolean isPause = false;
+
+    @Override
+    public void update(Destroyable destroyable) {
+        gameView.deleteBrick(destroyable.position());
+        gameView.drawScore(model.getScore());
+    }
 
     public static void startPlayingGame() {
         gameIsStarted = true;
@@ -83,14 +90,10 @@ public class Presenter {
         System.exit(0);
     }
 
+
     @FXML
     protected void startGame() {
-        Notifications.getInstance().subscribe(Notifications.EventType.DESTROY, destroyable -> {
-            model.increaseScore(destroyable.score());
-            gameView.deleteBrick(destroyable.position());
-            gameView.drawScore(model.getScore());
-        });
-
+        NotificationsAboutDestroy.getInstance().subscribe(this);
         startLevel();
     }
 
@@ -131,19 +134,18 @@ public class Presenter {
     }
 
     private void startLevel() {
-        JsonObject paramsForLevel = levelsManager.getCurrentLevelJsonObject();
-
-        if (paramsForLevel == null) {
-            changeScene(scenesManager.getScene("game_passed"));
-        }
 
         try {
-            model = GameLevel.initLevel(paramsForLevel);
+            model = levelsManager.initLevel();
+            if (model == null) {
+                changeScene(scenesManager.getScene("game_passed"));
+                return;
+            }
         } catch (GeneratingGameException e) {
             createAlert(e);
         }
 
-        setGameView(paramsForLevel);
+        setGameView(levelsManager.getCurrentLevelJsonObject());
         changeScene(gameView.getGameScene());
         startAnimation();
 
@@ -154,8 +156,8 @@ public class Presenter {
             if (gameIsStarted) {
                 gameView.drawBall(model.nextBallPosition());
                 switch (model.gameState()) {
-                    case GAME_WIN -> gameWin();
-                    case GAME_LOSE -> gameLose();
+                    case WIN -> gameWin();
+                    case LOSE -> gameLose();
                 }
             }
         }));
@@ -170,30 +172,29 @@ public class Presenter {
         List<Barrier> barriers = model.getBarriers();
         for (Barrier barrier : barriers) {
             if (barrier instanceof Platform platform) {
-                builder.platform(platform.position, platform.size);
+                builder.platform(platform.position(), platform.size);
                 continue;
             }
             if (barrier instanceof Brick brick) {
-                if (brick.health instanceof Health.Immortal) {
-                    builder.addImmortalBrick(brick.position, brick.size);
+                if (brick.isImmortal()) {
+                    builder.addImmortalBrick(brick.position(), brick.size);
                     continue;
                 }
                 if (brick.health.getValue() == 1) {
-                    builder.addStandardBrick(brick.position, brick.size);
+                    builder.addStandardBrick(brick.position(), brick.size);
                     continue;
                 }
                 if (brick.health.getValue() == 2) {
-                    builder.addDoubleHitBrick(brick.position, brick.size);
+                    builder.addDoubleHitBrick(brick.position(), brick.size);
                 }
             }
         }
 
         Ball ball = model.getBall();
-        builder.ball(ball.getPosition(), ball.radius).gameScene(model.getSceneSize());
+        builder.ball(ball.position(), ball.radius).gameScene(model.getSceneSize());
 
         builder.highScore(scoresManager.getScoreForLevel(levelsManager.getCurrentLevel()));
 
         gameView = builder.build();
     }
-
 }

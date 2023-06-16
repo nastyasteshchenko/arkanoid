@@ -3,15 +3,15 @@ package oop.arkanoid.model;
 import java.util.List;
 
 //TODO javadoc
-class QuadraticEquation {
+public class QuadraticEquation {
 
     final double a;
     final double b;
     final double c;
 
-    final List<Double> roots;
+    public final List<Double> roots;
 
-    QuadraticEquation(double a, double b, double c) {
+    public QuadraticEquation(double a, double b, double c) {
 
         // ax^2 + bx + c = 0
 

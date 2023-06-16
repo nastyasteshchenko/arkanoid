@@ -30,7 +30,7 @@ public class GeneratingGameException extends Exception {
         return new GeneratingGameException("Unsupported health");
     }
 
-    static GeneratingGameException uninitObjects() {
+    static GeneratingGameException uninitializedObjects() {
         return new GeneratingGameException("Some objects are uninitialized");
     }
 
