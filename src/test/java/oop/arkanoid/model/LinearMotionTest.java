@@ -12,20 +12,20 @@ import static org.junit.jupiter.api.Assertions.*;
 class LinearMotionTest {
 
     @Test
-    void nextPoint() {
+    void nextPointTest() {
         Point nextPoint = createLinearMotion().nextPoint();
         assertEquals(1, roundToThousandths(nextPoint.x()));
         assertEquals(1, roundToThousandths(nextPoint.y()));
     }
 
     @Test
-    void flipDirection() {
+    void flipDirectionTest() {
         LinearMotion linearMotion = createLinearMotion().flipDirection();
         assertEquals(MotionDirection.LEFT, linearMotion.direction);
     }
 
     @Test
-    void rotateByVerticalCollision() {
+    void rotateByVerticalCollisionTest() {
         LinearMotion linearMotion = createLinearMotion().rotate(67);
         assertEquals(67, linearMotion.getMotionAngle());
     }

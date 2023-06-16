@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BaseLinearEquationTest {
 
     @Test
-    void hasIntersection() {
+    void hasIntersectionTest() {
         LinearEquation baseLinearEquation = LinearEquation.linearEquation(0, new Point(7, 15));
         CircleEquation circleEquation = new CircleEquation(new Point(40, 15), 14);
         List<Double> points = baseLinearEquation.getIntersectionPoints(circleEquation);
@@ -21,7 +21,7 @@ class BaseLinearEquationTest {
     }
 
     @Test
-    void noIntersection() {
+    void noIntersectionTest() {
         LinearEquation baseLinearEquation = LinearEquation.linearEquation(0, new Point(7, 15));
         CircleEquation circleEquation = new CircleEquation(new Point(40, 40), 14);
         assertTrue(baseLinearEquation.getIntersectionPoints(circleEquation).isEmpty());

@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class XLinearEquationTest {
 
     @Test
-    void hasIntersection() {
+    void hasIntersectionTest() {
         XLinearEquation xLinearEquation = new XLinearEquation(10);
         CircleEquation circleEquation = new CircleEquation(new Point(10, 40), 14);
         List<Double> points = xLinearEquation.getIntersectionPoints(circleEquation);
@@ -19,7 +19,7 @@ class XLinearEquationTest {
     }
 
     @Test
-    void noIntersection() {
+    void noIntersectionTest() {
         XLinearEquation xLinearEquation = new XLinearEquation(10);
         CircleEquation circleEquation = new CircleEquation(new Point(40, 40), 14);
         assertTrue(xLinearEquation.getIntersectionPoints(circleEquation).isEmpty());

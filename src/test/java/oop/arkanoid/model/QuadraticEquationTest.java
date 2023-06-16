@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class QuadraticEquationTest {
 
     @Test
-    public void quadraticEquationWithTwoRoots(){
+    public void quadraticEquationWithTwoRootsTest(){
         //3x^2 - 14x - 5 = 0
         QuadraticEquation quadraticEquation = new QuadraticEquation(3, -14, -5);
         List<Double> roots = quadraticEquation.roots;
@@ -22,7 +22,7 @@ public class QuadraticEquationTest {
     }
 
     @Test
-    public void quadraticEquationWithOneRoot(){
+    public void quadraticEquationWithOneRootTest(){
         //3x^2 - 18x + 27 = 0
         QuadraticEquation quadraticEquation = new QuadraticEquation(3, -18, 27);
         List<Double> roots = quadraticEquation.roots;
@@ -31,7 +31,7 @@ public class QuadraticEquationTest {
     }
 
     @Test
-    public void quadraticEquationWithNoRoots(){
+    public void quadraticEquationWithNoRootsTest(){
         //x^2 + 6x + 14 = 0
         QuadraticEquation quadraticEquation = new QuadraticEquation(1, 6, 14);
         List<Double> roots = quadraticEquation.roots;
