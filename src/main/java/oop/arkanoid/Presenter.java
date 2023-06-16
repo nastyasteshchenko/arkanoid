@@ -13,7 +13,6 @@ import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
 import oop.arkanoid.model.barrier.Barrier;
 import oop.arkanoid.model.barrier.Brick;
-import oop.arkanoid.model.barrier.Health;
 import oop.arkanoid.model.barrier.Platform;
 import oop.arkanoid.notifications.NotificationsAboutDestroy;
 import oop.arkanoid.notifications.Subscriber;
@@ -188,7 +187,7 @@ public class Presenter implements Subscriber {
         }
 
         Ball ball = model.getBall();
-        builder.ball(ball.getPosition(), ball.radius).gameScene(model.getSceneSize());
+        builder.ball(ball.position(), ball.radius).gameScene(model.getSceneSize());
 
         builder.highScore(scoresManager.getScoreForLevel(levelsManager.getCurrentLevel()));
 

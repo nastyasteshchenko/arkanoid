@@ -49,7 +49,7 @@ public class GameLevel implements Subscriber {
         if (barriers.stream().filter(barrier -> barrier instanceof Brick).allMatch(barrier -> ((Brick) barrier).isImmortal())) {
             NotificationsAboutDestroy.getInstance().unsubscribe(this);
             return GameState.WIN;
-        } else if (ball.getPosition().y() > sceneSize.y()) {
+        } else if (ball.position().y() > sceneSize.y()) {
             return GameState.LOSE;
         } else {
             return GameState.PROCESS;
@@ -114,7 +114,7 @@ public class GameLevel implements Subscriber {
         }
 
         public GameLevel build() throws GeneratingGameException {
-            platform.checkCollisionWithBall(new CircleEquation(ball.getPosition(), ball.radius + 2));
+            platform.checkCollisionWithBall(new CircleEquation(ball.position(), ball.radius + 2));
             checkUninitializedObjects();
             return new GameLevel(ball, platform, barriers, sceneSize);
         }

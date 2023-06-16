@@ -24,7 +24,7 @@ public class Ball {
         this.motion = new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 1.5, startPos);
     }
 
-    public Point getPosition() {
+    public Point position() {
         return motion.currPoint;
     }
 
