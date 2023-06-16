@@ -20,6 +20,7 @@ class BallTest {
         assertEquals(10.75, roundToThousandths(nextPosition.x()));
         assertEquals(8.701, roundToThousandths(nextPosition.y()));
     }
+
     @Test
     void moveBallWithBottomCollisionTest() {
         Ball ball = new Ball(15, new Point(150, 165));
@@ -33,9 +34,8 @@ class BallTest {
     @Test
     void moveBallWithRightCollisionTest() throws GeneratingGameException {
         Ball ball = new Ball(15, new Point(285, 25));
-        List<Barrier> barriers = new ArrayList<>();
+        List<Barrier> barriers = createBarriers();
         barriers.add(new Wall(new Point(300, 0), new Point(0, 600), CollisionPlace.RIGHT));
-        barriers.add(new Brick(new Point(200, 200), new Point(100, 50), new Health(1)));
         Point nextPosition = ball.move(barriers);
         assertSame(ball.position(), nextPosition);
         assertEquals(284.25, roundToThousandths(nextPosition.x()));
