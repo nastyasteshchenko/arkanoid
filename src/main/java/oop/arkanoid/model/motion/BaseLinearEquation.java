@@ -6,8 +6,21 @@ import oop.arkanoid.model.QuadraticEquation;
 
 import java.util.List;
 
-public record BaseLinearEquation(double angle, double b, double k) implements LinearEquation{
+public record BaseLinearEquation(double angle, double b, double k) implements LinearEquation {
 
+    /**
+     * Calculates circle and line intersection points by solving system:
+     * <p>
+     * { (x-centerX)^2 + (y - centerY)^2 = R^2<br>
+     * { y=kx+b
+     * <p>
+     * In other words, by solving the quadratic equation:
+     * <p>
+     * [1+k^2]x^2 + [2(k(b-centerY) - centerX)]x + [centerX^2 - R^2 + (b - centerY)^2] = 0
+     *
+     * @param circleEquation equation of circle
+     * @return points of circle and line intersection
+     */
     @Override
     public List<Double> getIntersectionPoints(CircleEquation circleEquation) {
 
