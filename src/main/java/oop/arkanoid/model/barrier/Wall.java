@@ -15,23 +15,26 @@ public final class Wall extends Barrier {
         super(position, size);
         this.collisionPlace = collisionPlace;
         linearEquation = switch (collisionPlace) {
-            case LEFT, RIGHT ->
-                    LinearEquation.xLinearMotionEquation(position.x());
-            case BOTTOM ->
-                    LinearEquation.linearEquation(0, new Point(0,0));
+            case LEFT, RIGHT -> LinearEquation.xLinearMotionEquation(position.x());
+            case BOTTOM -> LinearEquation.linearEquation(0, new Point(0, 0));
             case TOP -> throw GeneratingGameException.addingBottomWall();
         };
     }
 
-    public void checkWall(Point scene, Point wallPosition) throws GeneratingGameException {
+    public void checkWall(Point scene) throws GeneratingGameException {
         switch (collisionPlace) {
-            case LEFT, BOTTOM -> {
-                if (wallPosition.x() != 0 || wallPosition.y() != 0) {
+            case BOTTOM -> {
+                if (position.x() != 0 || position.y() != 0 || size.x() != scene.x()) {
                     throw GeneratingGameException.wrongWallPosition();
                 }
             }
             case RIGHT -> {
-                if (!Objects.equals(wallPosition.x(), scene.x()) || wallPosition.y() != 0) {
+                if (!Objects.equals(position.x(), scene.x()) || position.y() != 0 || size.y() != scene.y()) {
+                    throw GeneratingGameException.wrongWallPosition();
+                }
+            }
+            case LEFT -> {
+                if (position.x() != 0 || position.y() != 0 || size.y() != scene.y()) {
                     throw GeneratingGameException.wrongWallPosition();
                 }
             }
@@ -43,7 +46,7 @@ public final class Wall extends Barrier {
         var linearEquations = getLinearEquations();
         for (var entry : linearEquations.entrySet()) {
             if (!entry.getValue().getIntersectionPoints(circleEquation).isEmpty()) {
-             return entry.getKey();
+                return entry.getKey();
             }
         }
         return null;

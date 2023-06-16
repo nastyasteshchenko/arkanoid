@@ -106,7 +106,7 @@ public class GameLevel implements Subscriber {
         @SuppressWarnings("UnusedReturnValue")
         public Builder addWall(Point position, Point size, CollisionPlace place) throws GeneratingGameException {
             Wall wall = new Wall(position, size, place);
-            wall.checkWall(sceneSize, position);
+            wall.checkWall(sceneSize);
             barriers.add(wall);
             return this;
         }
