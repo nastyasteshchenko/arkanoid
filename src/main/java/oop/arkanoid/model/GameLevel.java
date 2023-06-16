@@ -114,7 +114,7 @@ public class GameLevel implements Subscriber {
         }
 
         public GameLevel build() throws GeneratingGameException {
-            platform.isCollisionWithBall(new CircleEquation(ball.getPosition(), ball.radius + 2));
+            platform.checkCollisionWithBall(new CircleEquation(ball.getPosition(), ball.radius + 2));
             checkUninitializedObjects();
             return new GameLevel(ball, platform, barriers, sceneSize);
         }
