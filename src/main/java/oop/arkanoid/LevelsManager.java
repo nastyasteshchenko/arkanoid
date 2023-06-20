@@ -15,11 +15,14 @@ import java.util.Objects;
 
 class LevelsManager {
     private final static String PATH_TO_LEVELS_DIR = "./oop/arkanoid/Levels";
-    private static final Map<String, JsonObject> AVAILABLE_LEVELS = new HashMap<>();
+    private final Map<String, JsonObject> availableLevels = new HashMap<>();
 
     LevelsManager() {}
 
     void scanForLevels() throws IOException {
+
+        availableLevels.clear();
+
         File levelsDir = new File(Objects.requireNonNull(getClass().getClassLoader().getResource(PATH_TO_LEVELS_DIR)).getFile());
 
         if (!levelsDir.isDirectory()) {
@@ -34,22 +37,22 @@ class LevelsManager {
             }
 
             try (JsonReader reader = new JsonReader(new FileReader(f))) {
-                AVAILABLE_LEVELS.put(f.getName(), gson.fromJson(reader, JsonObject.class));
+                availableLevels.put(f.getName(), gson.fromJson(reader, JsonObject.class));
             }
         }
     }
 
     void checkGeneratingAllLevels() throws GeneratingGameException {
         int level = 1;
-        for (JsonObject ignored : AVAILABLE_LEVELS.values()) {
+        for (JsonObject ignored : availableLevels.values()) {
             LevelInitiator levelsInitiator = new LevelInitiator(level);
             levelsInitiator.initLevelModel();
             level++;
         }
     }
 
-    static JsonObject getLevelJsonObject(String level) {
-        return AVAILABLE_LEVELS.get(level + ".json");
+    JsonObject getLevelJsonObject(String level) {
+        return availableLevels.get(level + ".json");
     }
 
 }

@@ -23,7 +23,7 @@ public class LevelInitiator {
 
     LevelInitiator(int numLevel) {
         levelName = "level" + numLevel;
-        levelJsonObject = LevelsManager.getLevelJsonObject(levelName);
+        levelJsonObject = Presenter.LEVELS_MANAGER.getLevelJsonObject(levelName);
     }
 
     String getLevelName() {
@@ -88,7 +88,7 @@ public class LevelInitiator {
         JsonObject score = levelJsonObject.getAsJsonObject("score");
         Font highScoreFont = Font.font(score.get("font").getAsString());
         String highScoreFontSIze = "-fx-font-size: " + score.get("fontSize").getAsString();
-        builder.highScore(new ScoreLabel(ScoresManager.getScoreForLevel(levelName), highScoreFont, highScoreFontSIze));
+        builder.highScore(new ScoreLabel(Presenter.SCORES_MANAGER.getScoreForLevel(levelName), highScoreFont, highScoreFontSIze));
     }
 
     private void setSceneForView(GameLevel model, LevelView.Builder builder) {

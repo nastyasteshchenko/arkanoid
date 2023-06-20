@@ -17,9 +17,9 @@ import java.io.*;
 import static oop.arkanoid.AlertCreationUtil.alert;
 
 public class Presenter {
-    private static final LevelsManager LEVELS_MANAGER = new LevelsManager();
+    static final LevelsManager LEVELS_MANAGER = new LevelsManager();
+    static final ScoresManager SCORES_MANAGER = new ScoresManager();
     private static final ScenesManager SCENES_MANAGER = new ScenesManager();
-    private static final ScoresManager SCORES_MANAGER = new ScoresManager();
     private static LevelInitiator levelsInitiator;
     private static Timeline animation;
     private static LevelView gameView;
@@ -54,14 +54,14 @@ public class Presenter {
     static void loadResourcesBeforeStartApp() throws IOException {
         LEVELS_MANAGER.scanForLevels();
         SCORES_MANAGER.scanForScores();
-        SCENES_MANAGER.scanForScenes(SCORES_MANAGER);
+        SCENES_MANAGER.scanForScenes();
     }
 
     @FXML
     protected void backToMenu() {
         try {
-            SCORES_MANAGER.reloadScores();
-            SCENES_MANAGER.changeRecordsScene(SCORES_MANAGER);
+            SCORES_MANAGER.scanForScores();
+            SCENES_MANAGER.changeRecordsScene();
         } catch (Exception e) {
             alert(e.getMessage());
         }

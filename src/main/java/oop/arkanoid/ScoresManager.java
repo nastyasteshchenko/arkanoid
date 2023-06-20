@@ -16,18 +16,21 @@ public class ScoresManager {
 
     private final static String PATH_TO_RECORDS = "records.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final static Map<String, LevelScore> SCORES = new HashMap<>();
+    private final Map<String, LevelScore> scores = new HashMap<>();
 
     public ScoresManager() {
     }
 
     void scanForScores() {
+
+        scores.clear();
+
         try (JsonReader fileReader = new JsonReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(PATH_TO_RECORDS))))) {
             JsonArray ja = gson.fromJson(fileReader, JsonArray.class);
             for (JsonElement je : ja) {
                 JsonObject jsonObject = je.getAsJsonObject();
                 LevelScore levelScore = new LevelScore(jsonObject.get("levelName").getAsString(), jsonObject.get("score").getAsInt());
-                SCORES.put(levelScore.levelName, levelScore);
+                scores.put(levelScore.levelName, levelScore);
             }
         } catch (IOException e) {
             alert(e.getMessage());
@@ -35,28 +38,23 @@ public class ScoresManager {
     }
 
     public void writeScore(String levelName, int scoreValue) {
-        if (scoreValue > SCORES.get(levelName).score) {
-            SCORES.put(levelName, new LevelScore(levelName, scoreValue));
+        if (scoreValue > scores.get(levelName).score) {
+            scores.put(levelName, new LevelScore(levelName, scoreValue));
         }
     }
 
-    public void reloadScores() {
-        SCORES.clear();
-        scanForScores();
-    }
-
-    public static int getScoreForLevel(String levelName) {
-        return SCORES.get(levelName).score;
+    public int getScoreForLevel(String levelName) {
+        return scores.get(levelName).score;
     }
 
     public Collection<LevelScore> getScores() {
-        return SCORES.values();
+        return scores.values();
     }
 
     public void storeRecords() {
         try (JsonWriter jsonWriter = new JsonWriter(new FileWriter("src/main/resources/oop/arkanoid/" + PATH_TO_RECORDS))) {
             jsonWriter.beginArray();
-            for (LevelScore levelScore : SCORES.values()) {
+            for (LevelScore levelScore : scores.values()) {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("levelName", levelScore.levelName());
                 jsonObject.addProperty("score", levelScore.score());

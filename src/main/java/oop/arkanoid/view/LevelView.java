@@ -136,6 +136,7 @@ public class LevelView {
         ball.setCenterY(point.y());
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void deleteBrick(Point point) {
         removeBrick(bricks.stream().filter(i -> point.x() == i.getX() && point.y() == i.getY()).findFirst().get());
     }
