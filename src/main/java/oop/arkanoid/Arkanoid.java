@@ -30,9 +30,10 @@ public class Arkanoid extends Application {
         stage.show();
     }
 
-    public static Stage getStage(){
+    public static Stage getStage() {
         return stage;
     }
+
     public static void main(String[] args) {
         launch(args);
     }

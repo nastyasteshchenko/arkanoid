@@ -1,12 +1,13 @@
 package oop.arkanoid.model.barrier;
 
-import oop.arkanoid.notifications.DestroyNotifications;
 import oop.arkanoid.model.*;
 import oop.arkanoid.model.motion.LinearEquation;
+import oop.arkanoid.notifications.EventType;
+import oop.arkanoid.notifications.Notifications;
 
 import java.util.EnumMap;
 
-public final class Brick extends Barrier{
+public final class Brick extends Barrier {
 
     private final Health health;
     private final int score;
@@ -38,11 +39,11 @@ public final class Brick extends Barrier{
     public void onHit() {
         health.decrease();
         if (isDead()) {
-            DestroyNotifications.getInstance().publish(this);
+            Notifications.getInstance().publish(EventType.DESTROY, this);
         }
     }
 
-    public int health(){
+    public int health() {
         return health.value();
     }
 

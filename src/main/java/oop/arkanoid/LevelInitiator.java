@@ -16,20 +16,21 @@ import oop.arkanoid.view.LevelView;
 import java.util.List;
 
 public class LevelInitiator {
-    private final int numLevel;
+    private final JsonObject levelJsonObject;
+    private final String levelName;
 
     LevelInitiator(int numLevel) {
-        this.numLevel = numLevel;
+        levelName = "level" + numLevel;
+        levelJsonObject = LevelsManager.getLevelJsonObject(levelName);
     }
 
     String getLevelName() {
-        return "level" + numLevel;
+        return levelName;
     }
 
     LevelView initLevelView(GameLevel model) {
-        JsonObject paramsForLevel = LevelsManager.getLevelJsonObject(getLevelName());
 
-        LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
+        LevelView.Builder builder = new LevelView.Builder(levelJsonObject);
 
         List<Barrier> barriers = model.getBarriers();
         for (Barrier barrier : barriers) {
@@ -63,19 +64,18 @@ public class LevelInitiator {
 
     GameLevel initLevelModel() throws GeneratingGameException {
 
-        JsonObject paramsForLevel = LevelsManager.getLevelJsonObject(getLevelName());
-        if (paramsForLevel == null) {
+        if (levelJsonObject == null) {
             return null;
         }
-        JsonObject ball = paramsForLevel.getAsJsonObject("ball");
-        JsonObject platform = paramsForLevel.getAsJsonObject("platform");
-        JsonObject scene = paramsForLevel.getAsJsonObject("scene");
+        JsonObject ball = levelJsonObject.getAsJsonObject("ball");
+        JsonObject platform = levelJsonObject.getAsJsonObject("platform");
+        JsonObject scene = levelJsonObject.getAsJsonObject("scene");
         double sceneWidth = scene.get("width").getAsDouble();
         double sceneHeight = scene.get("height").getAsDouble();
         GameLevel.Builder builder = new GameLevel.Builder(new Point(sceneWidth, sceneHeight)).
                 ball(createPoint(ball.get("x").getAsDouble(), ball.get("y").getAsDouble()), ball.get("radius").getAsDouble())
                 .platform(createPoint(platform.get("x").getAsDouble(), platform.get("y").getAsDouble()), createPoint(platform.get("width").getAsDouble(), platform.get("height").getAsDouble()));
-        setBricks(builder, paramsForLevel);
+        setBricks(builder, levelJsonObject);
         setWalls(builder, sceneWidth, sceneHeight);
         return builder.build();
     }

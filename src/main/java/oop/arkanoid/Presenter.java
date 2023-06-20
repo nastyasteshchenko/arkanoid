@@ -16,7 +16,7 @@ import java.io.*;
 
 import static oop.arkanoid.AlertCreationUtil.alert;
 
-public class Presenter implements DestroySubscriber, MovePlatformSubscriber, ButtonSubscriber {
+public class Presenter {
     private static int currentLevel;
     private static LevelInitiator levelsInitiator;
     private static ScoresManager scoresManager;
@@ -28,13 +28,7 @@ public class Presenter implements DestroySubscriber, MovePlatformSubscriber, But
     private static boolean gameIsStarted = false;
     private static boolean isPause = false;
 
-    @Override
-    public void update(Brick brick) {
-        gameView.deleteBrick(brick.position());
-        gameView.drawScore(model.getScore());
-    }
-
-    public void startPlayingGame() {
+    public void setGameIsStarted() {
         gameIsStarted = true;
     }
 
@@ -89,9 +83,24 @@ public class Presenter implements DestroySubscriber, MovePlatformSubscriber, But
 
     @FXML
     protected void startGame() {
-        DestroyNotifications.getInstance().subscribe(this);
-        MovePlatformNotifications.getInstance().subscribe(this);
-        ButtonEventNotifications.getInstance().subscribe(this);
+        Notifications.getInstance().subscribe(EventType.DESTROY, this, b -> {
+            Brick brick = (Brick) b;
+            gameView.deleteBrick(brick.position());
+            gameView.drawScore(model.getScore());
+        });
+
+        Notifications.getInstance().subscribe(EventType.START_GAME, this, v -> {
+            setGameIsStarted();
+        });
+
+        Notifications.getInstance().subscribe(EventType.PAUSE, this, v -> {
+            setPause();
+        });
+
+        Notifications.getInstance().subscribe(EventType.MOVE_PLATFORM, this, x -> {
+            movePlatform((double) x);
+        });
+
         currentLevel = 1;
         levelsInitiator = new LevelInitiator(currentLevel);
         startLevel();
@@ -167,19 +176,5 @@ public class Presenter implements DestroySubscriber, MovePlatformSubscriber, But
 
     private void changeScene(Scene scene) {
         Arkanoid.getStage().setScene(scene);
-    }
-
-    @Override
-    public void update(ButtonEventType type) {
-        switch (type) {
-            //TODO rename
-            case START_GAME -> startPlayingGame();
-            case PAUSE -> setPause();
-        }
-    }
-
-    @Override
-    public void update(double x) {
-        movePlatform(x);
     }
 }
