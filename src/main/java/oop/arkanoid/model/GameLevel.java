@@ -97,7 +97,6 @@ public class GameLevel {
             return this;
         }
 
-        @SuppressWarnings("UnusedReturnValue")
         public Builder addBrick(Point position, Point size, int health) throws GeneratingGameException {
             Brick brick = switch (health) {
                 case -1 -> new Brick(position, size, Health.createImmortal());
@@ -111,7 +110,6 @@ public class GameLevel {
             return this;
         }
 
-        @SuppressWarnings("UnusedReturnValue")
         public Builder addWall(Point position, Point size, CollisionPlace place) throws GeneratingGameException {
             Wall wall = new Wall(position, size, place);
             wall.checkWall(sceneSize);
