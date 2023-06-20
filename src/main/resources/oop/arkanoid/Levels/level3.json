@@ -2,7 +2,8 @@
   "scene": {
     "color": "#FFDAB9",
     "width": "600",
-    "height": "900"
+    "height": "900",
+    "opacity": "0.5"
   },
   "pauseButton": {
     "font": "Droid Sans Mono",

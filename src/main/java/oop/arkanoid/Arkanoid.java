@@ -22,8 +22,8 @@ public class Arkanoid extends Application {
         Arkanoid.stage.setResizable(false);
 
         try {
-            Presenter.getInstance().loadResourcesBeforeStartApp();
-            Presenter.getInstance().checkGeneratingAllLevels();
+            Presenter.loadResourcesBeforeStartApp();
+            Presenter.checkGeneratingAllLevels();
         } catch (Exception e) {
             alert(e.getMessage());
             return;

@@ -2,7 +2,8 @@
   "scene": {
     "color": "#E0FFFF",
     "width": "600",
-    "height": "900"
+    "height": "900",
+    "opacity": "0.5"
   },
   "pauseButton": {
     "font": "Droid Sans Mono",
@@ -41,6 +42,11 @@
     "immortalBrick": {
       "color": "#808080",
       "strokeColor": "#A9A9A9",
+      "strokeWidth": "3"
+    },
+    "doubleHitBrick": {
+      "color": "#ff7b00",
+      "strokeColor": "#FF4500",
       "strokeWidth": "3"
     },
     "bricks": [
