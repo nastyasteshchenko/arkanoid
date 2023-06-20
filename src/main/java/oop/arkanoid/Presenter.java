@@ -34,11 +34,11 @@ public class Presenter implements DestroySubscriber, MovePlatformSubscriber, But
         gameView.drawScore(model.getScore());
     }
 
-    public static void startPlayingGame() {
+    public void startPlayingGame() {
         gameIsStarted = true;
     }
 
-    public static void setPause() {
+    public void setPause() {
         isPause = !isPause;
         if (isPause) {
             animation.pause();
@@ -47,7 +47,7 @@ public class Presenter implements DestroySubscriber, MovePlatformSubscriber, But
         }
     }
 
-    public static void movePlatform(double x) {
+    public void movePlatform(double x) {
         if (gameIsStarted) {
             gameView.drawPlatform(model.updatePlatformPosition(x));
         }
