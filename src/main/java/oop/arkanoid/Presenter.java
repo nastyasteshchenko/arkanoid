@@ -17,16 +17,21 @@ import java.io.*;
 import static oop.arkanoid.AlertCreationUtil.alert;
 
 public class Presenter {
-    private static int currentLevel;
-    private static LevelInitiator levelsInitiator;
-    private static ScoresManager scoresManager;
-    private static LevelsManager levelsManager;
-    private static ScenesManager scenesManager;
-    private static Timeline animation;
-    private static LevelView gameView;
-    private static GameLevel model;
-    private static boolean gameIsStarted = false;
-    private static boolean isPause = false;
+    private static final Presenter INSTANCE = new Presenter();
+    private final LevelsManager levelsManager = new LevelsManager();
+    private final ScenesManager scenesManager = new ScenesManager();
+    private final ScoresManager scoresManager = new ScoresManager();
+    private Timeline animation;
+    private LevelView gameView;
+    private GameLevel model;
+    private boolean gameIsStarted = false;
+    private boolean isPause = false;
+    private int currentLevel;
+    private LevelInitiator levelsInitiator;
+
+    static Presenter getInstance() {
+        return INSTANCE;
+    }
 
     public void setGameIsStarted() {
         gameIsStarted = true;
@@ -47,23 +52,20 @@ public class Presenter {
         }
     }
 
-    static void checkGeneratingAllLevels() throws GeneratingGameException {
+    void checkGeneratingAllLevels() throws GeneratingGameException {
         levelsManager.checkGeneratingAllLevels();
     }
 
-    static void loadResourcesBeforeStartApp() throws IOException {
-        levelsManager = new LevelsManager();
+    void loadResourcesBeforeStartApp() throws IOException {
         levelsManager.scanForLevels();
-        scoresManager = new ScoresManager();
         scoresManager.scanForScores();
-        scenesManager = new ScenesManager();
         scenesManager.scanForScenes(scoresManager);
     }
 
     @FXML
     protected void backToMenu() {
         try {
-            scoresManager = new ScoresManager();
+            scoresManager.reloadScores();
             scenesManager.changeRecordsScene(scoresManager);
         } catch (Exception e) {
             alert(e.getMessage());

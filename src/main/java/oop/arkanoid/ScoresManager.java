@@ -40,6 +40,11 @@ public class ScoresManager {
         }
     }
 
+    public void reloadScores() {
+        SCORES.clear();
+        scanForScores();
+    }
+
     public static int getScoreForLevel(String levelName) {
         return SCORES.get(levelName).score;
     }

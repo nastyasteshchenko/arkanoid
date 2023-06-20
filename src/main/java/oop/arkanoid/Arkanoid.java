@@ -20,9 +20,10 @@ public class Arkanoid extends Application {
         stage.setScene(startScene);
         Arkanoid.stage = stage;
         Arkanoid.stage.setResizable(false);
+
         try {
-            Presenter.loadResourcesBeforeStartApp();
-            Presenter.checkGeneratingAllLevels();
+            Presenter.getInstance().loadResourcesBeforeStartApp();
+            Presenter.getInstance().checkGeneratingAllLevels();
         } catch (Exception e) {
             alert(e.getMessage());
             return;
