@@ -1,7 +1,7 @@
 package oop.arkanoid.model;
 
-import oop.arkanoid.notifications.NotificationsAboutDestroy;
-import oop.arkanoid.notifications.Subscriber;
+import oop.arkanoid.notifications.DestroyNotifications;
+import oop.arkanoid.notifications.DestroySubscriber;
 import oop.arkanoid.model.barrier.*;
 
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import java.util.List;
 
 import static oop.arkanoid.model.ModelUtils.isInRange;
 
-public class GameLevel implements Subscriber {
+public class GameLevel implements DestroySubscriber {
     private final Platform platform;
     private final List<Barrier> barriers;
     private final Ball ball;
@@ -17,7 +17,7 @@ public class GameLevel implements Subscriber {
     private int score = 0;
 
     GameLevel(Ball ball, Platform platform, List<Barrier> barriers, Point sceneSize) {
-        NotificationsAboutDestroy.getInstance().subscribe(this);
+        DestroyNotifications.getInstance().subscribe(this);
 
         this.ball = ball;
         this.platform = platform;
@@ -47,7 +47,7 @@ public class GameLevel implements Subscriber {
 
     public GameState gameState() {
         if (barriers.stream().filter(barrier -> barrier instanceof Brick).allMatch(brick -> ((Brick) brick).isImmortal())) {
-            NotificationsAboutDestroy.getInstance().unsubscribe(this);
+            DestroyNotifications.getInstance().unsubscribe(this);
             return GameState.WIN;
         } else if (ball.position().y() > sceneSize.y()) {
             return GameState.LOSE;

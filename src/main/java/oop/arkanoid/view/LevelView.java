@@ -9,9 +9,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import oop.arkanoid.Presenter;
 import oop.arkanoid.model.*;
+import oop.arkanoid.notifications.ButtonEventNotifications;
+import oop.arkanoid.notifications.ButtonEventType;
+import oop.arkanoid.notifications.MovePlatformNotifications;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,8 +116,8 @@ public class LevelView {
             setPauseButtonParams(pauseButton);
             gamePane.getChildren().add(pauseButton);
 
-            gameScene.setOnMouseClicked(event -> Presenter.startPlayingGame());
-            gameScene.setOnMouseMoved(event -> Presenter.movePlatform(event.getX()));
+            gameScene.setOnMouseClicked(event -> ButtonEventNotifications.getInstance().publish(ButtonEventType.START_GAME));
+            gameScene.setOnMouseMoved(event -> MovePlatformNotifications.getInstance().publish(event.getX()));
 
             return new LevelView(bricks, platform, ball, gameScene, gamePane, score);
 
@@ -135,7 +136,7 @@ public class LevelView {
         }
 
         private void setPauseButtonParams(Button pauseButton) {
-            pauseButton.setOnMouseClicked(event -> Presenter.setPause());
+            pauseButton.setOnMouseClicked(event -> ButtonEventNotifications.getInstance().publish(ButtonEventType.PAUSE));
             pauseButton.setText("Pause");
             pauseButton.setTranslateX(gameScene.getWidth() - 75);
             pauseButton.setTranslateY(gameScene.getHeight() - 50);

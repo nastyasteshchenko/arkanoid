@@ -9,16 +9,14 @@ import javafx.util.Duration;
 import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
 import oop.arkanoid.model.barrier.Brick;
-import oop.arkanoid.notifications.NotificationsAboutDestroy;
-import oop.arkanoid.notifications.Subscriber;
+import oop.arkanoid.notifications.*;
 import oop.arkanoid.view.LevelView;
 
 import java.io.*;
 
 import static oop.arkanoid.AlertCreationUtil.alert;
 
-//TODO подумать над inner class, либо подписка на события
-public class Presenter implements Subscriber {
+public class Presenter implements DestroySubscriber, MovePlatformSubscriber, ButtonSubscriber {
     private static int currentLevel;
     private static LevelInitiator levelsInitiator;
     private static ScoresManager scoresManager;
@@ -91,7 +89,9 @@ public class Presenter implements Subscriber {
 
     @FXML
     protected void startGame() {
-        NotificationsAboutDestroy.getInstance().subscribe(this);
+        DestroyNotifications.getInstance().subscribe(this);
+        MovePlatformNotifications.getInstance().subscribe(this);
+        ButtonEventNotifications.getInstance().subscribe(this);
         currentLevel = 1;
         levelsInitiator = new LevelInitiator(currentLevel);
         startLevel();
@@ -167,5 +167,19 @@ public class Presenter implements Subscriber {
 
     private void changeScene(Scene scene) {
         Arkanoid.getStage().setScene(scene);
+    }
+
+    @Override
+    public void update(ButtonEventType type) {
+        switch (type) {
+            //TODO rename
+            case START_GAME -> startPlayingGame();
+            case PAUSE -> setPause();
+        }
+    }
+
+    @Override
+    public void update(double x) {
+        movePlatform(x);
     }
 }

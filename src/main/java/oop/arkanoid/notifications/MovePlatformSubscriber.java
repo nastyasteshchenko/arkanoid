@@ -2,7 +2,6 @@ package oop.arkanoid.notifications;
 
 import oop.arkanoid.model.barrier.Brick;
 
-public interface Subscriber {
-
-    void update(Brick brick);
+public interface MovePlatformSubscriber {
+    void update(double x);
 }

@@ -1,6 +1,6 @@
 package oop.arkanoid.model.barrier;
 
-import oop.arkanoid.notifications.NotificationsAboutDestroy;
+import oop.arkanoid.notifications.DestroyNotifications;
 import oop.arkanoid.model.*;
 import oop.arkanoid.model.motion.LinearEquation;
 
@@ -38,7 +38,7 @@ public final class Brick extends Barrier{
     public void onHit() {
         health.decrease();
         if (isDead()) {
-            NotificationsAboutDestroy.getInstance().publish(this);
+            DestroyNotifications.getInstance().publish(this);
         }
     }
 
