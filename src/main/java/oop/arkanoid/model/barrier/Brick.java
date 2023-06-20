@@ -8,7 +8,7 @@ import java.util.EnumMap;
 
 public final class Brick extends Barrier{
 
-    public final Health health;
+    private final Health health;
     private final int score;
     private final EnumMap<CollisionPlace, LinearEquation> linearEquations = new EnumMap<>(CollisionPlace.class);
 
@@ -40,6 +40,10 @@ public final class Brick extends Barrier{
         if (isDead()) {
             NotificationsAboutDestroy.getInstance().publish(this);
         }
+    }
+
+    public int health(){
+        return health.getValue();
     }
 
     @Override

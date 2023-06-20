@@ -181,11 +181,11 @@ public class Presenter implements Subscriber {
                     builder.addImmortalBrick(brick.position(), brick.size);
                     continue;
                 }
-                if (brick.health.getValue() == 1) {
+                if (brick.health() == 1) {
                     builder.addStandardBrick(brick.position(), brick.size);
                     continue;
                 }
-                if (brick.health.getValue() == 2) {
+                if (brick.health() == 2) {
                     builder.addDoubleHitBrick(brick.position(), brick.size);
                 }
             }

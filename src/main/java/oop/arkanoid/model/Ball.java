@@ -24,7 +24,7 @@ public class Ball {
     }
 
     public Point position() {
-        return motion.currPoint;
+        return motion.currPosition();
     }
 
     Point move(List<Barrier> barriers) {
@@ -35,7 +35,7 @@ public class Ball {
     }
 
     private void detectCollisions(List<Barrier> barriers) {
-        CircleEquation circleEquation = new CircleEquation(motion.currPoint, radius);
+        CircleEquation circleEquation = new CircleEquation(position(), radius);
 
         List<Brick> bricksToDelete = new ArrayList<>();
         boolean hasChangedDirection = false;
@@ -49,7 +49,7 @@ public class Ball {
             if (!hasChangedDirection) {
                 //TODO подумать над вынесением в отдельный метод
                 if (barrier instanceof Platform) {
-                    double diffXBetweenBallAndCenterPlatform = barrier.position().x() + barrier.size.x() / 2 - motion.currPoint.x();
+                    double diffXBetweenBallAndCenterPlatform = barrier.position().x() + barrier.size.x() / 2 - position().x();
                     flipDirectionByPlatform(diffXBetweenBallAndCenterPlatform);
                     motion = motion.rotate(-90 - diffXBetweenBallAndCenterPlatform);
 
