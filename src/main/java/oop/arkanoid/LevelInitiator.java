@@ -22,12 +22,13 @@ public class LevelInitiator {
         this.numLevel = numLevel;
     }
 
-    String getCurrentLevel() {
+    String getLevelName() {
         return "level" + numLevel;
     }
 
     LevelView initLevelView(GameLevel model) {
-        JsonObject paramsForLevel = LevelsManager.getLevelJsonObject(getCurrentLevel());
+        JsonObject paramsForLevel = LevelsManager.getLevelJsonObject(getLevelName());
+
         LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
 
         List<Barrier> barriers = model.getBarriers();
@@ -54,7 +55,7 @@ public class LevelInitiator {
         Ball ball = model.getBall();
         builder.ball(ball.position(), ball.radius).gameScene(model.getSceneSize());
 
-        builder.highScore(ScoresManager.getScoreForLevel(getCurrentLevel()));
+        builder.highScore(ScoresManager.getScoreForLevel(getLevelName()));
 
         return builder.build();
 
@@ -62,7 +63,7 @@ public class LevelInitiator {
 
     GameLevel initLevelModel() throws GeneratingGameException {
 
-        JsonObject paramsForLevel = LevelsManager.getLevelJsonObject(getCurrentLevel());
+        JsonObject paramsForLevel = LevelsManager.getLevelJsonObject(getLevelName());
         if (paramsForLevel == null) {
             return null;
         }

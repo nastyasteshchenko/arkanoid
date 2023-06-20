@@ -17,8 +17,7 @@ class LevelsManager {
     private final static String PATH_TO_LEVELS_DIR = "./oop/arkanoid/Levels";
     private static final Map<String, JsonObject> availableLevels = new HashMap<>();
 
-    LevelsManager() {
-    }
+    LevelsManager() {}
 
     void scanForLevels() throws IOException {
         File levelsDir = new File(Objects.requireNonNull(getClass().getClassLoader().getResource(PATH_TO_LEVELS_DIR)).getFile());

@@ -49,7 +49,6 @@ public class Presenter implements Subscriber {
         }
     }
 
-
     public static void movePlatform(double x) {
         if (gameIsStarted) {
             gameView.drawPlatform(model.updatePlatformPosition(x));
@@ -89,7 +88,6 @@ public class Presenter implements Subscriber {
     protected void endGame() {
         System.exit(0);
     }
-
 
     @FXML
     protected void startGame() {
@@ -132,12 +130,11 @@ public class Presenter implements Subscriber {
     }
 
     private void setRecord() {
-        scoresManager.writeScore(levelsInitiator.getCurrentLevel(), model.getScore());
+        scoresManager.writeScore(levelsInitiator.getLevelName(), model.getScore());
         scoresManager.storeRecords();
     }
 
     private void startLevel() {
-
         try {
             model = levelsInitiator.initLevelModel();
             if (model == null) {
