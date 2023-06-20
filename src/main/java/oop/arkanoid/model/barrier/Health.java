@@ -11,16 +11,16 @@ public class Health {
         return new Immortal();
     }
 
-    public int value() {
-        return value;
-    }
-
     boolean isDead() {
         return value <= 0;
     }
 
     void decrease() {
         value--;
+    }
+
+    int value() {
+        return value;
     }
 
     static class Immortal extends Health {
