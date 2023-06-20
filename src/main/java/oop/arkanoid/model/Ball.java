@@ -47,6 +47,7 @@ public class Ball {
             }
 
             if (!hasChangedDirection) {
+                //TODO подумать над вынесением в отдельный метод
                 if (barrier instanceof Platform) {
                     double diffXBetweenBallAndCenterPlatform = barrier.position().x() + barrier.size.x() / 2 - motion.currPoint.x();
                     flipDirectionByPlatform(diffXBetweenBallAndCenterPlatform);
@@ -71,6 +72,7 @@ public class Ball {
             }
         }
 
+        //TODO подумать
         if (hasChangedDirection) {
             bricksToDelete.forEach(barriers::remove);
         }

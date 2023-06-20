@@ -24,6 +24,8 @@ public class Arkanoid extends Application {
             Presenter.loadResourcesBeforeStartApp();
             Presenter.checkGeneratingAllLevels();
         } catch (Exception e) {
+            //TODO подумать над тем чтобы перенести в presenter???
+            //передавать не исключение, а сообщение
             createAlert(e);
             return;
         }

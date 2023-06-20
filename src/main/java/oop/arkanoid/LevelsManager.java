@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Objects;
 
 class LevelsManager {
+    //TODO про static подумать
+    //мб перенести в презентер
     private static int currentLevel = 1;
     private final static String pathToLevels = "./oop/arkanoid/Levels";
     private final Map<String, JsonObject> availableLevels = new HashMap<>();
@@ -99,6 +101,7 @@ class LevelsManager {
         JsonArray bricksArray = bricks.getAsJsonArray("bricks");
         for (JsonElement elem : bricksArray) {
             JsonObject brick = elem.getAsJsonObject();
+            //TODO проверить что будет делать в разных случаях
             switch (brick.get("health").getAsInt()) {
                 case -1 -> builder.addBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
                         createPoint(brickWidth, brickHeight), -1);
@@ -106,6 +109,7 @@ class LevelsManager {
                         createPoint(brickWidth, brickHeight), 1);
                 case 2 -> builder.addBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
                         createPoint(brickWidth, brickHeight), 2);
+                //TODO перенести на уровенб game builder
                 default -> throw GeneratingGameException.unsupportedHealth();
             }
         }

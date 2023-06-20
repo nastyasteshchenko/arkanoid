@@ -6,6 +6,7 @@ import oop.arkanoid.model.QuadraticEquation;
 public class LinearMotion {
 
     public final MotionDirection direction;
+    //getter
     public Point currPoint;
     private final double step;
     private final BaseLinearEquation linearEquation;

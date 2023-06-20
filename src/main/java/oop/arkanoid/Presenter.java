@@ -24,6 +24,7 @@ import java.util.*;
 import static oop.arkanoid.Arkanoid.changeScene;
 import static oop.arkanoid.Arkanoid.createAlert;
 
+//TODO подумать над inner class, либо подписка на события
 public class Presenter implements Subscriber {
     private static ScoresManager scoresManager;
     private static LevelsManager levelsManager;
@@ -53,6 +54,7 @@ public class Presenter implements Subscriber {
         }
     }
 
+    //TODO: как синхронизировать???
     public static void movePlatform(double x) {
         if (gameIsStarted) {
             gameView.drawPlatform(model.updatePlatformPosition(x));
