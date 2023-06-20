@@ -19,18 +19,18 @@ import java.util.Map;
 import java.util.Objects;
 
 class ScenesManager {
-    private final static String pathToLevels = "FXML/";
+    private final static String PATH_TO_SCENES = "FXML/";
     private final Map<String, Scene> scenes = new HashMap<>();
 
     ScenesManager() {
     }
 
     void scanForScenes(ScoresManager scoresManager) throws IOException {
-        scenes.put("main", loadNewScene(pathToLevels + "main-scene.fxml"));
-        scenes.put("about", loadNewScene(pathToLevels + "about-scene.fxml"));
-        scenes.put("game_over", loadNewScene(pathToLevels + "game-over-scene.fxml"));
-        scenes.put("game_win", loadNewScene(pathToLevels + "game-win-scene.fxml"));
-        scenes.put("game_passed", loadNewScene(pathToLevels + "game-passed-scene.fxml"));
+        scenes.put("main", loadNewScene(PATH_TO_SCENES + "main-scene.fxml"));
+        scenes.put("about", loadNewScene(PATH_TO_SCENES + "about-scene.fxml"));
+        scenes.put("game_over", loadNewScene(PATH_TO_SCENES + "game-over-scene.fxml"));
+        scenes.put("game_win", loadNewScene(PATH_TO_SCENES + "game-win-scene.fxml"));
+        scenes.put("game_passed", loadNewScene(PATH_TO_SCENES + "game-passed-scene.fxml"));
 
         addRecordsScene(scoresManager);
     }
@@ -49,7 +49,7 @@ class ScenesManager {
             Gson GSON_LOADER = new GsonBuilder().setPrettyPrinting().create();
             JsonObject records = GSON_LOADER.fromJson(reader, JsonObject.class);
 
-            Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource(pathToLevels + "records-scene.fxml")));
+            Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource(PATH_TO_SCENES + "records-scene.fxml")));
             Collection<ScoresManager.LevelScore> scores = scoresManager.getScores();
 
             for (ScoresManager.LevelScore score : scores) {

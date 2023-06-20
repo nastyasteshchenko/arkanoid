@@ -1,29 +1,26 @@
 package oop.arkanoid;
 
-import com.google.gson.JsonObject;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.util.Duration;
-import oop.arkanoid.model.Ball;
 import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
-import oop.arkanoid.model.barrier.Barrier;
 import oop.arkanoid.model.barrier.Brick;
-import oop.arkanoid.model.barrier.Platform;
 import oop.arkanoid.notifications.NotificationsAboutDestroy;
 import oop.arkanoid.notifications.Subscriber;
 import oop.arkanoid.view.LevelView;
 
 import java.io.*;
-import java.util.*;
 
 import static oop.arkanoid.AlertCreationUtil.alert;
 
 //TODO подумать над inner class, либо подписка на события
 public class Presenter implements Subscriber {
+    private static int currentLevel;
+    private static LevelsInitiator levelsInitiator;
     private static ScoresManager scoresManager;
     private static LevelsManager levelsManager;
     private static ScenesManager scenesManager;
@@ -97,6 +94,8 @@ public class Presenter implements Subscriber {
     @FXML
     protected void startGame() {
         NotificationsAboutDestroy.getInstance().subscribe(this);
+        currentLevel = 1;
+        levelsInitiator = new LevelsInitiator(currentLevel);
         startLevel();
     }
 
@@ -121,7 +120,8 @@ public class Presenter implements Subscriber {
 
     private void gameWin() {
         prepareForGameOver(scenesManager.getScene("game_win"));
-        levelsManager.increaseLevel();
+        currentLevel++;
+        levelsInitiator = new LevelsInitiator(currentLevel);
     }
 
     private void prepareForGameOver(Scene gameWinScene) {
@@ -132,14 +132,14 @@ public class Presenter implements Subscriber {
     }
 
     private void setRecord() {
-        scoresManager.writeScore(levelsManager.getCurrentLevel(), model.getScore());
+        scoresManager.writeScore(levelsInitiator.getCurrentLevel(), model.getScore());
         scoresManager.storeRecords();
     }
 
     private void startLevel() {
 
         try {
-            model = levelsManager.initLevel();
+            model = levelsInitiator.initLevelModel();
             if (model == null) {
                 changeScene(scenesManager.getScene("game_passed"));
                 return;
@@ -148,7 +148,7 @@ public class Presenter implements Subscriber {
             alert(e.getMessage());
         }
 
-        setGameView(levelsManager.getCurrentLevelJsonObject());
+        gameView = levelsInitiator.initLevelView(model);
         changeScene(gameView.getGameScene());
         startAnimation();
 
@@ -166,39 +166,6 @@ public class Presenter implements Subscriber {
         }));
         animation.setCycleCount(Animation.INDEFINITE);
         animation.play();
-    }
-
-
-    private static void setGameView(JsonObject paramsForLevel) {
-        LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
-
-        List<Barrier> barriers = model.getBarriers();
-        for (Barrier barrier : barriers) {
-            if (barrier instanceof Platform platform) {
-                builder.platform(platform.position(), platform.size);
-                continue;
-            }
-            if (barrier instanceof Brick brick) {
-                if (brick.isImmortal()) {
-                    builder.addImmortalBrick(brick.position(), brick.size);
-                    continue;
-                }
-                if (brick.health() == 1) {
-                    builder.addStandardBrick(brick.position(), brick.size);
-                    continue;
-                }
-                if (brick.health() == 2) {
-                    builder.addDoubleHitBrick(brick.position(), brick.size);
-                }
-            }
-        }
-
-        Ball ball = model.getBall();
-        builder.ball(ball.position(), ball.radius).gameScene(model.getSceneSize());
-
-        builder.highScore(scoresManager.getScoreForLevel(levelsManager.getCurrentLevel()));
-
-        gameView = builder.build();
     }
 
     private void changeScene(Scene scene) {

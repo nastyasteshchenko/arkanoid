@@ -14,15 +14,15 @@ public class ScoresManager {
     public record LevelScore(String levelName, int score) {
     }
 
-    private final static String pathToRecordsFile = "records.json";
+    private final static String PATH_TO_RECORDS = "records.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final Map<String, LevelScore> scores = new HashMap<>();
+    private static final Map<String, LevelScore> scores = new HashMap<>();
 
     public ScoresManager() {
     }
 
     void scanForScores() {
-        try (JsonReader fileReader = new JsonReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(pathToRecordsFile))))) {
+        try (JsonReader fileReader = new JsonReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(PATH_TO_RECORDS))))) {
             JsonArray mainJa = gson.fromJson(fileReader, JsonArray.class);
             for (JsonElement je : mainJa) {
                 JsonObject jsonObject = je.getAsJsonObject();
@@ -41,7 +41,7 @@ public class ScoresManager {
         }
     }
 
-    public int getScoreForLevel(String levelName) {
+    public static int getScoreForLevel(String levelName) {
         return scores.get(levelName).score;
     }
 
@@ -50,7 +50,7 @@ public class ScoresManager {
     }
 
     public void storeRecords() {
-        try (JsonWriter jsonWriter = new JsonWriter(new FileWriter("src/main/resources/oop/arkanoid/" + pathToRecordsFile))) {
+        try (JsonWriter jsonWriter = new JsonWriter(new FileWriter("src/main/resources/oop/arkanoid/" + PATH_TO_RECORDS))) {
             jsonWriter.beginArray();
             for (LevelScore levelScore : scores.values()) {
                 JsonObject jsonObject = new JsonObject();
