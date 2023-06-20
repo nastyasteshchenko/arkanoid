@@ -15,7 +15,7 @@ public final class Brick extends Barrier{
     public Brick(Point position, Point size, Health health) {
         super(position, size);
         this.health = health;
-        score = health.getValue() * 5;
+        score = health() * 5;
 
         linearEquations.put(CollisionPlace.BOTTOM, LinearEquation.linearEquation(0, new Point(position.x(), position.y() + size.y())));
         linearEquations.put(CollisionPlace.TOP, LinearEquation.linearEquation(0, position));
