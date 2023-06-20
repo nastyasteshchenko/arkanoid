@@ -20,7 +20,7 @@ import static oop.arkanoid.AlertCreationUtil.alert;
 //TODO подумать над inner class, либо подписка на события
 public class Presenter implements Subscriber {
     private static int currentLevel;
-    private static LevelsInitiator levelsInitiator;
+    private static LevelInitiator levelsInitiator;
     private static ScoresManager scoresManager;
     private static LevelsManager levelsManager;
     private static ScenesManager scenesManager;
@@ -95,7 +95,7 @@ public class Presenter implements Subscriber {
     protected void startGame() {
         NotificationsAboutDestroy.getInstance().subscribe(this);
         currentLevel = 1;
-        levelsInitiator = new LevelsInitiator(currentLevel);
+        levelsInitiator = new LevelInitiator(currentLevel);
         startLevel();
     }
 
@@ -121,7 +121,7 @@ public class Presenter implements Subscriber {
     private void gameWin() {
         prepareForGameOver(scenesManager.getScene("game_win"));
         currentLevel++;
-        levelsInitiator = new LevelsInitiator(currentLevel);
+        levelsInitiator = new LevelInitiator(currentLevel);
     }
 
     private void prepareForGameOver(Scene gameWinScene) {

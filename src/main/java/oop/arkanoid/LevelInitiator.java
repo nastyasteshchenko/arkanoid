@@ -15,10 +15,10 @@ import oop.arkanoid.view.LevelView;
 
 import java.util.List;
 
-public class LevelsInitiator {
+public class LevelInitiator {
     private final int numLevel;
 
-    LevelsInitiator(int numLevel) {
+    LevelInitiator(int numLevel) {
         this.numLevel = numLevel;
     }
 

@@ -44,7 +44,7 @@ class LevelsManager {
     void checkGeneratingAllLevels() throws GeneratingGameException {
         int level = 1;
         for (JsonObject ignored : availableLevels.values()) {
-            LevelsInitiator levelsInitiator = new LevelsInitiator(level);
+            LevelInitiator levelsInitiator = new LevelInitiator(level);
             levelsInitiator.initLevelModel();
             level++;
         }
