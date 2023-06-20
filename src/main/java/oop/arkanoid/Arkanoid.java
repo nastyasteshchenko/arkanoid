@@ -24,22 +24,15 @@ public class Arkanoid extends Application {
             Presenter.loadResourcesBeforeStartApp();
             Presenter.checkGeneratingAllLevels();
         } catch (Exception e) {
-            //TODO подумать над тем чтобы перенести в presenter???
-            //передавать не исключение, а сообщение
-            createAlert(e);
+            alert(e.getMessage());
             return;
         }
         stage.show();
     }
 
-    static void createAlert(Exception errorMsg) {
-        alert(stage, errorMsg);
+    public static Stage getStage(){
+        return stage;
     }
-
-    static void changeScene(Scene scene) {
-        stage.setScene(scene);
-    }
-
     public static void main(String[] args) {
         launch(args);
     }

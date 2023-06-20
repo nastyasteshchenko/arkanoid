@@ -20,8 +20,7 @@ import oop.arkanoid.view.LevelView;
 import java.io.*;
 import java.util.*;
 
-import static oop.arkanoid.Arkanoid.changeScene;
-import static oop.arkanoid.Arkanoid.createAlert;
+import static oop.arkanoid.AlertCreationUtil.alert;
 
 //TODO подумать над inner class, либо подписка на события
 public class Presenter implements Subscriber {
@@ -53,7 +52,7 @@ public class Presenter implements Subscriber {
         }
     }
 
-    //TODO: как синхронизировать???
+
     public static void movePlatform(double x) {
         if (gameIsStarted) {
             gameView.drawPlatform(model.updatePlatformPosition(x));
@@ -76,7 +75,7 @@ public class Presenter implements Subscriber {
             scoresManager = new ScoresManager();
             scenesManager.changeRecordsScene(scoresManager);
         } catch (Exception e) {
-            createAlert(e);
+            alert(e.getMessage());
         }
         changeScene(scenesManager.getScene("main"));
     }
@@ -143,7 +142,7 @@ public class Presenter implements Subscriber {
                 return;
             }
         } catch (GeneratingGameException e) {
-            createAlert(e);
+            alert(e.getMessage());
         }
 
         setGameView(levelsManager.getCurrentLevelJsonObject());
@@ -197,5 +196,9 @@ public class Presenter implements Subscriber {
         builder.highScore(scoresManager.getScoreForLevel(levelsManager.getCurrentLevel()));
 
         gameView = builder.build();
+    }
+
+    private void changeScene(Scene scene) {
+        Arkanoid.getStage().setScene(scene);
     }
 }
