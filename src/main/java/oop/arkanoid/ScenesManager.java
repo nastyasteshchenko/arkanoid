@@ -22,8 +22,10 @@ class ScenesManager {
     private final static String pathToLevels = "FXML/";
     private final Map<String, Scene> scenes = new HashMap<>();
 
-    ScenesManager(ScoresManager scoresManager) throws IOException {
+    ScenesManager() {
+    }
 
+    void scanForScenes(ScoresManager scoresManager) throws IOException {
         scenes.put("main", loadNewScene(pathToLevels + "main-scene.fxml"));
         scenes.put("about", loadNewScene(pathToLevels + "about-scene.fxml"));
         scenes.put("game_over", loadNewScene(pathToLevels + "game-over-scene.fxml"));
@@ -31,7 +33,6 @@ class ScenesManager {
         scenes.put("game_passed", loadNewScene(pathToLevels + "game-passed-scene.fxml"));
 
         addRecordsScene(scoresManager);
-
     }
 
     Scene getScene(String name) {

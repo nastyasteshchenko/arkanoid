@@ -11,12 +11,17 @@ import static oop.arkanoid.AlertCreationUtil.alert;
 
 public class ScoresManager {
 
-    public record LevelScore(String levelName, int score){}
+    public record LevelScore(String levelName, int score) {
+    }
+
     private final static String pathToRecordsFile = "records.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<String, LevelScore> scores = new HashMap<>();
 
     public ScoresManager() {
+    }
+
+    void scanForScores() {
         try (JsonReader fileReader = new JsonReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(pathToRecordsFile))))) {
             JsonArray mainJa = gson.fromJson(fileReader, JsonArray.class);
             for (JsonElement je : mainJa) {
@@ -36,11 +41,11 @@ public class ScoresManager {
         }
     }
 
-    public int getScoreForLevel(String levelName){
+    public int getScoreForLevel(String levelName) {
         return scores.get(levelName).score;
     }
 
-    public Collection<LevelScore> getScores(){
+    public Collection<LevelScore> getScores() {
         return scores.values();
     }
 

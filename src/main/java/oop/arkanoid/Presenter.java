@@ -65,8 +65,11 @@ public class Presenter implements Subscriber {
 
     static void loadResourcesBeforeStartApp() throws IOException {
         levelsManager = new LevelsManager();
+        levelsManager.scanForLevels();
         scoresManager = new ScoresManager();
-        scenesManager = new ScenesManager(scoresManager);
+        scoresManager.scanForScores();
+        scenesManager = new ScenesManager();
+        scenesManager.scanForScenes(scoresManager);
     }
 
     @FXML

@@ -22,12 +22,13 @@ class LevelsManager {
     //TODO про static подумать
     //мб перенести в презентер
     private static int currentLevel = 1;
-    private final static String pathToLevels = "./oop/arkanoid/Levels";
+    private final static String PATH_TO_LEVELS_DIR = "./oop/arkanoid/Levels";
     private final Map<String, JsonObject> availableLevels = new HashMap<>();
 
-    LevelsManager() throws IOException {
+    LevelsManager() {}
 
-        File levelsDir = new File(Objects.requireNonNull(getClass().getClassLoader().getResource(pathToLevels)).getFile());
+    void scanForLevels() throws IOException {
+        File levelsDir = new File(Objects.requireNonNull(getClass().getClassLoader().getResource(PATH_TO_LEVELS_DIR)).getFile());
 
         if (!levelsDir.isDirectory()) {
             throw new NotDirectoryException("Expected \"Levels\" directory, but got file");
@@ -71,6 +72,7 @@ class LevelsManager {
     }
 
     GameLevel initLevel() throws GeneratingGameException {
+
         JsonObject paramsForLevel = getCurrentLevelJsonObject();
         if (paramsForLevel == null) {
             return null;
