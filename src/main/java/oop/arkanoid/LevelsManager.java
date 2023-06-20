@@ -101,17 +101,8 @@ class LevelsManager {
         JsonArray bricksArray = bricks.getAsJsonArray("bricks");
         for (JsonElement elem : bricksArray) {
             JsonObject brick = elem.getAsJsonObject();
-            //TODO проверить что будет делать в разных случаях
-            switch (brick.get("health").getAsInt()) {
-                case -1 -> builder.addBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
-                        createPoint(brickWidth, brickHeight), -1);
-                case 1 -> builder.addBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
-                        createPoint(brickWidth, brickHeight), 1);
-                case 2 -> builder.addBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
-                        createPoint(brickWidth, brickHeight), 2);
-                //TODO перенести на уровенб game builder
-                default -> throw GeneratingGameException.unsupportedHealth();
-            }
+            builder.addBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
+                    createPoint(brickWidth, brickHeight), brick.get("health").getAsInt());
         }
     }
 

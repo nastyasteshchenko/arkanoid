@@ -101,7 +101,12 @@ public class GameLevel implements Subscriber {
 
         @SuppressWarnings("UnusedReturnValue")
         public Builder addBrick(Point position, Point size, int health) throws GeneratingGameException {
-            Brick brick = health == -1 ? new Brick(position, size, Health.createImmortal()) : new Brick(position, size, new Health(health));
+            Brick brick = switch (health) {
+                case -1 -> new Brick(position, size, Health.createImmortal());
+                case 1, 2 -> new Brick(position, size, new Health(health));
+                default -> throw GeneratingGameException.unsupportedHealth();
+            };
+
             brick.checkIfOutOfScene(sceneSize);
             brick.checkIfCollisionsWithOtherBarrier(barriers);
             barriers.add(brick);
