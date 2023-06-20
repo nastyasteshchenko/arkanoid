@@ -10,15 +10,15 @@ public class LinearMotion {
     private final double step;
     private final BaseLinearEquation linearEquation;
 
-    public LinearMotion(BaseLinearEquation linearEquation, MotionDirection direction, double step, Point startPos) {
+    public LinearMotion(BaseLinearEquation linearEquation, MotionDirection direction, double step, Point position) {
         this.linearEquation = linearEquation;
         this.direction = direction;
         this.step = step;
-        currPosition = startPos;
+        currPosition = position;
     }
 
     /**
-     * Calculate next point of motion for ball by solving the system:
+     * Calculate next point of motion for ball by solving the system of equation:
      * <p>
      * { (x-centerX)^2 + (y - centerY)^2 = R^2<br>
      * { y=kx+b
