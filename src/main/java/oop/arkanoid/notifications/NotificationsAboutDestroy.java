@@ -1,6 +1,6 @@
 package oop.arkanoid.notifications;
 
-import oop.arkanoid.model.Destroyable;
+import oop.arkanoid.model.barrier.Brick;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +18,9 @@ public class NotificationsAboutDestroy {
         return instance;
     }
 
-    public void publish(Destroyable destroyable) {
+    public void publish(Brick brick) {
         for (Subscriber subscriber : subscribers) {
-            subscriber.update(destroyable);
+            subscriber.update(brick);
         }
     }
 

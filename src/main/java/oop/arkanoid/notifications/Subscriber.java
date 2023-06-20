@@ -1,8 +1,8 @@
 package oop.arkanoid.notifications;
 
-import oop.arkanoid.model.Destroyable;
+import oop.arkanoid.model.barrier.Brick;
 
 public interface Subscriber {
 
-    void update(Destroyable destroyable);
+    void update(Brick brick);
 }

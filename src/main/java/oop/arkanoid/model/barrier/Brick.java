@@ -6,7 +6,7 @@ import oop.arkanoid.model.motion.LinearEquation;
 
 import java.util.EnumMap;
 
-public final class Brick extends Barrier implements Destroyable {
+public final class Brick extends Barrier{
 
     public final Health health;
     private final int score;
@@ -23,22 +23,18 @@ public final class Brick extends Barrier implements Destroyable {
         linearEquations.put(CollisionPlace.RIGHT, LinearEquation.xLinearMotionEquation(position.x() + size.x()));
     }
 
-    @Override
     public boolean isDead() {
         return health.isDead();
     }
 
-    @Override
     public boolean isImmortal() {
         return health instanceof Health.Immortal;
     }
 
-    @Override
     public int score() {
         return score;
     }
 
-    @Override
     public void onHit() {
         health.decrease();
         if (isDead()) {

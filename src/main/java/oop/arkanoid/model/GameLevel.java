@@ -26,8 +26,8 @@ public class GameLevel implements Subscriber {
     }
 
     @Override
-    public void update(Destroyable destroyable) {
-        score += destroyable.score();
+    public void update(Brick brick) {
+        score += brick.score();
     }
 
     public Point nextBallPosition() {

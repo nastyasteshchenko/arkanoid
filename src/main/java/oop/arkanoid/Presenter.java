@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.util.Duration;
 import oop.arkanoid.model.Ball;
-import oop.arkanoid.model.Destroyable;
 import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
 import oop.arkanoid.model.barrier.Barrier;
@@ -36,8 +35,8 @@ public class Presenter implements Subscriber {
     private static boolean isPause = false;
 
     @Override
-    public void update(Destroyable destroyable) {
-        gameView.deleteBrick(destroyable.position());
+    public void update(Brick brick) {
+        gameView.deleteBrick(brick.position());
         gameView.drawScore(model.getScore());
     }
 
