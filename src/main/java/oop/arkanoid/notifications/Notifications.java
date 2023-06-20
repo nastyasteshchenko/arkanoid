@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class Notifications {
-    private static final Notifications instance = new Notifications();
+    private static final Notifications INSTANCE = new Notifications();
 
     private final EnumMap<EventType, List<Subscriber>> subscribers = new EnumMap<>(EventType.class);
 
@@ -16,7 +16,7 @@ public class Notifications {
     }
 
     public static Notifications getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     public void publish(EventType type, Brick brick) {
