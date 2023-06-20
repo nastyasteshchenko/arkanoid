@@ -11,7 +11,7 @@ public class Health {
         return new Immortal();
     }
 
-    public int getValue() {
+    public int value() {
         return value;
     }
 

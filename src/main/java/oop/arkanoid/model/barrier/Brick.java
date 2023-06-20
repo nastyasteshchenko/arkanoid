@@ -43,7 +43,7 @@ public final class Brick extends Barrier{
     }
 
     public int health(){
-        return health.getValue();
+        return health.value();
     }
 
     @Override
