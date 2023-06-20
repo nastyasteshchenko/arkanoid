@@ -9,7 +9,7 @@ import java.util.List;
 public record BaseLinearEquation(double angle, double b, double k) implements LinearEquation {
 
     /**
-     * Calculates circle and line intersection points by solving the system:
+     * Calculates circle and line intersection points by solving the system of equations:
      * <p>
      * { (x-centerX)^2 + (y - centerY)^2 = R^2<br>
      * { y=kx+b
@@ -35,13 +35,11 @@ public record BaseLinearEquation(double angle, double b, double k) implements Li
         return new QuadraticEquation(a, b, c).roots;
     }
 
-    @Override
     public double getY(double x) {
         return k * x + b;
     }
 
-    @Override
-    public LinearEquation rotate(double angle, Point currPoint) {
+    public BaseLinearEquation rotate(double angle, Point currPoint) {
         return LinearEquation.linearEquation(angle, currPoint);
     }
 

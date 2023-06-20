@@ -42,17 +42,7 @@ public class LinearMotion {
         double firstRoot = qEquation.roots.get(0);
         double secondRoot = qEquation.roots.get(1);
 
-        double newX;
-
-        if (direction == MotionDirection.LEFT) {
-            newX = firstRoot <= currPoint.x() ? firstRoot : secondRoot;
-        } else {
-            newX = firstRoot >= currPoint.x() ? firstRoot : secondRoot;
-        }
-
-        double newY = linearEquation.getY(newX);
-
-        currPoint = new Point(newX, newY);
+        currPoint = findNextPoint(firstRoot, secondRoot);
 
         return currPoint;
     }
@@ -73,10 +63,25 @@ public class LinearMotion {
      * @return new linear motion with new linear equation according to new angle
      */
     public LinearMotion rotate(double angle) {
-        return new LinearMotion((BaseLinearEquation) linearEquation.rotate(angle, currPoint), direction, step, currPoint);
+        return new LinearMotion(linearEquation.rotate(angle, currPoint), direction, step, currPoint);
     }
 
     public double getMotionAngle() {
         return linearEquation.angle();
+    }
+
+    private Point findNextPoint(double firstRoot, double secondRoot) {
+
+        double newX;
+
+        if (direction == MotionDirection.LEFT) {
+            newX = firstRoot <= currPoint.x() ? firstRoot : secondRoot;
+        } else {
+            newX = firstRoot >= currPoint.x() ? firstRoot : secondRoot;
+        }
+
+        double newY = linearEquation.getY(newX);
+
+        return new Point(newX, newY);
     }
 }

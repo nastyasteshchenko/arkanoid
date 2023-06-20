@@ -31,6 +31,6 @@ class LinearMotionTest {
     }
 
     private static LinearMotion createLinearMotion() {
-        return new LinearMotion((BaseLinearEquation) LinearEquation.linearEquation(45, new Point(0, 0)), MotionDirection.RIGHT, Math.sqrt(2), new Point(0, 0));
+        return new LinearMotion(LinearEquation.linearEquation(45, new Point(0, 0)), MotionDirection.RIGHT, Math.sqrt(2), new Point(0, 0));
     }
 }
