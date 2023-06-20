@@ -6,16 +6,16 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class Notifications {
-    private static Notifications instance;
+    private static final Notifications instance = new Notifications();
 
     private final EnumMap<EventType, List<Subscriber>> subscribers = new EnumMap<>(EventType.class);
 
     private final HashMap<Object, EnumMap<EventType, Subscriber>> subscriberToObjectMapping = new HashMap<>();
 
+    private Notifications() {
+    }
+
     public static Notifications getInstance() {
-        if (instance == null) {
-            instance = new Notifications();
-        }
         return instance;
     }
 
@@ -40,17 +40,17 @@ public class Notifications {
         }
     }
 
-    public void subscribe(EventType type, Object subscriberObj, Consumer<Object> handler) {
-        EnumMap<EventType, Subscriber> mapping = this.subscriberToObjectMapping.computeIfAbsent(subscriberObj, v -> new EnumMap<>(EventType.class));
+    public void subscribe(EventType type, Object subObj, Consumer<Object> handler) {
+        EnumMap<EventType, Subscriber> mapping = this.subscriberToObjectMapping.computeIfAbsent(subObj, v -> new EnumMap<>(EventType.class));
         List<Subscriber> subscribers = this.subscribers.computeIfAbsent(type, v -> new ArrayList<>());
         Subscriber subscriber = new Subscriber(handler);
         mapping.put(type, subscriber);
         subscribers.add(0, subscriber);
     }
 
-    public void unsubscribe(EventType type, Object subscriberObj) {
+    public void unsubscribe(EventType type, Object subObj) {
         List<Subscriber> subscribers = this.subscribers.computeIfAbsent(type, V -> new ArrayList<>());
-        Subscriber subscriber = subscriberToObjectMapping.get(subscriberObj).get(type);
+        Subscriber subscriber = subscriberToObjectMapping.get(subObj).get(type);
         subscribers.remove(subscriber);
     }
 }
