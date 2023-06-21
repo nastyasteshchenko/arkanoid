@@ -53,15 +53,10 @@ public class LevelInitiator {
         LevelView.Builder builder = new LevelView.Builder();
 
         setBarriersForView(model, builder);
-
         setBallForView(model, builder);
-
         setSceneForView(model, builder);
-
         setHighScoreForView(builder);
-
         setScoreForView(builder);
-
         setPauseButtonForView(builder);
 
         return builder.build();
@@ -74,21 +69,30 @@ public class LevelInitiator {
         Font pauseButtonFont = Font.font(button.get("font").getAsString());
         Color pauseButtonTextColor = Color.valueOf(button.get("textColor").getAsString());
         String pauseButtonBackgroundStyle = "-fx-background-color: " + button.get("color").getAsString();
-        builder.pauseButton(new PauseButtonView(pauseButtonFont, pauseButtonFontSize, pauseButtonTextColor, pauseButtonBackgroundStyle));
+        double x = button.get("x").getAsDouble();
+        double y = button.get("y").getAsDouble();
+        double width = button.get("width").getAsDouble();
+        double height = button.get("height").getAsDouble();
+        PauseButtonView pauseButtonView = new PauseButtonView(new Point(x, y), new Point(width, height), pauseButtonFont, pauseButtonFontSize, pauseButtonTextColor, pauseButtonBackgroundStyle);
+        builder.pauseButton(pauseButtonView);
     }
 
     private void setScoreForView(LevelView.Builder builder) {
         JsonObject score = levelJsonObject.getAsJsonObject("score");
         Font scoreFont = Font.font(score.get("font").getAsString());
         String scoreFontSize = "-fx-font-size: " + score.get("fontSize").getAsString();
-        builder.score(new ScoreLabel(0, scoreFont, scoreFontSize));
+        double x = score.get("x").getAsDouble();
+        double y = score.get("y").getAsDouble();
+        builder.score(new ScoreLabel(new Point(x, y), 0, scoreFont, scoreFontSize));
     }
 
     private void setHighScoreForView(LevelView.Builder builder) {
-        JsonObject score = levelJsonObject.getAsJsonObject("score");
-        Font highScoreFont = Font.font(score.get("font").getAsString());
-        String highScoreFontSIze = "-fx-font-size: " + score.get("fontSize").getAsString();
-        builder.highScore(new ScoreLabel(Presenter.SCORES_MANAGER.getScoreForLevel(levelName), highScoreFont, highScoreFontSIze));
+        JsonObject highScore = levelJsonObject.getAsJsonObject("highScore");
+        Font highScoreFont = Font.font(highScore.get("font").getAsString());
+        String highScoreFontSIze = "-fx-font-size: " + highScore.get("fontSize").getAsString();
+        double x = highScore.get("x").getAsDouble();
+        double y = highScore.get("y").getAsDouble();
+        builder.highScore(new ScoreLabel(new Point(x, y), Presenter.SCORES_MANAGER.getScoreForLevel(levelName), highScoreFont, highScoreFontSIze));
     }
 
     private void setSceneForView(GameLevel model, LevelView.Builder builder) {

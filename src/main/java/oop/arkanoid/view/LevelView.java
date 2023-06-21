@@ -80,8 +80,8 @@ public class LevelView {
         @SuppressWarnings("UnusedReturnValue")
         public Builder highScore(ScoreLabel highScoreLabel) {
             Label highScore = new Label("High score: " + highScoreLabel.score());
-            highScore.setTranslateX(10);
-            highScore.setTranslateY(gameScene.getHeight() - 40);
+            highScore.setTranslateX(highScoreLabel.position().x());
+            highScore.setTranslateY(highScoreLabel.position().y());
             highScore.setFont(highScoreLabel.font());
             highScore.setStyle(highScoreLabel.fontSize());
             gamePane.getChildren().add(highScore);
@@ -91,8 +91,8 @@ public class LevelView {
         @SuppressWarnings("UnusedReturnValue")
         public Builder score(ScoreLabel scoreLabel) {
             score = new Label("Score: 0");
-            score.setTranslateX(200);
-            score.setTranslateY(gameScene.getHeight() - 40);
+            score.setTranslateX(scoreLabel.position().x());
+            score.setTranslateY(scoreLabel.position().y());
             score.setFont(scoreLabel.font());
             score.setStyle(scoreLabel.fontSize());
             gamePane.getChildren().add(score);
@@ -104,9 +104,9 @@ public class LevelView {
             Button pauseButton = new Button();
             pauseButton.setOnMouseClicked(event -> Notifications.getInstance().publish(EventType.PAUSE));
             pauseButton.setText("Pause");
-            pauseButton.setTranslateX(gameScene.getWidth() - 75);
-            pauseButton.setTranslateY(gameScene.getHeight() - 50);
-            pauseButton.setPrefSize(60, 40);
+            pauseButton.setTranslateX(pauseButtonView.position().x());
+            pauseButton.setTranslateY(pauseButtonView.position().y());
+            pauseButton.setPrefSize(pauseButtonView.size().x(), pauseButtonView.size().y());
 
             pauseButton.setStyle(pauseButtonView.fontSize());
             pauseButton.setFont(pauseButtonView.font());
