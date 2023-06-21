@@ -1,6 +1,5 @@
 package oop.arkanoid.model;
 
-import oop.arkanoid.model.motion.BaseLinearEquation;
 import oop.arkanoid.model.motion.LinearEquation;
 import oop.arkanoid.model.motion.LinearMotion;
 import oop.arkanoid.model.motion.MotionDirection;
