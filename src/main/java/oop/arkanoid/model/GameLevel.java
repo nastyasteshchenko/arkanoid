@@ -18,8 +18,9 @@ public class GameLevel {
 
     GameLevel(Ball ball, Platform platform, List<Barrier> barriers, Point sceneSize) {
         Notifications.getInstance().subscribe(EventType.DESTROY, this, b -> {
-            Brick brick = (Brick) b;
-            score += brick.score();
+            if (b instanceof Brick brick) {
+                score += brick.score();
+            }
         });
 
         this.ball = ball;
