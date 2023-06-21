@@ -30,6 +30,33 @@ public class LevelView {
         this.score = score;
     }
 
+    public void drawScore(int value) {
+        score.setText("Score: " + value);
+    }
+
+    public void drawPlatform(double x) {
+        platform.setX(x);
+    }
+
+    public void drawBall(Point point) {
+        ball.setCenterX(point.x());
+        ball.setCenterY(point.y());
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public void deleteBrick(Point point) {
+        removeBrick(bricks.stream().filter(i -> point.x() == i.getX() && point.y() == i.getY()).findFirst().get());
+    }
+
+    public Scene getGameScene() {
+        return gameScene;
+    }
+
+    private void removeBrick(Rectangle brick) {
+        gamePane.getChildren().remove(brick);
+        bricks.remove(brick);
+    }
+
     public static class Builder {
         private final List<Rectangle> bricks = new ArrayList<>();
         private Rectangle platform;
@@ -121,33 +148,6 @@ public class LevelView {
             return new LevelView(bricks, platform, ball, gameScene, gamePane, score);
         }
 
-    }
-
-    public void drawScore(int value) {
-        score.setText("Score: " + value);
-    }
-
-    public void drawPlatform(double x) {
-        platform.setX(x);
-    }
-
-    public void drawBall(Point point) {
-        ball.setCenterX(point.x());
-        ball.setCenterY(point.y());
-    }
-
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public void deleteBrick(Point point) {
-        removeBrick(bricks.stream().filter(i -> point.x() == i.getX() && point.y() == i.getY()).findFirst().get());
-    }
-
-    public Scene getGameScene() {
-        return gameScene;
-    }
-
-    private void removeBrick(Rectangle brick) {
-        gamePane.getChildren().remove(brick);
-        bricks.remove(brick);
     }
 
 }
