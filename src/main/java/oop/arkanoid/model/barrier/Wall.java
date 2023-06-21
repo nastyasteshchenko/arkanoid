@@ -4,7 +4,6 @@ import oop.arkanoid.model.*;
 import oop.arkanoid.model.motion.LinearEquation;
 
 import java.util.EnumMap;
-import java.util.Objects;
 
 public final class Wall extends Barrier {
 
@@ -29,7 +28,7 @@ public final class Wall extends Barrier {
                 }
             }
             case RIGHT -> {
-                if (!Objects.equals(position.x(), scene.x()) || position.y() != 0 || size.y() != scene.y()) {
+                if (position.x() != scene.x() || position.y() != 0 || size.y() != scene.y()) {
                     throw GeneratingGameException.wrongWallPosition();
                 }
             }
