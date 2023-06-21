@@ -22,15 +22,15 @@ class HealthTest {
     void decreaseHealthTest() {
         Health health = new Health(2);
         health.decrease();
-        assertEquals(1, health.getValue());
+        assertEquals(1, health.value());
     }
 
     @Test
     void decreaseImmortalTest() {
         Health health = Health.createImmortal();
-        assertEquals(1, health.getValue());
+        assertEquals(1, health.value());
         health.decrease();
-        assertEquals(1, health.getValue());
+        assertEquals(1, health.value());
     }
 
 }

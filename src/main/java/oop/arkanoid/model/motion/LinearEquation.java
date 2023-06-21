@@ -18,27 +18,13 @@ public interface LinearEquation {
 
     List<Double> getIntersectionPoints(CircleEquation circleEquation);
 
-    //TODO тоже посмотреть можно ли убрать
-    double getY(double x);
-
-    /**
-     * Rotates ball motion linear equation.
-     *
-     * @param angle angle to rotate
-     * @param point position relative to which to rotate
-     * @return new linear motion with new linear equation according to new angle
-     */
-
-    //TODO вынести из интерфейса
-    LinearEquation rotate(double angle, Point point);
-
-    static LinearEquation linearEquation(double angle, Point position) {
+    static BaseLinearEquation linearEquation(double angle, Point position) {
         double k = tan(angle);
         double b = position.y() - position.x() * k;
         return new BaseLinearEquation(angle, b, k);
     }
 
-    static LinearEquation xLinearMotionEquation(double x) {
+    static XLinearEquation xLinearMotionEquation(double x) {
         return new XLinearEquation(x);
     }
 

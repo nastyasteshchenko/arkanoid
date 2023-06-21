@@ -1,14 +1,9 @@
 package oop.arkanoid;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
-import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
-import oop.arkanoid.model.Point;
-import oop.arkanoid.model.barrier.CollisionPlace;
 
 import java.io.File;
 import java.io.FileReader;
@@ -19,15 +14,16 @@ import java.util.Map;
 import java.util.Objects;
 
 class LevelsManager {
-    //TODO про static подумать
-    //мб перенести в презентер
-    private static int currentLevel = 1;
-    private final static String pathToLevels = "./oop/arkanoid/Levels";
+    private final static String PATH_TO_LEVELS_DIR = "./oop/arkanoid/Levels";
     private final Map<String, JsonObject> availableLevels = new HashMap<>();
 
-    LevelsManager() throws IOException {
+    LevelsManager() {}
 
-        File levelsDir = new File(Objects.requireNonNull(getClass().getClassLoader().getResource(pathToLevels)).getFile());
+    void scanForLevels() throws IOException {
+
+        availableLevels.clear();
+
+        File levelsDir = new File(Objects.requireNonNull(getClass().getClassLoader().getResource(PATH_TO_LEVELS_DIR)).getFile());
 
         if (!levelsDir.isDirectory()) {
             throw new NotDirectoryException("Expected \"Levels\" directory, but got file");
@@ -46,76 +42,17 @@ class LevelsManager {
         }
     }
 
-    String getCurrentLevel() {
-        return "level" + currentLevel;
-    }
-
     void checkGeneratingAllLevels() throws GeneratingGameException {
+        int level = 1;
         for (JsonObject ignored : availableLevels.values()) {
-            initLevel();
-            currentLevel++;
-        }
-        currentLevel = 1;
-    }
-
-    void increaseLevel() {
-        currentLevel++;
-    }
-
-    JsonObject getCurrentLevelJsonObject() {
-        JsonObject object = availableLevels.get(getCurrentLevel() + ".json");
-        if (object == null) {
-            currentLevel = 1;
-        }
-        return object;
-    }
-
-    GameLevel initLevel() throws GeneratingGameException {
-        JsonObject paramsForLevel = getCurrentLevelJsonObject();
-        if (paramsForLevel == null) {
-            return null;
-        }
-        JsonObject ball = paramsForLevel.getAsJsonObject("ball");
-        JsonObject platform = paramsForLevel.getAsJsonObject("platform");
-        JsonObject scene = paramsForLevel.getAsJsonObject("scene");
-        double sceneWidth = scene.get("width").getAsDouble();
-        double sceneHeight = scene.get("height").getAsDouble();
-        GameLevel.Builder builder = new GameLevel.Builder(new Point(sceneWidth, sceneHeight)).
-                ball(createPoint(ball.get("x").getAsDouble(), ball.get("y").getAsDouble()), ball.get("radius").getAsDouble())
-                .platform(createPoint(platform.get("x").getAsDouble(), platform.get("y").getAsDouble()), createPoint(platform.get("width").getAsDouble(), platform.get("height").getAsDouble()));
-        setBricks(builder, paramsForLevel);
-        setWalls(builder, sceneWidth, sceneHeight);
-        return builder.build();
-    }
-
-    private void setWalls(GameLevel.Builder builder, double sceneWidth, double sceneHeight) throws GeneratingGameException {
-        builder.addWall(createPoint(0, 0), createPoint(0, sceneHeight), CollisionPlace.LEFT);
-        builder.addWall(createPoint(sceneWidth, 0), createPoint(0, sceneHeight), CollisionPlace.RIGHT);
-        builder.addWall(createPoint(0, 0), createPoint(sceneWidth, 0), CollisionPlace.BOTTOM);
-    }
-
-    private void setBricks(GameLevel.Builder builder, JsonObject paramsForLevel) throws GeneratingGameException {
-        JsonObject bricks = paramsForLevel.getAsJsonObject("bricks");
-        double brickWidth = bricks.get("width").getAsDouble();
-        double brickHeight = bricks.get("height").getAsDouble();
-        JsonArray bricksArray = bricks.getAsJsonArray("bricks");
-        for (JsonElement elem : bricksArray) {
-            JsonObject brick = elem.getAsJsonObject();
-            //TODO проверить что будет делать в разных случаях
-            switch (brick.get("health").getAsInt()) {
-                case -1 -> builder.addBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
-                        createPoint(brickWidth, brickHeight), -1);
-                case 1 -> builder.addBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
-                        createPoint(brickWidth, brickHeight), 1);
-                case 2 -> builder.addBrick(createPoint(brick.get("x").getAsDouble(), brick.get("y").getAsDouble()),
-                        createPoint(brickWidth, brickHeight), 2);
-                //TODO перенести на уровенб game builder
-                default -> throw GeneratingGameException.unsupportedHealth();
-            }
+            LevelInitiator levelsInitiator = new LevelInitiator(level);
+            levelsInitiator.initLevelModel();
+            level++;
         }
     }
 
-    private Point createPoint(double x, double y) {
-        return new Point(x, y);
+    JsonObject getLevelJsonObject(String level) {
+        return availableLevels.get(level + ".json");
     }
+
 }

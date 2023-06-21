@@ -1,15 +1,15 @@
 package oop.arkanoid;
 
 import javafx.scene.control.Alert;
-import javafx.stage.Stage;
 
 public class AlertCreationUtil {
 
-    static void alert(Stage stage, Exception e) {
+    static void alert(String msg) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Error initializing resources");
-        alert.setContentText("Error: " + e.getMessage());
+        alert.setContentText("Error: " + msg);
         alert.showAndWait();
-        stage.close();
+        Arkanoid.getStage().close();
     }
+
 }

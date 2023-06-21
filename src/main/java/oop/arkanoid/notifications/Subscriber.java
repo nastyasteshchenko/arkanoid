@@ -1,8 +1,6 @@
 package oop.arkanoid.notifications;
 
-import oop.arkanoid.model.Destroyable;
+import java.util.function.Consumer;
 
-public interface Subscriber {
-
-    void update(Destroyable destroyable);
+public record Subscriber(Consumer<Object> handler) {
 }

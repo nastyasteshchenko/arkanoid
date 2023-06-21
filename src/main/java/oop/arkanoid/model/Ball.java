@@ -19,12 +19,12 @@ public class Ball {
 
     Ball(double radius, Point startPos) {
         this.radius = radius;
-        BaseLinearEquation ballLineEquation = (BaseLinearEquation) LinearEquation.linearEquation(-60, startPos);
+        BaseLinearEquation ballLineEquation = LinearEquation.linearEquation(-60, startPos);
         this.motion = new LinearMotion(ballLineEquation, MotionDirection.RIGHT, 1.5, startPos);
     }
 
     public Point position() {
-        return motion.currPoint;
+        return motion.currPosition();
     }
 
     Point move(List<Barrier> barriers) {
@@ -35,10 +35,9 @@ public class Ball {
     }
 
     private void detectCollisions(List<Barrier> barriers) {
-        CircleEquation circleEquation = new CircleEquation(motion.currPoint, radius);
+        CircleEquation circleEquation = new CircleEquation(position(), radius);
 
         List<Brick> bricksToDelete = new ArrayList<>();
-        boolean hasChangedDirection = false;
 
         for (Barrier barrier : barriers) {
             CollisionPlace collision = barrier.findCollision(circleEquation);
@@ -46,22 +45,8 @@ public class Ball {
                 continue;
             }
 
-            if (!hasChangedDirection) {
-                //TODO подумать над вынесением в отдельный метод
-                if (barrier instanceof Platform) {
-                    double diffXBetweenBallAndCenterPlatform = barrier.position().x() + barrier.size.x() / 2 - motion.currPoint.x();
-                    flipDirectionByPlatform(diffXBetweenBallAndCenterPlatform);
-                    motion = motion.rotate(-90 - diffXBetweenBallAndCenterPlatform);
-
-                } else {
-                    if (collision.needToChangeDirection) {
-                        motion = motion.flipDirection();
-                    }
-                    double angle = collision.needToChangeDirection ? -180 - motion.getMotionAngle() : -motion.getMotionAngle();
-                    motion = motion.rotate(angle);
-                }
-
-                hasChangedDirection = true;
+            if (bricksToDelete.isEmpty()) {
+                handleCollision(barrier, collision);
             }
 
             if (barrier instanceof Brick brick) {
@@ -72,9 +57,21 @@ public class Ball {
             }
         }
 
-        //TODO подумать
-        if (hasChangedDirection) {
-            bricksToDelete.forEach(barriers::remove);
+        bricksToDelete.forEach(barriers::remove);
+    }
+
+    private void handleCollision(Barrier barrier, CollisionPlace collision) {
+        if (barrier instanceof Platform) {
+            double diffXBetweenBallAndCenterPlatform = barrier.position().x() + barrier.size.x() / 2 - position().x();
+            flipDirectionByPlatform(diffXBetweenBallAndCenterPlatform);
+            motion = motion.rotate(-90 - diffXBetweenBallAndCenterPlatform);
+
+        } else {
+            if (collision.needToChangeDirection) {
+                motion = motion.flipDirection();
+            }
+            double angle = collision.needToChangeDirection ? -180 - motion.getMotionAngle() : -motion.getMotionAngle();
+            motion = motion.rotate(angle);
         }
     }
 

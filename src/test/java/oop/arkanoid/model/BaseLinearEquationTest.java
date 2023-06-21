@@ -29,14 +29,14 @@ class BaseLinearEquationTest {
 
     @Test
     void getYTest() {
-        LinearEquation baseLinearEquation = LinearEquation.linearEquation(45, new Point(7, 15));
+        BaseLinearEquation baseLinearEquation = LinearEquation.linearEquation(45, new Point(7, 15));
         assertEquals(17, baseLinearEquation.getY(9));
     }
 
     @Test
     void rotateTest() {
-        BaseLinearEquation baseLinearEquation = (BaseLinearEquation) LinearEquation.linearEquation(165, new Point(7, 15));
-        baseLinearEquation = (BaseLinearEquation) baseLinearEquation.rotate(45, new Point(7, 15));
+        BaseLinearEquation baseLinearEquation = LinearEquation.linearEquation(165, new Point(7, 15));
+        baseLinearEquation = baseLinearEquation.rotate(45, new Point(7, 15));
         assertEquals(1, roundToThousandths(baseLinearEquation.k()));
         assertEquals(45, baseLinearEquation.angle());
     }
