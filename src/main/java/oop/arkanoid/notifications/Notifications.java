@@ -26,7 +26,7 @@ public class Notifications {
         }
     }
 
-    public void publish(EventType type, double x) {
+    public void publish(EventType type, Double x) {
         List<Subscriber> subscribers = this.subscribers.get(type);
         for (Subscriber subscriber : subscribers) {
             subscriber.handler().accept(x);

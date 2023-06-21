@@ -81,20 +81,29 @@ public class Presenter {
     @FXML
     protected void startGame() {
         Notifications.getInstance().subscribe(EventType.DESTROY, this, b -> {
-            Brick brick = (Brick) b;
-            gameView.deleteBrick(brick.position());
-            gameView.drawScore(model.getScore());
+            if (b instanceof Brick brick) {
+                gameView.deleteBrick(brick.position());
+                gameView.drawScore(model.getScore());
+            }
         });
 
         Notifications.getInstance().subscribe(EventType.START_GAME, this, v -> setGameIsStarted());
 
         Notifications.getInstance().subscribe(EventType.PAUSE, this, v -> setPause());
 
-        Notifications.getInstance().subscribe(EventType.MOVE_PLATFORM, this, x -> movePlatform((double) x));
+        Notifications.getInstance().subscribe(EventType.MOVE_PLATFORM, this, x -> {
+            if (x instanceof Double dx) {
+                movePlatform(dx);
+            }
+        });
 
         currentLevel = 1;
-        levelsInitiator = new LevelInitiator(currentLevel);
+        levelsInitiator = new
+
+                LevelInitiator(currentLevel);
+
         startLevel();
+
     }
 
     @FXML
