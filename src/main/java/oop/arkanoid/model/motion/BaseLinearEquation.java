@@ -39,8 +39,15 @@ public record BaseLinearEquation(double angle, double b, double k) implements Li
         return k * x + b;
     }
 
-    public BaseLinearEquation rotate(double angle, Point currPoint) {
-        return LinearEquation.linearEquation(angle, currPoint);
+    /**
+     * Rotates ball motion linear equation.
+     *
+     * @param angle angle to rotate
+     * @param position position relative to which to rotate
+     * @return new linear motion with new linear equation according to new angle
+     */
+    public BaseLinearEquation rotate(double angle, Point position) {
+        return LinearEquation.linearEquation(angle, position);
     }
 
 }
