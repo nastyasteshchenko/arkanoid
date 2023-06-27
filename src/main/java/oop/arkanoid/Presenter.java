@@ -4,7 +4,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
@@ -16,24 +16,28 @@ import java.io.*;
 
 import static oop.arkanoid.AlertCreationUtil.createResourcesAlert;
 
-public class Presenter extends StackPane {
+public class Presenter {
 
     private final LevelsManager levelsManager = new LevelsManager();
     private final ScoresManager scoresManager = new ScoresManager();
     private final ScenesManager scenesManager = new ScenesManager();
-    private LevelInitiator levelsInitiator;
     private Timeline animation;
     private LevelView gameView;
     private GameLevel model;
     private boolean gameIsStarted = false;
     private boolean isPause = false;
     private int currentLevel;
+    private final Stage stage;
 
-    public void setGameIsStarted() {
+    Presenter(Stage stage) {
+        this.stage = stage;
+    }
+
+    void setGameIsStarted() {
         gameIsStarted = true;
     }
 
-    public void setPause() {
+    void setPause() {
         isPause = !isPause;
         if (isPause) {
             animation.pause();
@@ -42,18 +46,16 @@ public class Presenter extends StackPane {
         }
     }
 
-    public void movePlatform(double x) {
+    void movePlatform(double x) {
         if (gameIsStarted) {
             gameView.drawPlatform(model.updatePlatformPosition(x));
         }
     }
 
-    void checkGeneratingAllLevels() throws GeneratingGameException {
-        levelsManager.checkGeneratingAllLevels();
-    }
-
-    void loadResourcesBeforeStartApp() throws IOException {
+    void loadResourcesBeforeStartApp() throws IOException, GeneratingGameException {
         levelsManager.scanForLevels();
+        levelsManager.checkGeneratingAllLevels();
+
         scoresManager.scanForScores();
         scenesManager.scanForScenes(scoresManager);
 
@@ -67,11 +69,7 @@ public class Presenter extends StackPane {
 
         Notifications.getInstance().subscribe(EventType.ABOUT, this, v -> watchAboutGame());
 
-        Notifications.getInstance().subscribe(EventType.RESTART_LEVEL, this, v -> startLevel());
-
-        Notifications.getInstance().subscribe(EventType.RESTART_GAME, this, v -> restartAllGame());
-
-        Arkanoid.getStage().setScene(scenesManager.getScene("main"));
+        stage.setScene(scenesManager.getScene("main"));
     }
 
     private void restartAllGame() {
@@ -82,7 +80,7 @@ public class Presenter extends StackPane {
             createResourcesAlert(e.getMessage());
             endGame();
         }
-        changeScene(scenesManager.getScene("main"));
+        stage.setScene(scenesManager.getScene("main"));
     }
 
     private void endGame() {
@@ -107,21 +105,24 @@ public class Presenter extends StackPane {
             }
         });
 
+        Notifications.getInstance().subscribe(EventType.RESTART_LEVEL, this, v -> startLevel());
+
+        Notifications.getInstance().subscribe(EventType.RESTART_GAME, this, v -> restartAllGame());
+
         currentLevel = 1;
-        levelsInitiator = new LevelInitiator(currentLevel, levelsManager.getLevelJsonObject(currentLevel));
         startLevel();
     }
 
     private void backToMainScene() {
-        changeScene(scenesManager.getScene("main"));
+        stage.setScene(scenesManager.getScene("main"));
     }
 
     private void watchAboutGame() {
-        changeScene(scenesManager.getScene("about"));
+       stage.setScene(scenesManager.getScene("about"));
     }
 
     private void watchRecords() {
-        changeScene(scenesManager.getScene("records"));
+        stage.setScene(scenesManager.getScene("records"));
     }
 
     private void gameLose() {
@@ -129,36 +130,35 @@ public class Presenter extends StackPane {
     }
 
     private void gameWin() {
-        currentLevel++;
         prepareForGameOver(scenesManager.getScene("game_win"));
-        levelsInitiator = new LevelInitiator(currentLevel, levelsManager.getLevelJsonObject(currentLevel));
+        currentLevel++;
     }
 
     private void prepareForGameOver(Scene scene) {
         animation.stop();
         setRecord();
         gameIsStarted = false;
-        changeScene(scene);
+        stage.setScene(scene);
     }
 
     private void setRecord() {
-        scoresManager.writeScore(levelsInitiator.getLevelName(), model.getScore());
+        scoresManager.writeScore("level" + currentLevel, model.getScore());
         scoresManager.storeRecords();
     }
 
     private void startLevel() {
         try {
-            model = levelsInitiator.initLevelModel();
+            model = levelsManager.initLevelModel(currentLevel);
             if (model == null) {
-                changeScene(scenesManager.getScene("game_passed"));
+                stage.setScene(scenesManager.getScene("game_passed"));
                 return;
             }
         } catch (GeneratingGameException e) {
             createResourcesAlert(e.getMessage());
         }
 
-        gameView = levelsInitiator.initLevelView(model, scoresManager);
-        changeScene(gameView.getGameScene());
+        gameView = levelsManager.initLevelView(model, scoresManager);
+        stage.setScene(gameView.getGameScene());
         startAnimation();
 
     }
@@ -177,7 +177,4 @@ public class Presenter extends StackPane {
         animation.play();
     }
 
-    private void changeScene(Scene scene) {
-        Arkanoid.getStage().setScene(scene);
-    }
 }

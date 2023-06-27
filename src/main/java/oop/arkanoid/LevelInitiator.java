@@ -17,17 +17,13 @@ import oop.arkanoid.view.*;
 
 import java.util.List;
 
-public class LevelInitiator {
+class LevelInitiator {
     private final JsonObject levelJsonObject;
-    private final String levelName;
+    final Integer numLevel;
 
     LevelInitiator(int numLevel, JsonObject levelJsonObject) {
-        levelName = "level" + numLevel;
+        this.numLevel = numLevel;
         this.levelJsonObject = levelJsonObject;
-    }
-
-    String getLevelName() {
-        return levelName;
     }
 
     GameLevel initLevelModel() throws GeneratingGameException {
@@ -92,7 +88,7 @@ public class LevelInitiator {
         String highScoreFontSIze = "-fx-font-size: " + highScore.get("fontSize").getAsString();
         double x = highScore.get("x").getAsDouble();
         double y = highScore.get("y").getAsDouble();
-        builder.highScore(new ScoreLabel(new Point(x, y), scoresManager.getScoreForLevel(levelName), highScoreFont, highScoreFontSIze));
+        builder.highScore(new ScoreLabel(new Point(x, y), scoresManager.getScoreForLevel("level" + numLevel), highScoreFont, highScoreFontSIze));
     }
 
     private void setSceneForView(GameLevel model, LevelView.Builder builder) {
