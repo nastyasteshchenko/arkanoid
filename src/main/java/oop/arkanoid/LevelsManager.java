@@ -17,7 +17,8 @@ class LevelsManager {
     private final static String PATH_TO_LEVELS_DIR = "./oop/arkanoid/Levels";
     private final Map<String, JsonObject> availableLevels = new HashMap<>();
 
-    LevelsManager() {}
+    LevelsManager() {
+    }
 
     void scanForLevels() throws IOException {
 
@@ -45,7 +46,7 @@ class LevelsManager {
     void checkGeneratingAllLevels() throws GeneratingGameException {
         int level = 1;
         for (JsonObject ignored : availableLevels.values()) {
-            LevelInitiator levelsInitiator = new LevelInitiator(level);
+            LevelInitiator levelsInitiator = new LevelInitiator(level, this);
             levelsInitiator.initLevelModel();
             level++;
         }

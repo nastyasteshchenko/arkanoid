@@ -72,7 +72,7 @@ public class LevelView {
         public Builder gameScene(GameSceneView gameSceneView) {
             gamePane.setOpacity(gameSceneView.opacity());
             gameScene = new Scene(gamePane, gameSceneView.size().x(), gameSceneView.size().y(), gameSceneView.color());
-            gameScene.setOnMouseClicked(event -> Notifications.getInstance().publish(EventType.START_GAME));
+            gameScene.setOnMouseClicked(event -> Notifications.getInstance().publish(EventType.START_PLAYING_GAME));
             gameScene.setOnMouseMoved(event -> Notifications.getInstance().publish(EventType.MOVE_PLATFORM, event.getX()));
             return this;
         }

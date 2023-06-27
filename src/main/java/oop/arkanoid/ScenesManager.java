@@ -4,12 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import oop.arkanoid.pane.*;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,65 +20,62 @@ import java.util.Map;
 import java.util.Objects;
 
 class ScenesManager {
-    private final static String PATH_TO_SCENES = "FXML/";
     private final Map<String, Scene> scenes = new HashMap<>();
 
     ScenesManager() {
     }
 
-    void scanForScenes() throws IOException {
+    void scanForScenes(ScoresManager scoresManager) throws IOException {
 
         scenes.clear();
 
-        scenes.put("main", loadNewScene(PATH_TO_SCENES + "main-scene.fxml"));
-        scenes.put("about", loadNewScene(PATH_TO_SCENES + "about-scene.fxml"));
-        scenes.put("game_over", loadNewScene(PATH_TO_SCENES + "game-over-scene.fxml"));
-        scenes.put("game_win", loadNewScene(PATH_TO_SCENES + "game-win-scene.fxml"));
-        scenes.put("game_passed", loadNewScene(PATH_TO_SCENES + "game-passed-scene.fxml"));
+        scenes.put("main", new Scene(new MainMenuPane()));
+        scenes.put("about", new Scene(new AboutPane()));
+        scenes.put("game_over", new Scene(new GameOverPane()));
+        scenes.put("game_win", new Scene(new GameWinPane()));
+        scenes.put("game_passed", new Scene(new GamePassedPane()));
 
-        addRecordsScene();
+        addRecordsScene(scoresManager);
     }
 
     Scene getScene(String name) {
         return scenes.get(name);
     }
 
-    void changeRecordsScene() throws IOException {
+    void changeRecordsScene(ScoresManager scoresManager) throws IOException {
         scenes.remove("records");
-        addRecordsScene();
+        addRecordsScene(scoresManager);
     }
 
-    private void addRecordsScene() throws IOException {
+    private void addRecordsScene(ScoresManager scoresManager) throws IOException {
         try (JsonReader reader = new JsonReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream("records_scene.json"))))) {
             Gson GSON_LOADER = new GsonBuilder().setPrettyPrinting().create();
             JsonObject records = GSON_LOADER.fromJson(reader, JsonObject.class);
 
-            Pane root = FXMLLoader.load(Objects.requireNonNull(Arkanoid.class.getResource(PATH_TO_SCENES + "records-scene.fxml")));
-            Collection<ScoresManager.LevelScore> scores = Presenter.SCORES_MANAGER.getScores();
+            Pane recordsPane = new RecordsPane();
+            Collection<ScoresManager.LevelScore> scores = scoresManager.getScores();
 
             for (ScoresManager.LevelScore score : scores) {
 
                 Text levelScore = new Text(String.valueOf(score.score()));
                 setTextParams(records, score, levelScore);
 
-                root.getChildren().add(levelScore);
+                recordsPane.getChildren().add(levelScore);
             }
-            scenes.put("records", new Scene(root));
+            scenes.put("records", new Scene(recordsPane));
         }
     }
 
 
     private static void setTextParams(JsonObject records, ScoresManager.LevelScore score, Text levelScore) {
         JsonObject scoreText = records.getAsJsonObject("scoreLabel").getAsJsonObject(score.levelName());
+        levelScore.setTextAlignment(TextAlignment.CENTER);
+        levelScore.setWrappingWidth(100);
         levelScore.setX(scoreText.get("x").getAsDouble());
         levelScore.setY(scoreText.get("y").getAsDouble());
         levelScore.setFont(Font.font(scoreText.get("font").getAsString()));
         levelScore.setFill(Color.valueOf(scoreText.get("color").getAsString()));
         levelScore.setStyle("-fx-font-size: " + scoreText.get("fontSize").getAsString());
-    }
-
-    private static Scene loadNewScene(String fileName) throws IOException {
-        return new Scene(FXMLLoader.load(Objects.requireNonNull(Presenter.class.getResource(fileName))));
     }
 }
 

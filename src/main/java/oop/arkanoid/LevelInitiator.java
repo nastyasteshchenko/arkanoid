@@ -21,9 +21,9 @@ public class LevelInitiator {
     private final JsonObject levelJsonObject;
     private final String levelName;
 
-    LevelInitiator(int numLevel) {
+    LevelInitiator(int numLevel, LevelsManager levelsManager) {
         levelName = "level" + numLevel;
-        levelJsonObject = Presenter.LEVELS_MANAGER.getLevelJsonObject(levelName);
+        levelJsonObject = levelsManager.getLevelJsonObject(levelName);
     }
 
     String getLevelName() {
@@ -48,14 +48,14 @@ public class LevelInitiator {
         return builder.build();
     }
 
-    LevelView initLevelView(GameLevel model) {
+    LevelView initLevelView(GameLevel model, ScoresManager scoresManager) {
 
         LevelView.Builder builder = new LevelView.Builder();
 
         setBarriersForView(model, builder);
         setBallForView(model, builder);
         setSceneForView(model, builder);
-        setHighScoreForView(builder);
+        setHighScoreForView(builder, scoresManager);
         setScoreForView(builder);
         setPauseButtonForView(builder);
 
@@ -86,13 +86,13 @@ public class LevelInitiator {
         builder.score(new ScoreLabel(new Point(x, y), 0, scoreFont, scoreFontSize));
     }
 
-    private void setHighScoreForView(LevelView.Builder builder) {
+    private void setHighScoreForView(LevelView.Builder builder, ScoresManager scoresManager) {
         JsonObject highScore = levelJsonObject.getAsJsonObject("highScore");
         Font highScoreFont = Font.font(highScore.get("font").getAsString());
         String highScoreFontSIze = "-fx-font-size: " + highScore.get("fontSize").getAsString();
         double x = highScore.get("x").getAsDouble();
         double y = highScore.get("y").getAsDouble();
-        builder.highScore(new ScoreLabel(new Point(x, y), Presenter.SCORES_MANAGER.getScoreForLevel(levelName), highScoreFont, highScoreFontSIze));
+        builder.highScore(new ScoreLabel(new Point(x, y), scoresManager.getScoreForLevel(levelName), highScoreFont, highScoreFontSIze));
     }
 
     private void setSceneForView(GameLevel model, LevelView.Builder builder) {
