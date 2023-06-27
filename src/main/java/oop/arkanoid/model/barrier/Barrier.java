@@ -11,9 +11,9 @@ import static oop.arkanoid.model.ModelUtils.isInRange;
 
 public abstract sealed class Barrier permits Wall, Brick, Platform {
 
-    Point position;
-
     public final Point size;
+
+    protected Point position;
 
     Barrier(Point position, Point size) {
         this.position = position;

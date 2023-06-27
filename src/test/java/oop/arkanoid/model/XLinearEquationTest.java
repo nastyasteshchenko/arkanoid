@@ -25,15 +25,4 @@ class XLinearEquationTest {
         assertTrue(xLinearEquation.getIntersectionPoints(circleEquation).isEmpty());
     }
 
-    @Test
-    void unsupportedOperationTest() {
-        XLinearEquation xLinearEquation = new XLinearEquation(10);
-        assertThrows(UnsupportedOperationException.class, () -> xLinearEquation.rotate(80, new Point(0, 0)));
-    }
-
-    @Test
-    void getYTest() {
-        XLinearEquation xLinearEquation = new XLinearEquation(10);
-        assertEquals(Double.NaN, xLinearEquation.getY(10));
-    }
 }

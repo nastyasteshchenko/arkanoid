@@ -35,8 +35,8 @@ class BrickTest {
     @Test
     void onHitTest() {
         Brick brick = new Brick(new Point(0,0), new Point(10, 10), new Health(2));
-        assertEquals(2, brick.health.getValue());
+        assertEquals(2, brick.health());
         brick.onHit();
-        assertEquals(1, brick.health.getValue());
+        assertEquals(1, brick.health());
     }
 }

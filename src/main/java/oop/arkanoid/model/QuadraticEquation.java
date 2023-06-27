@@ -2,7 +2,6 @@ package oop.arkanoid.model;
 
 import java.util.List;
 
-//TODO javadoc
 public class QuadraticEquation {
 
     final double a;
@@ -11,9 +10,16 @@ public class QuadraticEquation {
 
     public final List<Double> roots;
 
-    public QuadraticEquation(double a, double b, double c) {
+    /**
+     * Calculates solutions to the equation of the form:<br/>
+     * ax^2 + bx + c = 0
+     *
+     * @param a the quadratic coefficient
+     * @param b the linear coefficient
+     * @param c the constant coefficient
+     */
 
-        // ax^2 + bx + c = 0
+    public QuadraticEquation(double a, double b, double c) {
 
         this.a = a;
         this.b = b;

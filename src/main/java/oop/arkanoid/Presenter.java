@@ -1,50 +1,38 @@
 package oop.arkanoid;
 
-import com.google.gson.JsonObject;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.util.Duration;
-import oop.arkanoid.model.Ball;
-import oop.arkanoid.model.Destroyable;
 import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
-import oop.arkanoid.model.barrier.Barrier;
 import oop.arkanoid.model.barrier.Brick;
-import oop.arkanoid.model.barrier.Platform;
-import oop.arkanoid.notifications.NotificationsAboutDestroy;
-import oop.arkanoid.notifications.Subscriber;
+import oop.arkanoid.notifications.*;
 import oop.arkanoid.view.LevelView;
 
 import java.io.*;
-import java.util.*;
 
-import static oop.arkanoid.Arkanoid.changeScene;
-import static oop.arkanoid.Arkanoid.createAlert;
+import static oop.arkanoid.AlertCreationUtil.alert;
 
-public class Presenter implements Subscriber {
-    private static ScoresManager scoresManager;
-    private static LevelsManager levelsManager;
-    private static ScenesManager scenesManager;
+public class Presenter {
+    static final LevelsManager LEVELS_MANAGER = new LevelsManager();
+    static final ScoresManager SCORES_MANAGER = new ScoresManager();
+    private static final ScenesManager SCENES_MANAGER = new ScenesManager();
+    private static LevelInitiator levelsInitiator;
     private static Timeline animation;
     private static LevelView gameView;
     private static GameLevel model;
     private static boolean gameIsStarted = false;
     private static boolean isPause = false;
+    private static int currentLevel;
 
-    @Override
-    public void update(Destroyable destroyable) {
-        gameView.deleteBrick(destroyable.position());
-        gameView.drawScore(model.getScore());
-    }
-
-    public static void startPlayingGame() {
+    public void setGameIsStarted() {
         gameIsStarted = true;
     }
 
-    public static void setPause() {
+    public void setPause() {
         isPause = !isPause;
         if (isPause) {
             animation.pause();
@@ -53,31 +41,31 @@ public class Presenter implements Subscriber {
         }
     }
 
-    public static void movePlatform(double x) {
+    public void movePlatform(double x) {
         if (gameIsStarted) {
             gameView.drawPlatform(model.updatePlatformPosition(x));
         }
     }
 
     static void checkGeneratingAllLevels() throws GeneratingGameException {
-        levelsManager.checkGeneratingAllLevels();
+        LEVELS_MANAGER.checkGeneratingAllLevels();
     }
 
     static void loadResourcesBeforeStartApp() throws IOException {
-        levelsManager = new LevelsManager();
-        scoresManager = new ScoresManager();
-        scenesManager = new ScenesManager(scoresManager);
+        LEVELS_MANAGER.scanForLevels();
+        SCORES_MANAGER.scanForScores();
+        SCENES_MANAGER.scanForScenes();
     }
 
     @FXML
     protected void backToMenu() {
         try {
-            scoresManager = new ScoresManager();
-            scenesManager.changeRecordsScene(scoresManager);
+            SCORES_MANAGER.scanForScores();
+            SCENES_MANAGER.changeRecordsScene();
         } catch (Exception e) {
-            createAlert(e);
+            alert(e.getMessage());
         }
-        changeScene(scenesManager.getScene("main"));
+        changeScene(SCENES_MANAGER.getScene("main"));
     }
 
     @FXML
@@ -90,62 +78,79 @@ public class Presenter implements Subscriber {
         System.exit(0);
     }
 
-
     @FXML
     protected void startGame() {
-        NotificationsAboutDestroy.getInstance().subscribe(this);
+        Notifications.getInstance().subscribe(EventType.DESTROY, this, b -> {
+            if (b instanceof Brick brick) {
+                gameView.deleteBrick(brick.position());
+                gameView.drawScore(model.getScore());
+            }
+        });
+
+        Notifications.getInstance().subscribe(EventType.START_GAME, this, v -> setGameIsStarted());
+
+        Notifications.getInstance().subscribe(EventType.PAUSE, this, v -> setPause());
+
+        Notifications.getInstance().subscribe(EventType.MOVE_PLATFORM, this, v -> {
+            if (v instanceof Double x) {
+                movePlatform(x);
+            }
+        });
+
+        currentLevel = 1;
+        levelsInitiator = new LevelInitiator(currentLevel);
         startLevel();
     }
 
     @FXML
     protected void backToMainScene() {
-        changeScene(scenesManager.getScene("main"));
+        changeScene(SCENES_MANAGER.getScene("main"));
     }
 
     @FXML
     protected void watchAboutGame() {
-        changeScene(scenesManager.getScene("about"));
+        changeScene(SCENES_MANAGER.getScene("about"));
     }
 
     @FXML
     protected void watchRecords() {
-        changeScene(scenesManager.getScene("records"));
+        changeScene(SCENES_MANAGER.getScene("records"));
     }
 
     private void gameLose() {
-        prepareForGameOver(scenesManager.getScene("game_over"));
+        prepareForGameOver(SCENES_MANAGER.getScene("game_over"));
     }
 
     private void gameWin() {
-        prepareForGameOver(scenesManager.getScene("game_win"));
-        levelsManager.increaseLevel();
+        currentLevel++;
+        prepareForGameOver(SCENES_MANAGER.getScene("game_win"));
+        levelsInitiator = new LevelInitiator(currentLevel);
     }
 
-    private void prepareForGameOver(Scene gameWinScene) {
+    private void prepareForGameOver(Scene scene) {
         animation.stop();
         setRecord();
         gameIsStarted = false;
-        changeScene(gameWinScene);
+        changeScene(scene);
     }
 
     private void setRecord() {
-        scoresManager.writeScore(levelsManager.getCurrentLevel(), model.getScore());
-        scoresManager.storeRecords();
+        SCORES_MANAGER.writeScore(levelsInitiator.getLevelName(), model.getScore());
+        SCORES_MANAGER.storeRecords();
     }
 
     private void startLevel() {
-
         try {
-            model = levelsManager.initLevel();
+            model = levelsInitiator.initLevelModel();
             if (model == null) {
-                changeScene(scenesManager.getScene("game_passed"));
+                changeScene(SCENES_MANAGER.getScene("game_passed"));
                 return;
             }
         } catch (GeneratingGameException e) {
-            createAlert(e);
+            alert(e.getMessage());
         }
 
-        setGameView(levelsManager.getCurrentLevelJsonObject());
+        gameView = levelsInitiator.initLevelView(model);
         changeScene(gameView.getGameScene());
         startAnimation();
 
@@ -165,36 +170,7 @@ public class Presenter implements Subscriber {
         animation.play();
     }
 
-
-    private static void setGameView(JsonObject paramsForLevel) {
-        LevelView.Builder builder = new LevelView.Builder(paramsForLevel);
-
-        List<Barrier> barriers = model.getBarriers();
-        for (Barrier barrier : barriers) {
-            if (barrier instanceof Platform platform) {
-                builder.platform(platform.position(), platform.size);
-                continue;
-            }
-            if (barrier instanceof Brick brick) {
-                if (brick.isImmortal()) {
-                    builder.addImmortalBrick(brick.position(), brick.size);
-                    continue;
-                }
-                if (brick.health.getValue() == 1) {
-                    builder.addStandardBrick(brick.position(), brick.size);
-                    continue;
-                }
-                if (brick.health.getValue() == 2) {
-                    builder.addDoubleHitBrick(brick.position(), brick.size);
-                }
-            }
-        }
-
-        Ball ball = model.getBall();
-        builder.ball(ball.position(), ball.radius).gameScene(model.getSceneSize());
-
-        builder.highScore(scoresManager.getScoreForLevel(levelsManager.getCurrentLevel()));
-
-        gameView = builder.build();
+    private void changeScene(Scene scene) {
+        Arkanoid.getStage().setScene(scene);
     }
 }

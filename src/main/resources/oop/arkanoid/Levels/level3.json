@@ -2,9 +2,14 @@
   "scene": {
     "color": "#FFDAB9",
     "width": "600",
-    "height": "900"
+    "height": "900",
+    "opacity": "0.5"
   },
   "pauseButton": {
+    "x": "525",
+    "y": "850",
+    "width": "60",
+    "height": "40",
     "font": "Droid Sans Mono",
     "textColor": "#ffffff",
     "fontSize": "15",
@@ -26,8 +31,15 @@
     "radius": "15"
   },
   "score": {
-    "x": "283",
-    "y": "280",
+    "x": "200",
+    "y": "860",
+    "font": "Droid Sans Mono",
+    "color": "#680707",
+    "fontSize": "23"
+  },
+  "highScore": {
+    "x": "10",
+    "y": "860",
     "font": "Droid Sans Mono",
     "color": "#680707",
     "fontSize": "23"

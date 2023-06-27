@@ -8,7 +8,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//не уверена что тут делать и как правильно писать тесты...
 class GameLevelTest {
 
     private static GameLevel gameLevel;

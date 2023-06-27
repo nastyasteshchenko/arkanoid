@@ -1,6 +1,5 @@
 package oop.arkanoid.model;
 
-import oop.arkanoid.model.motion.BaseLinearEquation;
 import oop.arkanoid.model.motion.LinearEquation;
 import oop.arkanoid.model.motion.LinearMotion;
 import oop.arkanoid.model.motion.MotionDirection;
@@ -31,6 +30,6 @@ class LinearMotionTest {
     }
 
     private static LinearMotion createLinearMotion() {
-        return new LinearMotion((BaseLinearEquation) LinearEquation.linearEquation(45, new Point(0, 0)), MotionDirection.RIGHT, Math.sqrt(2), new Point(0, 0));
+        return new LinearMotion(LinearEquation.linearEquation(45, new Point(0, 0)), MotionDirection.RIGHT, Math.sqrt(2), new Point(0, 0));
     }
 }

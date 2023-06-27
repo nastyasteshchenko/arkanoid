@@ -1,15 +1,15 @@
 package oop.arkanoid.model;
 
-import oop.arkanoid.notifications.NotificationsAboutDestroy;
-import oop.arkanoid.notifications.Subscriber;
 import oop.arkanoid.model.barrier.*;
+import oop.arkanoid.notifications.EventType;
+import oop.arkanoid.notifications.Notifications;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static oop.arkanoid.model.ModelUtils.isInRange;
 
-public class GameLevel implements Subscriber {
+public class GameLevel {
     private final Platform platform;
     private final List<Barrier> barriers;
     private final Ball ball;
@@ -17,17 +17,16 @@ public class GameLevel implements Subscriber {
     private int score = 0;
 
     GameLevel(Ball ball, Platform platform, List<Barrier> barriers, Point sceneSize) {
-        NotificationsAboutDestroy.getInstance().subscribe(this);
+        Notifications.getInstance().subscribe(EventType.DESTROY, this, b -> {
+            if (b instanceof Brick brick) {
+                score += brick.score();
+            }
+        });
 
         this.ball = ball;
         this.platform = platform;
         this.barriers = barriers;
         this.sceneSize = sceneSize;
-    }
-
-    @Override
-    public void update(Destroyable destroyable) {
-        score += destroyable.score();
     }
 
     public Point nextBallPosition() {
@@ -47,7 +46,7 @@ public class GameLevel implements Subscriber {
 
     public GameState gameState() {
         if (barriers.stream().filter(barrier -> barrier instanceof Brick).allMatch(brick -> ((Brick) brick).isImmortal())) {
-            NotificationsAboutDestroy.getInstance().unsubscribe(this);
+            Notifications.getInstance().unsubscribe(EventType.DESTROY, this);
             return GameState.WIN;
         } else if (ball.position().y() > sceneSize.y()) {
             return GameState.LOSE;
@@ -99,16 +98,19 @@ public class GameLevel implements Subscriber {
             return this;
         }
 
-        @SuppressWarnings("UnusedReturnValue")
         public Builder addBrick(Point position, Point size, int health) throws GeneratingGameException {
-            Brick brick = health == -1 ? new Brick(position, size, Health.createImmortal()) : new Brick(position, size, new Health(health));
+            Brick brick = switch (health) {
+                case -1 -> new Brick(position, size, Health.createImmortal());
+                case 1, 2 -> new Brick(position, size, new Health(health));
+                default -> throw GeneratingGameException.unsupportedHealth();
+            };
+
             brick.checkIfOutOfScene(sceneSize);
             brick.checkIfCollisionsWithOtherBarrier(barriers);
             barriers.add(brick);
             return this;
         }
 
-        @SuppressWarnings("UnusedReturnValue")
         public Builder addWall(Point position, Point size, CollisionPlace place) throws GeneratingGameException {
             Wall wall = new Wall(position, size, place);
             wall.checkWall(sceneSize);

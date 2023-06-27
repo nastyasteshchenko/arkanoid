@@ -9,19 +9,22 @@ import static oop.arkanoid.model.ModelUtils.tan;
 
 public interface LinearEquation {
 
+    /**
+     * Calculates circle and line intersection points.
+     *
+     * @param circleEquation equation of circle
+     * @return points of circle and line intersection
+     */
+
     List<Double> getIntersectionPoints(CircleEquation circleEquation);
 
-    double getY(double x);
-
-    LinearEquation rotate(double angle, Point currPoint);
-
-    static LinearEquation linearEquation(double angle, Point position) {
+    static BaseLinearEquation linearEquation(double angle, Point position) {
         double k = tan(angle);
         double b = position.y() - position.x() * k;
         return new BaseLinearEquation(angle, b, k);
     }
 
-    static LinearEquation xLinearMotionEquation(double x) {
+    static XLinearEquation xLinearMotionEquation(double x) {
         return new XLinearEquation(x);
     }
 
