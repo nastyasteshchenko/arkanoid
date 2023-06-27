@@ -69,8 +69,8 @@ class LevelInitiator {
         double y = button.get("y").getAsDouble();
         double width = button.get("width").getAsDouble();
         double height = button.get("height").getAsDouble();
-        PauseButtonView pauseButtonView = new PauseButtonView(new Point(x, y), new Point(width, height), pauseButtonFont, pauseButtonFontSize, pauseButtonTextColor, pauseButtonBackgroundStyle);
-        builder.pauseButton(pauseButtonView);
+
+        builder.pauseButton(new Point(x, y), new Point(width, height), pauseButtonFont, pauseButtonFontSize, pauseButtonTextColor, pauseButtonBackgroundStyle);
     }
 
     private void setScoreForView(LevelView.Builder builder) {
@@ -79,7 +79,7 @@ class LevelInitiator {
         String scoreFontSize = "-fx-font-size: " + score.get("fontSize").getAsString();
         double x = score.get("x").getAsDouble();
         double y = score.get("y").getAsDouble();
-        builder.score(new ScoreLabel(new Point(x, y), 0, scoreFont, scoreFontSize));
+        builder.score(new Point(x, y), scoreFont, scoreFontSize);
     }
 
     private void setHighScoreForView(LevelView.Builder builder, ScoresManager scoresManager) {
@@ -88,13 +88,13 @@ class LevelInitiator {
         String highScoreFontSIze = "-fx-font-size: " + highScore.get("fontSize").getAsString();
         double x = highScore.get("x").getAsDouble();
         double y = highScore.get("y").getAsDouble();
-        builder.highScore(new ScoreLabel(new Point(x, y), scoresManager.getScoreForLevel("level" + numLevel), highScoreFont, highScoreFontSIze));
+        builder.highScore(new Point(x, y), scoresManager.getScoreForLevel("level" + numLevel), highScoreFont, highScoreFontSIze);
     }
 
     private void setSceneForView(GameLevel model, LevelView.Builder builder) {
         double sceneOpacity = levelJsonObject.getAsJsonObject("scene").get("opacity").getAsDouble();
         Color sceneColor = Color.valueOf(levelJsonObject.getAsJsonObject("scene").get("color").getAsString());
-        builder.gameScene(new GameSceneView(model.getSceneSize(), sceneColor, sceneOpacity));
+        builder.gameScene(model.getSceneSize(), sceneColor, sceneOpacity);
     }
 
     private void setBarriersForView(GameLevel model, LevelView.Builder builder) {
@@ -102,8 +102,7 @@ class LevelInitiator {
         for (Barrier barrier : barriers) {
             if (barrier instanceof Platform p) {
                 Color platformColor = Color.valueOf(levelJsonObject.getAsJsonObject("platform").get("color").getAsString());
-                PlatformView viewPlatform = new PlatformView(p.position(), p.size, platformColor);
-                builder.platform(viewPlatform);
+                builder.platform(p.position(), p.size, platformColor);
                 continue;
             }
 
@@ -124,15 +123,15 @@ class LevelInitiator {
 
             if (barrier instanceof Brick brick) {
                 if (brick.isImmortal()) {
-                    builder.addBrick(new BrickView(brick.position(), brick.size, immortalBrickColor, immortalBrickStrokeColor, immortalBrickStrokeWidth));
+                    builder.addBrick(brick.position(), brick.size, immortalBrickColor, immortalBrickStrokeColor, immortalBrickStrokeWidth);
                     continue;
                 }
                 if (brick.health() == 1) {
-                    builder.addBrick(new BrickView(brick.position(), brick.size, standardBrickColor, standardStrokeColor, standardBrickStrokeWidth));
+                    builder.addBrick(brick.position(), brick.size, standardBrickColor, standardStrokeColor, standardBrickStrokeWidth);
                     continue;
                 }
                 if (brick.health() == 2) {
-                    builder.addBrick(new BrickView(brick.position(), brick.size, doubleHitBrickColor, doubleHitBrickStrokeColor, doubleHitBrickStrokeWidth));
+                    builder.addBrick(brick.position(), brick.size, doubleHitBrickColor, doubleHitBrickStrokeColor, doubleHitBrickStrokeWidth);
                 }
             }
         }
@@ -145,8 +144,8 @@ class LevelInitiator {
         String ballStokeWidth = "-fx-stroke-width: " + ballJO.get("strokeWidth").getAsString();
 
         Ball ball = model.getBall();
-        BallView ballView = new BallView(ball.position(), ball.radius, ballColor, ballStrokeColor, ballStokeWidth);
-        builder.ball(ballView);
+
+        builder.ball(ball.position(), ball.radius, ballColor, ballStrokeColor, ballStokeWidth);
     }
 
     private void setWallsForModel(GameLevel.Builder builder, double sceneWidth, double sceneHeight) throws GeneratingGameException {
