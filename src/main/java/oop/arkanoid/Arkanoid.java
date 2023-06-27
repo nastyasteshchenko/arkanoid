@@ -3,7 +3,7 @@ package oop.arkanoid;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import static oop.arkanoid.AlertCreationUtil.alert;
+import static oop.arkanoid.AlertCreationUtil.createResourcesAlert;
 
 public class Arkanoid extends Application {
     private static Stage stage;
@@ -20,7 +20,7 @@ public class Arkanoid extends Application {
             presenter.loadResourcesBeforeStartApp();
             presenter.checkGeneratingAllLevels();
         } catch (Exception e) {
-            alert(e.getMessage());
+            createResourcesAlert(e.getMessage());
             return;
         }
 

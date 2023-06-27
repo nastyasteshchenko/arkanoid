@@ -45,15 +45,15 @@ class LevelsManager {
 
     void checkGeneratingAllLevels() throws GeneratingGameException {
         int level = 1;
-        for (JsonObject ignored : availableLevels.values()) {
-            LevelInitiator levelsInitiator = new LevelInitiator(level, this);
+        for (JsonObject jsonObject : availableLevels.values()) {
+            LevelInitiator levelsInitiator = new LevelInitiator(level, jsonObject);
             levelsInitiator.initLevelModel();
             level++;
         }
     }
 
-    JsonObject getLevelJsonObject(String level) {
-        return availableLevels.get(level + ".json");
+    JsonObject getLevelJsonObject(int level) {
+        return availableLevels.get("level" + level + ".json");
     }
 
 }

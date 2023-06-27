@@ -4,6 +4,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
@@ -13,9 +14,9 @@ import oop.arkanoid.view.LevelView;
 
 import java.io.*;
 
-import static oop.arkanoid.AlertCreationUtil.alert;
+import static oop.arkanoid.AlertCreationUtil.createResourcesAlert;
 
-public class Presenter {
+public class Presenter extends StackPane {
 
     private final LevelsManager levelsManager = new LevelsManager();
     private final ScoresManager scoresManager = new ScoresManager();
@@ -77,8 +78,9 @@ public class Presenter {
         try {
             scoresManager.scanForScores();
             scenesManager.changeRecordsScene(scoresManager);
-        } catch (Exception e) {
-            alert(e.getMessage());
+        } catch (IOException e) {
+            createResourcesAlert(e.getMessage());
+            endGame();
         }
         changeScene(scenesManager.getScene("main"));
     }
@@ -106,7 +108,7 @@ public class Presenter {
         });
 
         currentLevel = 1;
-        levelsInitiator = new LevelInitiator(currentLevel, levelsManager);
+        levelsInitiator = new LevelInitiator(currentLevel, levelsManager.getLevelJsonObject(currentLevel));
         startLevel();
     }
 
@@ -129,7 +131,7 @@ public class Presenter {
     private void gameWin() {
         currentLevel++;
         prepareForGameOver(scenesManager.getScene("game_win"));
-        levelsInitiator = new LevelInitiator(currentLevel, levelsManager);
+        levelsInitiator = new LevelInitiator(currentLevel, levelsManager.getLevelJsonObject(currentLevel));
     }
 
     private void prepareForGameOver(Scene scene) {
@@ -152,7 +154,7 @@ public class Presenter {
                 return;
             }
         } catch (GeneratingGameException e) {
-            alert(e.getMessage());
+            createResourcesAlert(e.getMessage());
         }
 
         gameView = levelsInitiator.initLevelView(model, scoresManager);

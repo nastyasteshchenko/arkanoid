@@ -21,9 +21,9 @@ public class LevelInitiator {
     private final JsonObject levelJsonObject;
     private final String levelName;
 
-    LevelInitiator(int numLevel, LevelsManager levelsManager) {
+    LevelInitiator(int numLevel, JsonObject levelJsonObject) {
         levelName = "level" + numLevel;
-        levelJsonObject = levelsManager.getLevelJsonObject(levelName);
+        this.levelJsonObject = levelJsonObject;
     }
 
     String getLevelName() {

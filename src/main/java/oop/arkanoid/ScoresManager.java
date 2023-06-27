@@ -7,7 +7,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.*;
 import java.util.*;
 
-import static oop.arkanoid.AlertCreationUtil.alert;
+import static oop.arkanoid.AlertCreationUtil.createResourcesAlert;
 
 public class ScoresManager {
 
@@ -33,7 +33,7 @@ public class ScoresManager {
                 scores.put(levelScore.levelName, levelScore);
             }
         } catch (IOException e) {
-            alert(e.getMessage());
+            createResourcesAlert(e.getMessage());
         }
     }
 
@@ -62,7 +62,7 @@ public class ScoresManager {
             }
             jsonWriter.endArray();
         } catch (IOException e) {
-            alert(e.getMessage());
+            createResourcesAlert(e.getMessage());
         }
     }
 }
