@@ -34,7 +34,6 @@ class Presenter {
     private Timeline animation;
     private LevelView gameView;
     private GameLevel model;
-    private boolean gameIsStarted = false;
     private boolean isPause = false;
     private int currentLevel;
     private final StackPane rootStackPane;
@@ -65,7 +64,7 @@ class Presenter {
     }
 
     private void setGameIsStarted() {
-        gameIsStarted = true;
+        animation.play();
     }
 
     private void setPause() {
@@ -78,7 +77,7 @@ class Presenter {
     }
 
     private void movePlatform(double x) {
-        if (gameIsStarted) {
+        if (animation.getCurrentRate() != 0.) {
             gameView.drawPlatform(model.updatePlatformPosition(x));
         }
     }
@@ -148,7 +147,6 @@ class Presenter {
     private void prepareForGameOver(Pane pane) {
         animation.stop();
         setRecord();
-        gameIsStarted = false;
         updateMainPane(pane);
     }
 
@@ -176,16 +174,13 @@ class Presenter {
 
     private void startAnimation() {
         animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
-            if (gameIsStarted) {
                 gameView.drawBall(model.nextBallPosition());
                 switch (model.gameState()) {
                     case WIN -> gameWin();
                     case LOSE -> gameLose();
                 }
-            }
         }));
         animation.setCycleCount(Animation.INDEFINITE);
-        animation.play();
     }
 
     private void updateMainPane(Pane pane) {

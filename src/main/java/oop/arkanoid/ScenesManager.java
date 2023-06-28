@@ -52,7 +52,7 @@ class ScenesManager {
             Gson GSON_LOADER = new GsonBuilder().setPrettyPrinting().create();
             JsonObject records = GSON_LOADER.fromJson(reader, JsonObject.class);
 
-            Pane recordsPane = new RecordsPane();
+            Pane recordsPane = new ScoresPane();
             Collection<ScoresManager.LevelScore> scores = scoresManager.getScores();
 
             for (ScoresManager.LevelScore score : scores) {
