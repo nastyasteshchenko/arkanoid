@@ -1,9 +1,14 @@
 package oop.arkanoid.view;
 
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -19,17 +24,32 @@ public class LevelView {
     private final List<Rectangle> bricks;
     private final Rectangle platform;
     private final Circle ball;
-    private final Scene gameScene;
     private final Pane gamePane;
+    private final GridPane gamePaneHolderGridPane = new GridPane();
     private final Label score;
 
-    LevelView(List<Rectangle> bricks, Rectangle platform, Circle ball, Scene gameScene, Pane gamePane, Label score) {
+    LevelView(List<Rectangle> bricks, Rectangle platform, Circle ball, Pane gamePane, Label score) {
         this.ball = ball;
         this.bricks = bricks;
         this.platform = platform;
-        this.gameScene = gameScene;
         this.gamePane = gamePane;
         this.score = score;
+
+        RowConstraints rowConstraints = new RowConstraints();
+        rowConstraints.setPercentHeight(100.);
+
+        ColumnConstraints columnConstraints = new ColumnConstraints();
+        columnConstraints.setPercentWidth(100.);
+
+        GridPane.setValignment(this.gamePane, VPos.CENTER);
+        GridPane.setHalignment(this.gamePane, HPos.CENTER);
+        GridPane.setFillHeight(this.gamePane, false);
+        GridPane.setFillWidth(this.gamePane, false);
+
+        gamePaneHolderGridPane.getColumnConstraints().add(columnConstraints);
+        gamePaneHolderGridPane.getRowConstraints().add(rowConstraints);
+
+        gamePaneHolderGridPane.getChildren().add(this.gamePane);
     }
 
     public void drawScore(int value) {
@@ -50,8 +70,8 @@ public class LevelView {
         removeBrick(bricks.stream().filter(i -> point.x() == i.getX() && point.y() == i.getY()).findFirst().get());
     }
 
-    public Scene getGameScene() {
-        return gameScene;
+    public Pane getGamePane() {
+        return gamePaneHolderGridPane;
     }
 
     private void removeBrick(Rectangle brick) {
@@ -64,7 +84,6 @@ public class LevelView {
         private Rectangle platform;
         private Circle ball;
         private final Pane gamePane = new Pane();
-        private Scene gameScene;
         private Label score;
 
         public Builder() {
@@ -73,9 +92,11 @@ public class LevelView {
         @SuppressWarnings("UnusedReturnValue")
         public Builder gameScene(Point size, Color color, double opacity) {
             gamePane.setOpacity(opacity);
-            gameScene = new Scene(gamePane, size.x(), size.y(), color);
-            gameScene.setOnMouseClicked(event -> Notifications.getInstance().publish(EventType.START_PLAYING_GAME));
-            gameScene.setOnMouseMoved(event -> Notifications.getInstance().publish(EventType.MOVE_PLATFORM, event.getX()));
+            gamePane.setPrefSize(size.x(), size.y());
+            String fxColor = String.format("#%2x%2x%2x", (int) (color.getRed() * 255), (int) (color.getGreen() * 255), (int) (color.getBlue() * 255));
+            gamePane.setStyle("-fx-background-color: " + fxColor);
+            gamePane.setOnMouseClicked(event -> Notifications.getInstance().publish(EventType.START_PLAYING_GAME));
+            gamePane.setOnMouseMoved(event -> Notifications.getInstance().publish(EventType.MOVE_PLATFORM, event.getX()));
             return this;
         }
 
@@ -147,7 +168,7 @@ public class LevelView {
         }
 
         public LevelView build() {
-            return new LevelView(bricks, platform, ball, gameScene, gamePane, score);
+            return new LevelView(bricks, platform, ball, gamePane, score);
         }
 
     }

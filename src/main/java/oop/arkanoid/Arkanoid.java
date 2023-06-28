@@ -1,6 +1,8 @@
 package oop.arkanoid;
 
 import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import static oop.arkanoid.AlertCreationUtil.createResourcesAlert;
@@ -11,7 +13,9 @@ public class Arkanoid extends Application {
     public void start(Stage stage) {
         stage.setTitle("Arkanoid");
 
-        Presenter presenter = new Presenter(stage);
+        StackPane mainStackPane = new StackPane();
+
+        Presenter presenter = new Presenter(mainStackPane);
 
         try {
             presenter.loadResourcesBeforeStartApp();
@@ -20,6 +24,7 @@ public class Arkanoid extends Application {
             return;
         }
 
+        stage.setScene(new Scene(mainStackPane));
         stage.show();
     }
 

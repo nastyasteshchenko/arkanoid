@@ -4,12 +4,15 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
 import oop.arkanoid.model.barrier.Brick;
 import oop.arkanoid.notifications.*;
+import oop.arkanoid.pane.*;
 import oop.arkanoid.view.LevelView;
 
 import java.io.*;
@@ -21,17 +24,25 @@ class Presenter {
     private final LevelsManager levelsManager = new LevelsManager();
     private final ScoresManager scoresManager = new ScoresManager();
     private final ScenesManager scenesManager = new ScenesManager();
+
+    private final AboutPane aboutPane = new AboutPane();
+    private final GameOverPane gameOverPane = new GameOverPane();
+    private final GamePassedPane gamePassedPane = new GamePassedPane();
+    private final GameWinPane gameWinPane = new GameWinPane();
+    private final MainMenuPane mainMenuPane = new MainMenuPane();
+
     private Timeline animation;
     private LevelView gameView;
     private GameLevel model;
     private boolean gameIsStarted = false;
     private boolean isPause = false;
     private int currentLevel;
-    private final Stage stage;
+    private final StackPane rootStackPane;
 
-    Presenter(Stage stage) {
-        this.stage = stage;
+    Presenter(StackPane rootStackPane) {
+        this.rootStackPane = rootStackPane;
     }
+
 
     void loadResourcesBeforeStartApp() throws IOException, GeneratingGameException {
         levelsManager.scanForLevels();
@@ -50,7 +61,7 @@ class Presenter {
 
         Notifications.getInstance().subscribe(EventType.ABOUT, this, v -> watchAboutGame());
 
-        stage.setScene(scenesManager.getScene("main"));
+       updateMainPane(mainMenuPane);
     }
 
     private void setGameIsStarted() {
@@ -80,7 +91,7 @@ class Presenter {
             createResourcesAlert(e.getMessage());
             endGame();
         }
-        stage.setScene(scenesManager.getScene("main"));
+       updateMainPane(mainMenuPane);
     }
 
     private void endGame() {
@@ -114,31 +125,31 @@ class Presenter {
     }
 
     private void backToMainScene() {
-        stage.setScene(scenesManager.getScene("main"));
+       updateMainPane(mainMenuPane);
     }
 
     private void watchAboutGame() {
-        stage.setScene(scenesManager.getScene("about"));
+        updateMainPane(aboutPane);
     }
 
     private void watchRecords() {
-        stage.setScene(scenesManager.getScene("records"));
+       //updateMainPane();
     }
 
     private void gameLose() {
-        prepareForGameOver(scenesManager.getScene("game_over"));
+        prepareForGameOver(gameOverPane);
     }
 
     private void gameWin() {
-        prepareForGameOver(scenesManager.getScene("game_win"));
+        prepareForGameOver(gameWinPane);
         currentLevel++;
     }
 
-    private void prepareForGameOver(Scene scene) {
+    private void prepareForGameOver(Pane pane) {
         animation.stop();
         setRecord();
         gameIsStarted = false;
-        stage.setScene(scene);
+        updateMainPane(pane);
     }
 
     private void setRecord() {
@@ -150,7 +161,7 @@ class Presenter {
         try {
             model = levelsManager.initLevelModel(currentLevel);
             if (model == null) {
-                stage.setScene(scenesManager.getScene("game_passed"));
+               updateMainPane(gamePassedPane);
                 return;
             }
         } catch (GeneratingGameException e) {
@@ -158,7 +169,7 @@ class Presenter {
         }
 
         gameView = levelsManager.initLevelView(model, scoresManager);
-        stage.setScene(gameView.getGameScene());
+        updateMainPane(gameView.getGamePane());
         startAnimation();
 
     }
@@ -175,6 +186,11 @@ class Presenter {
         }));
         animation.setCycleCount(Animation.INDEFINITE);
         animation.play();
+    }
+
+    private void updateMainPane(Pane pane) {
+        rootStackPane.getChildren().clear();
+        rootStackPane.getChildren().add(pane);
     }
 
 }
