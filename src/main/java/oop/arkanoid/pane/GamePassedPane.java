@@ -45,16 +45,16 @@ public class GamePassedPane extends GridPane {
         GridPane.setValignment(exitButton, VPos.TOP);
 
         backToMenuButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.RESTART_GAME));
-        backToMenuButton.setPrefSize(233.0, 70.0);
-        backToMenuButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21.0");
+        backToMenuButton.setPrefSize(233., 70.);
+        backToMenuButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21");
         backToMenuButton.setFont(Font.font("Droid Sans Mono"));
 
         exitButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.EXIT));
-        exitButton.setPrefSize(233.0, 70.0);
-        exitButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21.0");
+        exitButton.setPrefSize(233., 70.);
+        exitButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21");
         exitButton.setFont(Font.font("Droid Sans Mono"));
 
-        gamePassedLabel.setStyle("-fx-text-fill: RED; -fx-text-alignment: CENTER; -fx-font-size: 70.0;");
+        gamePassedLabel.setStyle("-fx-text-fill: RED; -fx-text-alignment: CENTER; -fx-font-size: 70;");
         gamePassedLabel.setFont(Font.font("Droid Sans Mono"));
 
         this.getChildren().addAll(exitButton, backToMenuButton, gamePassedLabel);

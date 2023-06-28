@@ -47,16 +47,16 @@ public class GameWinPane extends GridPane {
 
 
         nextLevelButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.RESTART_LEVEL));
-        nextLevelButton.setPrefSize(233.0, 70.0);
-        nextLevelButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21.0");
+        nextLevelButton.setPrefSize(233., 70.);
+        nextLevelButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21");
         nextLevelButton.setFont(Font.font("Droid Sans Mono"));
 
         exitButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.EXIT));
-        exitButton.setPrefSize(233.0, 70.0);
-        exitButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21.0");
+        exitButton.setPrefSize(233., 70.);
+        exitButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21");
         exitButton.setFont(Font.font("Droid Sans Mono"));
 
-        gameWinLabel.setStyle("-fx-text-fill: RED; -fx-text-alignment: CENTER; -fx-font-size: 70.0;");
+        gameWinLabel.setStyle("-fx-text-fill: RED; -fx-text-alignment: CENTER; -fx-font-size: 70;");
         gameWinLabel.setFont(Font.font("Droid Sans Mono"));
 
         this.getChildren().addAll(exitButton, nextLevelButton, gameWinLabel);

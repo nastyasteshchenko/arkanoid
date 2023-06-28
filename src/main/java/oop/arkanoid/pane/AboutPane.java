@@ -48,16 +48,16 @@ public class AboutPane extends GridPane {
         aboutTextAnchorPane.getChildren().add(aboutText);
 
         backButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.BACK));
-        backButton.setPrefSize(150.0, 70.0);
-        backButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 19.0");
+        backButton.setPrefSize(150., 70.);
+        backButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 19");
         backButton.setFont(Font.font("Droid Sans Mono"));
 
-        aboutText.setStyle("-fx-text-fill: #680707; -fx-text-alignment: CENTER; -fx-font-size: 23.0;");
+        aboutText.setStyle("-fx-text-fill: #680707; -fx-text-alignment: CENTER; -fx-font-size: 23;");
         aboutText.setFont(Font.font("Droid Sans Mono"));
         aboutText.setWrapText(true);
 
         aboutTitleText.setTextFill(Color.valueOf("RED"));
-        aboutTitleText.setStyle("-fx-text-alignment: CENTER; -fx-font-size: 36.0;");
+        aboutTitleText.setStyle("-fx-text-alignment: CENTER; -fx-font-size: 36");
         aboutTitleText.setFont(Font.font("Droid Sans Mono"));
 
         this.getChildren().addAll(backButton, aboutTextAnchorPane, aboutTitleText);

@@ -47,16 +47,16 @@ public class GameOverPane extends GridPane {
         GridPane.setValignment(exitButton, VPos.TOP);
 
         restartGameButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.RESTART_LEVEL));
-        restartGameButton.setPrefSize(233.0, 70.0);
-        restartGameButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21.0");
+        restartGameButton.setPrefSize(233., 70.);
+        restartGameButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21");
         restartGameButton.setFont(Font.font("Droid Sans Mono"));
 
         exitButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.EXIT));
-        exitButton.setPrefSize(233.0, 70.0);
-        exitButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21.0");
+        exitButton.setPrefSize(233., 70.);
+        exitButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21");
         exitButton.setFont(Font.font("Droid Sans Mono"));
 
-        gameOverLabel.setStyle("-fx-text-fill: RED; -fx-text-alignment: CENTER; -fx-font-size: 70.0;");
+        gameOverLabel.setStyle("-fx-text-fill: RED; -fx-text-alignment: CENTER; -fx-font-size: 70;");
         gameOverLabel.setFont(Font.font("Droid Sans Mono"));
 
         this.getChildren().addAll(exitButton, restartGameButton, gameOverLabel);
