@@ -6,16 +6,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import oop.arkanoid.notifications.EventType;
 import oop.arkanoid.notifications.Notifications;
 
-public class GameOverPane extends GridPane {
+public class GameLosePane extends GridPane {
 
-    public GameOverPane() {
+    public GameLosePane() {
         ColumnConstraints columnConstraints = new ColumnConstraints();
         columnConstraints.setPercentWidth(100.);
 

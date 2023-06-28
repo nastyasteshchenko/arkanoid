@@ -72,7 +72,7 @@ public class ScoresPane extends GridPane {
             Label levelNameLabel = new Label(singleScore.levelName());
             Label authorLabel = new Label(singleScore.author());
             Label scoreLabel = new Label(String.valueOf(singleScore.score()));
-            Label timeLabel = new Label(String.valueOf(Math.round(singleScore.time() * 1000) / 1000.0));
+            Label timeLabel = new Label(Math.round(singleScore.time() * 1000) / 1000.0 + " sec");
 
             levelNameLabel.setFont(Font.font("Droid Sans Mono", 20.));
             authorLabel.setFont(Font.font("Droid Sans Mono", 20.));

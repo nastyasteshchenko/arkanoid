@@ -24,7 +24,7 @@ class Presenter {
     private final ScoresManager scoresManager = new ScoresManager();
 
     private final AboutPane aboutPane = new AboutPane();
-    private final GameOverPane gameOverPane = new GameOverPane();
+    private final GameLosePane gameLosePane = new GameLosePane();
     private final GamePassedPane gamePassedPane = new GamePassedPane();
     private final GameWinPane gameWinPane = new GameWinPane();
     private final MainMenuPane mainMenuPane = new MainMenuPane();
@@ -52,13 +52,9 @@ class Presenter {
         scoresManager.scanForScores();
 
         Notifications.getInstance().subscribe(EventType.START_GAME, this, v -> startGame());
-
         Notifications.getInstance().subscribe(EventType.EXIT, this, v -> exitGame());
-
         Notifications.getInstance().subscribe(EventType.RECORDS, this, v -> watchRecords());
-
         Notifications.getInstance().subscribe(EventType.BACK, this, v -> updateMainPane(mainMenuPane));
-
         Notifications.getInstance().subscribe(EventType.ABOUT, this, v -> updateMainPane(aboutPane));
 
         updateMainPane(mainMenuPane);
@@ -85,7 +81,6 @@ class Presenter {
 
     private void restartAllGame() {
         scoresManager.scanForScores();
-        scoresPane.updateScores(scoresManager.getScores());
         updateMainPane(mainMenuPane);
     }
 
@@ -100,7 +95,7 @@ class Presenter {
             saveScorePane.setShowingScore(model.getScore(), secondsPassed);
             updateMainPane(saveScorePane);
         } else {
-            prepareForGameOver();
+            prepareForLevelOver();
         }
     }
 
@@ -113,9 +108,7 @@ class Presenter {
         });
 
         Notifications.getInstance().subscribe(EventType.START_PLAYING_GAME, this, v -> setGameIsStarted());
-
         Notifications.getInstance().subscribe(EventType.PAUSE, this, v -> setPause());
-
         Notifications.getInstance().subscribe(EventType.MOVE_PLATFORM, this, v -> {
             if (v instanceof Double x) {
                 movePlatform(x);
@@ -123,17 +116,15 @@ class Presenter {
         });
 
         Notifications.getInstance().subscribe(EventType.RESTART_LEVEL, this, v -> startLevel());
-
         Notifications.getInstance().subscribe(EventType.RESTART_GAME, this, v -> restartAllGame());
-
         Notifications.getInstance().subscribe(EventType.SAVE_SCORE, this, str -> {
             if (str instanceof String name) {
                 setRecord(name, secondsPassed);
-                prepareForGameOver();
+                prepareForLevelOver();
             }
         });
 
-        Notifications.getInstance().subscribe(EventType.DONT_SAVE_SCORE, this, v -> prepareForGameOver());
+        Notifications.getInstance().subscribe(EventType.DONT_SAVE_SCORE, this, v -> prepareForLevelOver());
 
         currentLevel = 1;
         startLevel();
@@ -144,14 +135,14 @@ class Presenter {
         updateMainPane(scoresPane);
     }
 
-    private void prepareForGameOver() {
+    private void prepareForLevelOver() {
         animation.stop();
         switch (model.gameState()) {
             case WIN -> {
                 updateMainPane(gameWinPane);
                 currentLevel++;
             }
-            case LOSE -> updateMainPane(gameOverPane);
+            case LOSE -> updateMainPane(gameLosePane);
         }
     }
 

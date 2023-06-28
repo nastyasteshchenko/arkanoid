@@ -14,7 +14,6 @@ public class Arkanoid extends Application {
         stage.setTitle("Arkanoid");
 
         StackPane mainStackPane = new StackPane();
-
         Presenter presenter = new Presenter(mainStackPane);
 
         try {
