@@ -15,4 +15,6 @@ module oop.arkanoid {
     opens oop.arkanoid.model.motion to javafx.fxml;
     exports oop.arkanoid.notifications;
     opens oop.arkanoid.notifications to javafx.fxml;
+    exports oop.arkanoid.pane;
+    opens oop.arkanoid.pane to javafx.fxml;
 }

@@ -1,1 +1,8 @@
-[{"levelName":"level1","score":0},{"levelName":"level3","score":0},{"levelName":"level2","score":0}]
+[
+  {
+    "levelName": "level1",
+    "author": "nastya",
+    "score": 125,
+    "time": 51.7224999999892
+  }
+]

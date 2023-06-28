@@ -3,36 +3,68 @@ package oop.arkanoid;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.fxml.FXML;
-import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import oop.arkanoid.model.GameLevel;
+import oop.arkanoid.model.GameState;
 import oop.arkanoid.model.GeneratingGameException;
 import oop.arkanoid.model.barrier.Brick;
 import oop.arkanoid.notifications.*;
+import oop.arkanoid.pane.*;
 import oop.arkanoid.view.LevelView;
 
 import java.io.*;
 
-import static oop.arkanoid.AlertCreationUtil.alert;
+import static oop.arkanoid.AlertCreationUtil.createResourcesAlert;
 
-public class Presenter {
-    static final LevelsManager LEVELS_MANAGER = new LevelsManager();
-    static final ScoresManager SCORES_MANAGER = new ScoresManager();
-    private static final ScenesManager SCENES_MANAGER = new ScenesManager();
-    private static LevelInitiator levelsInitiator;
-    private static Timeline animation;
-    private static LevelView gameView;
-    private static GameLevel model;
-    private static boolean gameIsStarted = false;
-    private static boolean isPause = false;
-    private static int currentLevel;
+class Presenter {
 
-    public void setGameIsStarted() {
-        gameIsStarted = true;
+    private final LevelsManager levelsManager = new LevelsManager();
+    private final ScoresManager scoresManager = new ScoresManager();
+
+    private final AboutPane aboutPane = new AboutPane();
+    private final GameLosePane gameLosePane = new GameLosePane();
+    private final GamePassedPane gamePassedPane = new GamePassedPane();
+    private final GameWinPane gameWinPane = new GameWinPane();
+    private final MainMenuPane mainMenuPane = new MainMenuPane();
+    private final SaveScorePane saveScorePane = new SaveScorePane();
+    private final ScoresPane scoresPane = new ScoresPane();
+    private final StackPane rootStackPane;
+
+    private double secondsPassed = 0.;
+
+    private Timeline animation;
+    private LevelView gameView;
+    private GameLevel model;
+    private boolean isPause = false;
+    private int currentLevel;
+
+    Presenter(StackPane rootStackPane) {
+        this.rootStackPane = rootStackPane;
     }
 
-    public void setPause() {
+
+    void loadResourcesBeforeStartApp() throws IOException, GeneratingGameException {
+        levelsManager.scanForLevels();
+        levelsManager.checkGeneratingAllLevels();
+
+        scoresManager.scanForScores();
+
+        Notifications.getInstance().subscribe(EventType.START_GAME, this, v -> startGame());
+        Notifications.getInstance().subscribe(EventType.EXIT, this, v -> exitGame());
+        Notifications.getInstance().subscribe(EventType.RECORDS, this, v -> watchRecords());
+        Notifications.getInstance().subscribe(EventType.BACK, this, v -> updateMainPane(mainMenuPane));
+        Notifications.getInstance().subscribe(EventType.ABOUT, this, v -> updateMainPane(aboutPane));
+
+        updateMainPane(mainMenuPane);
+    }
+
+    private void setGameIsStarted() {
+        animation.play();
+    }
+
+    private void setPause() {
         isPause = !isPause;
         if (isPause) {
             animation.pause();
@@ -41,45 +73,33 @@ public class Presenter {
         }
     }
 
-    public void movePlatform(double x) {
-        if (gameIsStarted) {
+    private void movePlatform(double x) {
+        if (animation.getCurrentRate() != 0.) {
             gameView.drawPlatform(model.updatePlatformPosition(x));
         }
     }
 
-    static void checkGeneratingAllLevels() throws GeneratingGameException {
-        LEVELS_MANAGER.checkGeneratingAllLevels();
+    private void restartAllGame() {
+        scoresManager.scanForScores();
+        updateMainPane(mainMenuPane);
     }
 
-    static void loadResourcesBeforeStartApp() throws IOException {
-        LEVELS_MANAGER.scanForLevels();
-        SCORES_MANAGER.scanForScores();
-        SCENES_MANAGER.scanForScenes();
-    }
-
-    @FXML
-    protected void backToMenu() {
-        try {
-            SCORES_MANAGER.scanForScores();
-            SCENES_MANAGER.changeRecordsScene();
-        } catch (Exception e) {
-            alert(e.getMessage());
-        }
-        changeScene(SCENES_MANAGER.getScene("main"));
-    }
-
-    @FXML
-    protected void restartGame() {
-        startLevel();
-    }
-
-    @FXML
-    protected void endGame() {
+    private void exitGame() {
         System.exit(0);
     }
 
-    @FXML
-    protected void startGame() {
+    private void endGame() {
+        animation.stop();
+
+        if (scoresManager.isNewScore("level" + currentLevel, model.getScore(), secondsPassed)) {
+            saveScorePane.setShowingScore(model.getScore(), secondsPassed);
+            updateMainPane(saveScorePane);
+        } else {
+            prepareForLevelOver();
+        }
+    }
+
+    private void startGame() {
         Notifications.getInstance().subscribe(EventType.DESTROY, this, b -> {
             if (b instanceof Brick brick) {
                 gameView.deleteBrick(brick.position());
@@ -87,90 +107,81 @@ public class Presenter {
             }
         });
 
-        Notifications.getInstance().subscribe(EventType.START_GAME, this, v -> setGameIsStarted());
-
+        Notifications.getInstance().subscribe(EventType.START_PLAYING_GAME, this, v -> setGameIsStarted());
         Notifications.getInstance().subscribe(EventType.PAUSE, this, v -> setPause());
-
         Notifications.getInstance().subscribe(EventType.MOVE_PLATFORM, this, v -> {
             if (v instanceof Double x) {
                 movePlatform(x);
             }
         });
 
+        Notifications.getInstance().subscribe(EventType.RESTART_LEVEL, this, v -> startLevel());
+        Notifications.getInstance().subscribe(EventType.RESTART_GAME, this, v -> restartAllGame());
+        Notifications.getInstance().subscribe(EventType.SAVE_SCORE, this, str -> {
+            if (str instanceof String name) {
+                setRecord(name, secondsPassed);
+                prepareForLevelOver();
+            }
+        });
+
+        Notifications.getInstance().subscribe(EventType.DONT_SAVE_SCORE, this, v -> prepareForLevelOver());
+
         currentLevel = 1;
-        levelsInitiator = new LevelInitiator(currentLevel);
         startLevel();
     }
 
-    @FXML
-    protected void backToMainScene() {
-        changeScene(SCENES_MANAGER.getScene("main"));
+    private void watchRecords() {
+        scoresPane.updateScores(scoresManager.getScores());
+        updateMainPane(scoresPane);
     }
 
-    @FXML
-    protected void watchAboutGame() {
-        changeScene(SCENES_MANAGER.getScene("about"));
-    }
-
-    @FXML
-    protected void watchRecords() {
-        changeScene(SCENES_MANAGER.getScene("records"));
-    }
-
-    private void gameLose() {
-        prepareForGameOver(SCENES_MANAGER.getScene("game_over"));
-    }
-
-    private void gameWin() {
-        currentLevel++;
-        prepareForGameOver(SCENES_MANAGER.getScene("game_win"));
-        levelsInitiator = new LevelInitiator(currentLevel);
-    }
-
-    private void prepareForGameOver(Scene scene) {
+    private void prepareForLevelOver() {
         animation.stop();
-        setRecord();
-        gameIsStarted = false;
-        changeScene(scene);
+        switch (model.gameState()) {
+            case WIN -> {
+                updateMainPane(gameWinPane);
+                currentLevel++;
+            }
+            case LOSE -> updateMainPane(gameLosePane);
+        }
     }
 
-    private void setRecord() {
-        SCORES_MANAGER.writeScore(levelsInitiator.getLevelName(), model.getScore());
-        SCORES_MANAGER.storeRecords();
+    private void setRecord(String author, double time) {
+        scoresManager.writeScore("level" + currentLevel, author, model.getScore(), time);
+        scoresManager.storeRecords();
     }
 
     private void startLevel() {
         try {
-            model = levelsInitiator.initLevelModel();
+            model = levelsManager.initLevelModel(currentLevel);
             if (model == null) {
-                changeScene(SCENES_MANAGER.getScene("game_passed"));
+                updateMainPane(gamePassedPane);
                 return;
             }
         } catch (GeneratingGameException e) {
-            alert(e.getMessage());
+            createResourcesAlert(e.getMessage());
         }
 
-        gameView = levelsInitiator.initLevelView(model);
-        changeScene(gameView.getGameScene());
+        gameView = levelsManager.initLevelView(model, scoresManager);
+        updateMainPane(gameView.getGamePane());
         startAnimation();
 
     }
 
     private void startAnimation() {
         animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
-            if (gameIsStarted) {
-                gameView.drawBall(model.nextBallPosition());
-                switch (model.gameState()) {
-                    case WIN -> gameWin();
-                    case LOSE -> gameLose();
-                }
+            secondsPassed += animation.getKeyFrames().get(0).getTime().toSeconds();
+            gameView.drawBall(model.nextBallPosition());
+            if (model.gameState() != GameState.PROCESS) {
+                endGame();
             }
         }));
         animation.setCycleCount(Animation.INDEFINITE);
-        animation.play();
     }
 
-    private void changeScene(Scene scene) {
-        Arkanoid.getStage().setScene(scene);
+    private void updateMainPane(Pane pane) {
+        rootStackPane.getChildren().clear();
+        rootStackPane.getChildren().add(pane);
     }
+
 }

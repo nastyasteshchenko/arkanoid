@@ -33,6 +33,13 @@ public class Notifications {
         }
     }
 
+    public void publish(EventType type, String name) {
+        List<Subscriber> subscribers = this.subscribers.get(type);
+        for (Subscriber subscriber : subscribers) {
+            subscriber.handler().accept(name);
+        }
+    }
+
     public void publish(EventType type) {
         List<Subscriber> subscribers = this.subscribers.get(type);
         for (Subscriber subscriber : subscribers) {
@@ -49,8 +56,10 @@ public class Notifications {
     }
 
     public void unsubscribe(EventType type, Object subObj) {
-        List<Subscriber> subscribers = this.subscribers.computeIfAbsent(type, V -> new ArrayList<>());
-        Subscriber subscriber = subscriberToObjectMapping.get(subObj).get(type);
+        EnumMap<EventType, Subscriber> subscriberEnumMap = subscriberToObjectMapping.get(subObj);
+        Subscriber subscriber = subscriberEnumMap.get(type);
+        subscriberToObjectMapping.remove(subscriberEnumMap);
+        List<Subscriber> subscribers = this.subscribers.get(type);
         subscribers.remove(subscriber);
     }
 }
