@@ -66,7 +66,7 @@ class LevelsManager {
         }
     }
 
-    JsonObject getLevelJsonObject(int level) {
+    private JsonObject getLevelJsonObject(int level) {
         return availableLevels.get("level" + level + ".json");
     }
 
