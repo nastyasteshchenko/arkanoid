@@ -1,42 +1,69 @@
 package oop.arkanoid.pane;
 
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import oop.arkanoid.notifications.EventType;
 import oop.arkanoid.notifications.Notifications;
 
-public class GameWinPane extends Pane {
-    private final Button restartGameButton = new Button("Next level");
-    private final Button exitButton = new Button("Exit");
-    private final Text label = new Text("Game Win");
+public class GameWinPane extends GridPane {
 
     public GameWinPane() {
-        restartGameButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.RESTART_LEVEL));
-        restartGameButton.setLayoutX(183.0);
-        restartGameButton.setLayoutY(380.0);
-        restartGameButton.setPrefSize(233.0, 70.0);
-        restartGameButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21.0");
-        restartGameButton.setFont(Font.font("Droid Sans Mono"));
+        ColumnConstraints columnConstraints = new ColumnConstraints();
+        columnConstraints.setPercentWidth(100.);
+
+        RowConstraints gameOverRowConstraints = new RowConstraints();
+        RowConstraints restartRowConstraints = new RowConstraints();
+        RowConstraints exitRowConstraints = new RowConstraints();
+        RowConstraints spaceRowConstraints = new RowConstraints();
+
+        gameOverRowConstraints.setPercentHeight(40.);
+        restartRowConstraints.setPercentHeight(20.);
+        exitRowConstraints.setPercentHeight(20.);
+        spaceRowConstraints.setPercentHeight(20.);
+
+        Label gameWinLabel = new Label("Game Win");
+        GridPane.setConstraints(gameWinLabel, 0, 0);
+
+        Button nextLevelButton = new Button("Next level");
+        GridPane.setConstraints(nextLevelButton, 0, 1);
+
+        Button exitButton = new Button("Exit");
+        GridPane.setConstraints(exitButton, 0, 2);
+
+        GridPane.setHalignment(gameWinLabel, HPos.CENTER);
+        GridPane.setHalignment(nextLevelButton, HPos.CENTER);
+        GridPane.setHalignment(exitButton, HPos.CENTER);
+
+        GridPane.setValignment(gameWinLabel, VPos.CENTER);
+        GridPane.setValignment(nextLevelButton, VPos.CENTER);
+        GridPane.setValignment(exitButton, VPos.TOP);
+
+
+        nextLevelButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.RESTART_LEVEL));
+        nextLevelButton.setPrefSize(233.0, 70.0);
+        nextLevelButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21.0");
+        nextLevelButton.setFont(Font.font("Droid Sans Mono"));
 
         exitButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.EXIT));
-        exitButton.setLayoutX(183.0);
-        exitButton.setLayoutY(495.0);
         exitButton.setPrefSize(233.0, 70.0);
         exitButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21.0");
         exitButton.setFont(Font.font("Droid Sans Mono"));
 
-        label.setLayoutX(103.0);
-        label.setLayoutY(235.0);
-        label.setWrappingWidth(393);
-        label.setStyle("-fx-fill: RED; -fx-text-alignment: CENTER; -fx-font-size: 70.0;");
-        label.setFont(Font.font("Droid Sans Mono"));
+        gameWinLabel.setStyle("-fx-text-fill: RED; -fx-text-alignment: CENTER; -fx-font-size: 70.0;");
+        gameWinLabel.setFont(Font.font("Droid Sans Mono"));
 
-        this.getChildren().addAll(exitButton, restartGameButton, label);
+        this.getChildren().addAll(exitButton, nextLevelButton, gameWinLabel);
         this.setPrefSize(600, 900);
         this.setOpacity(0.5);
         this.setStyle("-fx-background-color: #FFE4B5");
+        this.getColumnConstraints().add(columnConstraints);
+        this.getRowConstraints().addAll(gameOverRowConstraints, restartRowConstraints, exitRowConstraints, spaceRowConstraints);
     }
 }
