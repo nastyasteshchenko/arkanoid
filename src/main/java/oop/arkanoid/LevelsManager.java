@@ -47,13 +47,13 @@ class LevelsManager {
     }
 
     GameLevel initLevelModel(int level) throws GeneratingGameException {
-        if (levelInitiator.numLevel != level){
-            levelInitiator =new LevelInitiator(level, getLevelJsonObject(level));
+        if (levelInitiator.numLevel != level) {
+            levelInitiator = new LevelInitiator(level, getLevelJsonObject(level));
         }
         return levelInitiator.initLevelModel();
     }
 
-    LevelView initLevelView(GameLevel model, ScoresManager scoresManager){
+    LevelView initLevelView(GameLevel model, ScoresManager scoresManager) {
         return levelInitiator.initLevelView(model, scoresManager);
     }
 
