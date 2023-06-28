@@ -18,10 +18,8 @@ import oop.arkanoid.notifications.Notifications;
 import java.util.Collection;
 
 public class ScoresPane extends GridPane {
-    private final Button backButton = new Button("Back");
-    private final Label scoresTitleLabel = new Label("Scores");
-    private ListView<GridPane> scoresListView = new ListView<>();
-    private ObservableList<GridPane> scoresObservableList = FXCollections.observableArrayList();
+    private final ListView<GridPane> scoresListView = new ListView<>();
+    private final ObservableList<GridPane> scoresObservableList = FXCollections.observableArrayList();
 
     public ScoresPane() {
         ColumnConstraints columnConstraints = new ColumnConstraints();
@@ -35,8 +33,11 @@ public class ScoresPane extends GridPane {
         scoresViewRowConstraints.setPercentHeight(60.);
         backButtonRowConstraints.setPercentHeight(20.);
 
+        Label scoresTitleLabel = new Label("Scores");
         GridPane.setConstraints(scoresTitleLabel, 0, 0);
         GridPane.setConstraints(scoresListView, 0, 1);
+
+        Button backButton = new Button("Back");
         GridPane.setConstraints(backButton, 0, 2);
 
         GridPane.setHalignment(scoresTitleLabel, HPos.CENTER);
