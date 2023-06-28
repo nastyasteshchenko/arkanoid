@@ -29,8 +29,8 @@ public class GameOverPane extends GridPane {
         exitRowConstraints.setPercentHeight(20.);
         spaceRowConstraints.setPercentHeight(20.);
 
-        Label text = new Label("Game Over");
-        GridPane.setConstraints(text, 0, 0);
+        Label gameOverLabel = new Label("Game Over");
+        GridPane.setConstraints(gameOverLabel, 0, 0);
 
         Button restartGameButton = new Button("Restart game");
         GridPane.setConstraints(restartGameButton, 0, 1);
@@ -38,11 +38,11 @@ public class GameOverPane extends GridPane {
         Button exitButton = new Button("Exit");
         GridPane.setConstraints(exitButton, 0, 2);
 
-        GridPane.setHalignment(text, HPos.CENTER);
+        GridPane.setHalignment(gameOverLabel, HPos.CENTER);
         GridPane.setHalignment(restartGameButton, HPos.CENTER);
         GridPane.setHalignment(exitButton, HPos.CENTER);
 
-        GridPane.setValignment(text, VPos.CENTER);
+        GridPane.setValignment(gameOverLabel, VPos.CENTER);
         GridPane.setValignment(restartGameButton, VPos.CENTER);
         GridPane.setValignment(exitButton, VPos.TOP);
 
@@ -56,10 +56,10 @@ public class GameOverPane extends GridPane {
         exitButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21.0");
         exitButton.setFont(Font.font("Droid Sans Mono"));
 
-        text.setStyle("-fx-text-fill: RED; -fx-text-alignment: CENTER; -fx-font-size: 70.0;");
-        text.setFont(Font.font("Droid Sans Mono"));
+        gameOverLabel.setStyle("-fx-text-fill: RED; -fx-text-alignment: CENTER; -fx-font-size: 70.0;");
+        gameOverLabel.setFont(Font.font("Droid Sans Mono"));
 
-        this.getChildren().addAll(exitButton, restartGameButton, text);
+        this.getChildren().addAll(exitButton, restartGameButton, gameOverLabel);
         this.setPrefSize(600, 900);
         this.setOpacity(0.5);
         this.setStyle("-fx-background-color: #FFE4B5");
