@@ -11,5 +11,7 @@ public enum EventType {
     BACK,
     ABOUT,
     RESTART_LEVEL,
-    RESTART_GAME
+    RESTART_GAME,
+    SAVE_SCORE,
+    DONT_SAVE_SCORE
 }

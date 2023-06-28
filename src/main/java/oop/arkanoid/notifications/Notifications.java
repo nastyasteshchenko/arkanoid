@@ -33,6 +33,13 @@ public class Notifications {
         }
     }
 
+    public void publish(EventType type, String name) {
+        List<Subscriber> subscribers = this.subscribers.get(type);
+        for (Subscriber subscriber : subscribers) {
+            subscriber.handler().accept(name);
+        }
+    }
+
     public void publish(EventType type) {
         List<Subscriber> subscribers = this.subscribers.get(type);
         for (Subscriber subscriber : subscribers) {

@@ -12,17 +12,16 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import oop.arkanoid.notifications.EventType;
+import oop.arkanoid.notifications.Notifications;
 
 public class SaveScorePane extends GridPane {
-    private final Label newScoreTitleLabel = new Label("New score");
-    private final Label newScoreLabel = new Label("You have set a new score!\nEnter your nickname to save it");
     private final Label scoreLabel = new Label();
-    private final AnchorPane authorNameWrapper = new AnchorPane();
     private final TextField authorNameTextField = new TextField();
     private final Button saveButton = new Button("Save");
-    private final Button dontSaveButton = new Button("Don't save");
 
     public SaveScorePane() {
+        AnchorPane authorNameWrapper = new AnchorPane();
         authorNameWrapper.getChildren().add(authorNameTextField);
         AnchorPane.setRightAnchor(authorNameTextField, 15.);
         AnchorPane.setLeftAnchor(authorNameTextField, 15.);
@@ -47,11 +46,16 @@ public class SaveScorePane extends GridPane {
         spaceRowConstraints.setPercentHeight(20.);
         buttonsRowConstraints.setPercentHeight(10.);
 
+        Label newScoreTitleLabel = new Label("New score");
         GridPane.setConstraints(newScoreTitleLabel, 0, 0);
         GridPane.setConstraints(scoreLabel, 0, 1);
+
+        Label newScoreLabel = new Label("You have set a new score!\nEnter your nickname to save it");
         GridPane.setConstraints(newScoreLabel, 0, 2);
         GridPane.setConstraints(authorNameWrapper, 0, 3);
         GridPane.setConstraints(saveButton, 0, 5);
+
+        Button dontSaveButton = new Button("Don't save");
         GridPane.setConstraints(dontSaveButton, 1, 5);
 
         GridPane.setValignment(newScoreTitleLabel, VPos.CENTER);
@@ -93,10 +97,12 @@ public class SaveScorePane extends GridPane {
         saveButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff");
         saveButton.setFont(Font.font("Droid Sans Mono", 19.));
         saveButton.setDisable(true);
+        saveButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.SAVE_SCORE, authorNameTextField.getText()));
 
         dontSaveButton.setPrefSize(150., 70.);
         dontSaveButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff");
         dontSaveButton.setFont(Font.font("Droid Sans Mono", 19.));
+        dontSaveButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.DONT_SAVE_SCORE));
 
         this.getChildren().addAll(newScoreTitleLabel, scoreLabel, newScoreLabel, authorNameWrapper, saveButton, dontSaveButton);
         this.setPrefSize(600, 900);

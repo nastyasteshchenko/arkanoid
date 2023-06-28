@@ -1,8 +1,20 @@
 [
   {
     "levelName": "level1",
-    "author": "CHANGE!!!",
-    "score": 10,
-    "time": 0.0
+    "author": "Nastya",
+    "score": 125,
+    "time": 65.55999999997663
+  },
+  {
+    "levelName": "level3",
+    "author": "Nastya",
+    "score": 100,
+    "time": 204.00499999985072
+  },
+  {
+    "levelName": "level2",
+    "author": "Nastya",
+    "score": 75,
+    "time": 158.36749999989223
   }
 ]

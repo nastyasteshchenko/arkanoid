@@ -72,10 +72,12 @@ public class ScoresPane extends GridPane {
             Label levelNameLabel = new Label(singleScore.levelName());
             Label authorLabel = new Label(singleScore.author());
             Label scoreLabel = new Label(String.valueOf(singleScore.score()));
+            Label timeLabel = new Label(String.valueOf(Math.round(singleScore.time() * 1000) / 1000.0));
 
             levelNameLabel.setFont(Font.font("Droid Sans Mono", 20.));
             authorLabel.setFont(Font.font("Droid Sans Mono", 20.));
             scoreLabel.setFont(Font.font("Droid Sans mono", 20.));
+            timeLabel.setFont(Font.font("Droid Sans mono", 20.));
 
             RowConstraints rowConstraints = new RowConstraints();
             rowConstraints.setPercentHeight(100.);
@@ -83,29 +85,34 @@ public class ScoresPane extends GridPane {
             ColumnConstraints levelNameLabelColumnConstraints = new ColumnConstraints();
             ColumnConstraints authorLabelColumnConstraints = new ColumnConstraints();
             ColumnConstraints scoreLabelColumnConstraints = new ColumnConstraints();
+            ColumnConstraints timeLabelColumnConstraints = new ColumnConstraints();
 
-            levelNameLabelColumnConstraints.setPercentWidth(30.);
-            authorLabelColumnConstraints.setPercentWidth(40.);
-            scoreLabelColumnConstraints.setPercentWidth(30.);
+            levelNameLabelColumnConstraints.setPercentWidth(25.);
+            authorLabelColumnConstraints.setPercentWidth(55.);
+            scoreLabelColumnConstraints.setPercentWidth(35.);
+            timeLabelColumnConstraints.setPercentWidth(50.);
 
             GridPane itemGrid = new GridPane();
 
-            itemGrid.getColumnConstraints().addAll(levelNameLabelColumnConstraints, authorLabelColumnConstraints, scoreLabelColumnConstraints);
+            itemGrid.getColumnConstraints().addAll(levelNameLabelColumnConstraints, authorLabelColumnConstraints, scoreLabelColumnConstraints, timeLabelColumnConstraints);
             itemGrid.getRowConstraints().add(rowConstraints);
 
             GridPane.setConstraints(levelNameLabel, 0, 0);
             GridPane.setConstraints(authorLabel, 1, 0);
             GridPane.setConstraints(scoreLabel, 2, 0);
+            GridPane.setConstraints(timeLabel, 3, 0);
 
             GridPane.setHalignment(levelNameLabel, HPos.LEFT);
             GridPane.setHalignment(authorLabel, HPos.CENTER);
-            GridPane.setHalignment(scoreLabel, HPos.RIGHT);
+            GridPane.setHalignment(scoreLabel, HPos.CENTER);
+            GridPane.setHalignment(timeLabel, HPos.RIGHT);
 
             GridPane.setValignment(levelNameLabel, VPos.CENTER);
             GridPane.setValignment(authorLabel, VPos.CENTER);
             GridPane.setValignment(scoreLabel, VPos.CENTER);
+            GridPane.setValignment(timeLabel, VPos.CENTER);
 
-            itemGrid.getChildren().addAll(levelNameLabel, authorLabel, scoreLabel);
+            itemGrid.getChildren().addAll(levelNameLabel, authorLabel, scoreLabel, timeLabel);
 
             scoresObservableList.add(itemGrid);
         }
