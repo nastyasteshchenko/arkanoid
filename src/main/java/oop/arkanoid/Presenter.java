@@ -3,12 +3,11 @@ package oop.arkanoid;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import oop.arkanoid.model.GameLevel;
+import oop.arkanoid.model.GameState;
 import oop.arkanoid.model.GeneratingGameException;
 import oop.arkanoid.model.barrier.Brick;
 import oop.arkanoid.notifications.*;
@@ -23,13 +22,15 @@ class Presenter {
 
     private final LevelsManager levelsManager = new LevelsManager();
     private final ScoresManager scoresManager = new ScoresManager();
-    private final ScenesManager scenesManager = new ScenesManager();
-
     private final AboutPane aboutPane = new AboutPane();
     private final GameOverPane gameOverPane = new GameOverPane();
     private final GamePassedPane gamePassedPane = new GamePassedPane();
     private final GameWinPane gameWinPane = new GameWinPane();
     private final MainMenuPane mainMenuPane = new MainMenuPane();
+    private final SaveScorePane saveScorePane = new SaveScorePane();
+    private final ScoresPane scoresPane = new ScoresPane();
+
+    private double secondsPassed = 0.;
 
     private Timeline animation;
     private LevelView gameView;
@@ -48,11 +49,10 @@ class Presenter {
         levelsManager.checkGeneratingAllLevels();
 
         scoresManager.scanForScores();
-        scenesManager.scanForScenes(scoresManager);
 
         Notifications.getInstance().subscribe(EventType.START_GAME, this, v -> startGame());
 
-        Notifications.getInstance().subscribe(EventType.EXIT, this, v -> endGame());
+        Notifications.getInstance().subscribe(EventType.EXIT, this, v -> exitGame());
 
         Notifications.getInstance().subscribe(EventType.RECORDS, this, v -> watchRecords());
 
@@ -60,7 +60,7 @@ class Presenter {
 
         Notifications.getInstance().subscribe(EventType.ABOUT, this, v -> watchAboutGame());
 
-       updateMainPane(mainMenuPane);
+        updateMainPane(mainMenuPane);
     }
 
     private void setGameIsStarted() {
@@ -83,18 +83,27 @@ class Presenter {
     }
 
     private void restartAllGame() {
-        try {
-            scoresManager.scanForScores();
-            scenesManager.changeRecordsScene(scoresManager);
-        } catch (IOException e) {
-            createResourcesAlert(e.getMessage());
-            endGame();
-        }
-       updateMainPane(mainMenuPane);
+        scoresManager.scanForScores();
+        updateMainPane(mainMenuPane);
+    }
+
+    private void exitGame() {
+        System.exit(0);
     }
 
     private void endGame() {
-        System.exit(0);
+        animation.stop();
+//        setScore();
+
+        if (scoresManager.isNewScore("level" + currentLevel, model.getScore(), secondsPassed)) {
+            saveScorePane.setShowingScore(model.getScore(), secondsPassed);
+            updateMainPane(saveScorePane);
+        } else {
+            switch (model.gameState()) {
+                case WIN -> gameWin();
+                case LOSE -> gameLose();
+            }
+        }
     }
 
     private void startGame() {
@@ -124,7 +133,7 @@ class Presenter {
     }
 
     private void backToMainScene() {
-       updateMainPane(mainMenuPane);
+        updateMainPane(mainMenuPane);
     }
 
     private void watchAboutGame() {
@@ -132,7 +141,8 @@ class Presenter {
     }
 
     private void watchRecords() {
-       //updateMainPane();
+        scoresPane.updateScores(scoresManager.getScores());
+        updateMainPane(scoresPane);
     }
 
     private void gameLose() {
@@ -151,7 +161,7 @@ class Presenter {
     }
 
     private void setRecord() {
-        scoresManager.writeScore("level" + currentLevel, model.getScore());
+        scoresManager.writeScore("level" + currentLevel, "CHANGE!!!", model.getScore(), 0.);
         scoresManager.storeRecords();
     }
 
@@ -159,7 +169,7 @@ class Presenter {
         try {
             model = levelsManager.initLevelModel(currentLevel);
             if (model == null) {
-               updateMainPane(gamePassedPane);
+                updateMainPane(gamePassedPane);
                 return;
             }
         } catch (GeneratingGameException e) {
@@ -174,11 +184,11 @@ class Presenter {
 
     private void startAnimation() {
         animation = new Timeline(new KeyFrame(Duration.millis(2.5), ae -> {
-                gameView.drawBall(model.nextBallPosition());
-                switch (model.gameState()) {
-                    case WIN -> gameWin();
-                    case LOSE -> gameLose();
-                }
+            secondsPassed += animation.getKeyFrames().get(0).getTime().toSeconds();
+            gameView.drawBall(model.nextBallPosition());
+            if (model.gameState() != GameState.PROCESS) {
+                endGame();
+            }
         }));
         animation.setCycleCount(Animation.INDEFINITE);
     }

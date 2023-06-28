@@ -1,1 +1,8 @@
-[{"levelName":"level1","score":125},{"levelName":"level3","score":100},{"levelName":"level2","score":125}]
+[
+  {
+    "levelName": "level1",
+    "author": "CHANGE!!!",
+    "score": 10,
+    "time": 0.0
+  }
+]

@@ -10,13 +10,9 @@ import java.util.*;
 import static oop.arkanoid.AlertCreationUtil.createResourcesAlert;
 
 class ScoresManager {
-
-    record LevelScore(String levelName, int score) {
-    }
-
     private final static String PATH_TO_RECORDS = "records.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final Map<String, LevelScore> scores = new HashMap<>();
+    private final Map<String, SingleScore> scores = new HashMap<>();
 
     ScoresManager() {
     }
@@ -27,40 +23,46 @@ class ScoresManager {
 
         try (JsonReader fileReader = new JsonReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(PATH_TO_RECORDS))))) {
             JsonArray ja = gson.fromJson(fileReader, JsonArray.class);
+            if (ja == null) {
+                return;
+            }
             for (JsonElement je : ja) {
-                JsonObject jsonObject = je.getAsJsonObject();
-                LevelScore levelScore = new LevelScore(jsonObject.get("levelName").getAsString(), jsonObject.get("score").getAsInt());
-                scores.put(levelScore.levelName, levelScore);
+                SingleScore levelScore = gson.fromJson(je, SingleScore.class);
+                scores.put(levelScore.levelName(), levelScore);
             }
         } catch (IOException e) {
             createResourcesAlert(e.getMessage());
         }
     }
 
-    void writeScore(String levelName, int scoreValue) {
-        if (scoreValue > scores.get(levelName).score) {
-            scores.put(levelName, new LevelScore(levelName, scoreValue));
+    public boolean isNewScore(String levelName, int scoreValue, double time) {
+        if (scores.containsKey(levelName)) {
+            return scoreValue > scores.get(levelName).score() || (scoreValue == scores.get(levelName).score() && time < scores.get(levelName).time());
+        }
+        return true;
+    }
+
+    void writeScore(String levelName, String author, int scoreValue, double time) {
+        if (this.isNewScore(levelName, scoreValue, time)) {
+            scores.put(levelName, new SingleScore(levelName, author, scoreValue, time));
         }
     }
 
-    int getScoreForLevel(String levelName) {
-        return scores.get(levelName).score;
+    double getScoreForLevel(String levelName) {
+        if (scores.containsKey(levelName)) {
+            return scores.get(levelName).score();
+        }
+        return 0;
     }
 
-    Collection<LevelScore> getScores() {
+    Collection<SingleScore> getScores() {
         return scores.values();
     }
 
     void storeRecords() {
-        try (JsonWriter jsonWriter = new JsonWriter(new FileWriter("src/main/resources/oop/arkanoid/" + PATH_TO_RECORDS))) {
-            jsonWriter.beginArray();
-            for (LevelScore levelScore : scores.values()) {
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("levelName", levelScore.levelName());
-                jsonObject.addProperty("score", levelScore.score());
-                gson.toJson(jsonObject, jsonWriter);
-            }
-            jsonWriter.endArray();
+        try (FileWriter jsonWriter = new FileWriter("src/main/resources/oop/arkanoid/" + PATH_TO_RECORDS)) {
+            ArrayList<SingleScore> singleScores = new ArrayList<>(scores.values());
+            gson.toJson(singleScores, jsonWriter);
         } catch (IOException e) {
             createResourcesAlert(e.getMessage());
         }

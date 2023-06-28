@@ -88,7 +88,7 @@ class LevelInitiator {
         String highScoreFontSIze = "-fx-font-size: " + highScore.get("fontSize").getAsString();
         double x = highScore.get("x").getAsDouble();
         double y = highScore.get("y").getAsDouble();
-        builder.highScore(new Point(x, y), scoresManager.getScoreForLevel("level" + numLevel), highScoreFont, highScoreFontSIze);
+        builder.highScore(new Point(x, y), (int) scoresManager.getScoreForLevel("level" + numLevel), highScoreFont, highScoreFontSIze);
     }
 
     private void setSceneForView(GameLevel model, LevelView.Builder builder) {
