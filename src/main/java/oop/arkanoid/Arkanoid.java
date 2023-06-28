@@ -10,7 +10,6 @@ public class Arkanoid extends Application {
     @Override
     public void start(Stage stage) {
         stage.setTitle("Arkanoid");
-        stage.setResizable(false);
 
         Presenter presenter = new Presenter(stage);
 
