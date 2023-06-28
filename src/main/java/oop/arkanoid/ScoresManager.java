@@ -9,16 +9,16 @@ import java.util.*;
 
 import static oop.arkanoid.AlertCreationUtil.createResourcesAlert;
 
-public class ScoresManager {
+class ScoresManager {
 
-    public record LevelScore(String levelName, int score) {
+    record LevelScore(String levelName, int score) {
     }
 
     private final static String PATH_TO_RECORDS = "records.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<String, LevelScore> scores = new HashMap<>();
 
-    public ScoresManager() {
+    ScoresManager() {
     }
 
     void scanForScores() {
@@ -37,21 +37,21 @@ public class ScoresManager {
         }
     }
 
-    public void writeScore(String levelName, int scoreValue) {
+    void writeScore(String levelName, int scoreValue) {
         if (scoreValue > scores.get(levelName).score) {
             scores.put(levelName, new LevelScore(levelName, scoreValue));
         }
     }
 
-    public int getScoreForLevel(String levelName) {
+    int getScoreForLevel(String levelName) {
         return scores.get(levelName).score;
     }
 
-    public Collection<LevelScore> getScores() {
+    Collection<LevelScore> getScores() {
         return scores.values();
     }
 
-    public void storeRecords() {
+    void storeRecords() {
         try (JsonWriter jsonWriter = new JsonWriter(new FileWriter("src/main/resources/oop/arkanoid/" + PATH_TO_RECORDS))) {
             jsonWriter.beginArray();
             for (LevelScore levelScore : scores.values()) {

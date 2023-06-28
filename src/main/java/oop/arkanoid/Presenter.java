@@ -16,7 +16,7 @@ import java.io.*;
 
 import static oop.arkanoid.AlertCreationUtil.createResourcesAlert;
 
-public class Presenter {
+class Presenter {
 
     private final LevelsManager levelsManager = new LevelsManager();
     private final ScoresManager scoresManager = new ScoresManager();
@@ -31,25 +31,6 @@ public class Presenter {
 
     Presenter(Stage stage) {
         this.stage = stage;
-    }
-
-    void setGameIsStarted() {
-        gameIsStarted = true;
-    }
-
-    void setPause() {
-        isPause = !isPause;
-        if (isPause) {
-            animation.pause();
-        } else {
-            animation.play();
-        }
-    }
-
-    void movePlatform(double x) {
-        if (gameIsStarted) {
-            gameView.drawPlatform(model.updatePlatformPosition(x));
-        }
     }
 
     void loadResourcesBeforeStartApp() throws IOException, GeneratingGameException {
@@ -70,6 +51,25 @@ public class Presenter {
         Notifications.getInstance().subscribe(EventType.ABOUT, this, v -> watchAboutGame());
 
         stage.setScene(scenesManager.getScene("main"));
+    }
+
+    private void setGameIsStarted() {
+        gameIsStarted = true;
+    }
+
+    private void setPause() {
+        isPause = !isPause;
+        if (isPause) {
+            animation.pause();
+        } else {
+            animation.play();
+        }
+    }
+
+    private void movePlatform(double x) {
+        if (gameIsStarted) {
+            gameView.drawPlatform(model.updatePlatformPosition(x));
+        }
     }
 
     private void restartAllGame() {
@@ -118,7 +118,7 @@ public class Presenter {
     }
 
     private void watchAboutGame() {
-       stage.setScene(scenesManager.getScene("about"));
+        stage.setScene(scenesManager.getScene("about"));
     }
 
     private void watchRecords() {

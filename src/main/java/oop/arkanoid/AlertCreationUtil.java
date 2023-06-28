@@ -2,7 +2,7 @@ package oop.arkanoid;
 
 import javafx.scene.control.Alert;
 
-public class AlertCreationUtil {
+class AlertCreationUtil {
 
     static void createResourcesAlert(String msg) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
