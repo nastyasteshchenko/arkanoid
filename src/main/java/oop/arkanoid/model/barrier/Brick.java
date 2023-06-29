@@ -3,7 +3,7 @@ package oop.arkanoid.model.barrier;
 import oop.arkanoid.model.*;
 import oop.arkanoid.model.motion.LinearEquation;
 import oop.arkanoid.notifications.EventType;
-import oop.arkanoid.notifications.Notifications;
+import oop.arkanoid.notifications.NotificationsManager;
 
 import java.util.EnumMap;
 
@@ -39,7 +39,7 @@ public final class Brick extends Barrier {
     public void onHit() {
         health.decrease();
         if (isDead()) {
-            Notifications.getInstance().publish(EventType.DESTROY, this);
+            NotificationsManager.getInstance().publish(EventType.DESTROY, this);
         }
     }
 

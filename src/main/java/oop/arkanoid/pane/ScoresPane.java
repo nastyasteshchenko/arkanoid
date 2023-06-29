@@ -13,7 +13,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import oop.arkanoid.SingleScore;
 import oop.arkanoid.notifications.EventType;
-import oop.arkanoid.notifications.Notifications;
+import oop.arkanoid.notifications.NotificationsManager;
 
 import java.util.Collection;
 
@@ -48,7 +48,7 @@ public class ScoresPane extends GridPane {
         GridPane.setValignment(scoresListView, VPos.CENTER);
         GridPane.setValignment(backButton, VPos.CENTER);
 
-        backButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.BACK));
+        backButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventType.BACK));
         backButton.setPrefSize(150.0, 70.0);
 
         backButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 19.0");

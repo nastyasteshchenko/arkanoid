@@ -9,7 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import oop.arkanoid.notifications.EventType;
-import oop.arkanoid.notifications.Notifications;
+import oop.arkanoid.notifications.NotificationsManager;
 
 public class GamePassedPane extends GridPane {
 
@@ -44,12 +44,12 @@ public class GamePassedPane extends GridPane {
         GridPane.setValignment(backToMenuButton, VPos.CENTER);
         GridPane.setValignment(exitButton, VPos.TOP);
 
-        backToMenuButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.RESTART_GAME));
+        backToMenuButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventType.RESTART_GAME));
         backToMenuButton.setPrefSize(233., 70.);
         backToMenuButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21");
         backToMenuButton.setFont(Font.font("Droid Sans Mono"));
 
-        exitButton.setOnAction(ae -> Notifications.getInstance().publish(EventType.EXIT));
+        exitButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventType.EXIT));
         exitButton.setPrefSize(233., 70.);
         exitButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21");
         exitButton.setFont(Font.font("Droid Sans Mono"));

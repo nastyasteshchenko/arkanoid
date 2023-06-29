@@ -49,13 +49,39 @@ class Presenter {
 
         scoresManager.scanForScores();
 
-        Notifications.getInstance().subscribe(EventType.START_GAME, this, v -> startGame());
-        Notifications.getInstance().subscribe(EventType.EXIT, this, v -> exitGame());
-        Notifications.getInstance().subscribe(EventType.RECORDS, this, v -> watchRecords());
-        Notifications.getInstance().subscribe(EventType.BACK, this, v -> updateMainPane(mainMenuPane));
+        NotificationsManager.getInstance().subscribe(EventType.START_GAME, this, v -> startGame());
+        NotificationsManager.getInstance().subscribe(EventType.EXIT, this, v -> exitGame());
+        NotificationsManager.getInstance().subscribe(EventType.RECORDS, this, v -> watchRecords());
+        NotificationsManager.getInstance().subscribe(EventType.BACK, this, v -> updateMainPane(mainMenuPane));
 
         final AboutPane aboutPane = new AboutPane();
-        Notifications.getInstance().subscribe(EventType.ABOUT, this, v -> updateMainPane(aboutPane));
+        NotificationsManager.getInstance().subscribe(EventType.ABOUT, this, v -> updateMainPane(aboutPane));
+
+        NotificationsManager.getInstance().subscribe(EventType.DESTROY, this, b -> {
+            if (b instanceof Brick brick) {
+                gameView.deleteBrick(brick.position());
+                gameView.drawScore(model.getScore());
+            }
+        });
+
+        NotificationsManager.getInstance().subscribe(EventType.START_PLAYING_GAME, this, v -> setGameIsStarted());
+        NotificationsManager.getInstance().subscribe(EventType.PAUSE, this, v -> setPause());
+        NotificationsManager.getInstance().subscribe(EventType.MOVE_PLATFORM, this, v -> {
+            if (v instanceof Double x) {
+                movePlatform(x);
+            }
+        });
+
+        NotificationsManager.getInstance().subscribe(EventType.RESTART_LEVEL, this, v -> startLevel());
+        NotificationsManager.getInstance().subscribe(EventType.RESTART_GAME, this, v -> restartAllGame());
+        NotificationsManager.getInstance().subscribe(EventType.SAVE_SCORE, this, str -> {
+            if (str instanceof String name) {
+                setRecord(name, secondsPassed);
+                prepareForLevelOver();
+            }
+        });
+
+        NotificationsManager.getInstance().subscribe(EventType.DONT_SAVE_SCORE, this, v -> prepareForLevelOver());
 
         updateMainPane(mainMenuPane);
     }
@@ -99,32 +125,6 @@ class Presenter {
     }
 
     private void startGame() {
-        Notifications.getInstance().subscribe(EventType.DESTROY, this, b -> {
-            if (b instanceof Brick brick) {
-                gameView.deleteBrick(brick.position());
-                gameView.drawScore(model.getScore());
-            }
-        });
-
-        Notifications.getInstance().subscribe(EventType.START_PLAYING_GAME, this, v -> setGameIsStarted());
-        Notifications.getInstance().subscribe(EventType.PAUSE, this, v -> setPause());
-        Notifications.getInstance().subscribe(EventType.MOVE_PLATFORM, this, v -> {
-            if (v instanceof Double x) {
-                movePlatform(x);
-            }
-        });
-
-        Notifications.getInstance().subscribe(EventType.RESTART_LEVEL, this, v -> startLevel());
-        Notifications.getInstance().subscribe(EventType.RESTART_GAME, this, v -> restartAllGame());
-        Notifications.getInstance().subscribe(EventType.SAVE_SCORE, this, str -> {
-            if (str instanceof String name) {
-                setRecord(name, secondsPassed);
-                prepareForLevelOver();
-            }
-        });
-
-        Notifications.getInstance().subscribe(EventType.DONT_SAVE_SCORE, this, v -> prepareForLevelOver());
-
         currentLevel = 1;
         startLevel();
     }

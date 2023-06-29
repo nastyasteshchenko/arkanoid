@@ -5,17 +5,17 @@ import oop.arkanoid.model.barrier.Brick;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class Notifications {
-    private static final Notifications INSTANCE = new Notifications();
+public class NotificationsManager {
+    private static final NotificationsManager INSTANCE = new NotificationsManager();
 
     private final EnumMap<EventType, List<Subscriber>> subscribers = new EnumMap<>(EventType.class);
 
     private final HashMap<Object, EnumMap<EventType, Subscriber>> subscriberToObjectMapping = new HashMap<>();
 
-    private Notifications() {
+    private NotificationsManager() {
     }
 
-    public static Notifications getInstance() {
+    public static NotificationsManager getInstance() {
         return INSTANCE;
     }
 
