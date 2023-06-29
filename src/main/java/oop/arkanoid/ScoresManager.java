@@ -13,9 +13,6 @@ class ScoresManager {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<String, SingleScore> scores = new HashMap<>();
 
-    ScoresManager() {
-    }
-
     void scanForScores() {
 
         scores.clear();
