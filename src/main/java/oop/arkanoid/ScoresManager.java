@@ -2,18 +2,17 @@ package oop.arkanoid;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
+import javafx.scene.control.Alert;
 
 import java.io.*;
 import java.util.*;
-
-import static oop.arkanoid.AlertCreationUtil.createResourcesAlert;
 
 class ScoresManager {
     private final static String PATH_TO_RECORDS = "records.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<String, SingleScore> scores = new HashMap<>();
 
-    void scanForScores() {
+    void scanForScores() throws IOException {
 
         scores.clear();
 
@@ -26,9 +25,6 @@ class ScoresManager {
                 SingleScore levelScore = gson.fromJson(je, SingleScore.class);
                 scores.put(levelScore.levelName(), levelScore);
             }
-        } catch (IOException e) {
-            createResourcesAlert(e.getMessage());
-            System.exit(0);
         }
     }
 
@@ -61,7 +57,10 @@ class ScoresManager {
             ArrayList<SingleScore> singleScores = new ArrayList<>(scores.values());
             gson.toJson(singleScores, jsonWriter);
         } catch (IOException e) {
-            createResourcesAlert(e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error saving scores");
+            alert.setContentText("Error: " + e.getMessage());
+            alert.showAndWait();
         }
     }
 }

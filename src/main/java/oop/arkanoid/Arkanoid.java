@@ -2,10 +2,10 @@ package oop.arkanoid;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import static oop.arkanoid.AlertCreationUtil.createResourcesAlert;
 
 public class Arkanoid extends Application {
 
@@ -17,9 +17,12 @@ public class Arkanoid extends Application {
         Presenter presenter = new Presenter(mainStackPane);
 
         try {
-            presenter.loadResourcesBeforeStartApp();
+            presenter.initialize();
         } catch (Exception e) {
-            createResourcesAlert(e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error");
+            alert.setContentText("Error: " + e.getMessage());
+            alert.showAndWait();
             return;
         }
 

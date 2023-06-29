@@ -16,8 +16,6 @@ import oop.arkanoid.view.LevelView;
 
 import java.io.*;
 
-import static oop.arkanoid.AlertCreationUtil.createResourcesAlert;
-
 class Presenter {
 
     private final LevelsManager levelsManager = new LevelsManager();
@@ -44,7 +42,7 @@ class Presenter {
     }
 
 
-    void loadResourcesBeforeStartApp() throws IOException, GeneratingGameException {
+    void initialize() throws IOException, GeneratingGameException {
         levelsManager.scanForLevels();
         levelsManager.checkGeneratingAllLevels();
 
@@ -81,7 +79,6 @@ class Presenter {
     }
 
     private void restartAllGame() {
-        scoresManager.scanForScores();
         updateMainPane(mainMenuPane);
     }
 
@@ -159,8 +156,8 @@ class Presenter {
                 updateMainPane(gamePassedPane);
                 return;
             }
-        } catch (GeneratingGameException e) {
-            createResourcesAlert(e.getMessage());
+        } catch (GeneratingGameException ignore) {
+            //never throws because all checks have already done
         }
 
         gameView = levelsManager.initLevelView(model, scoresManager);
