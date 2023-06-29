@@ -21,16 +21,16 @@ class ScoresManager {
         return scoresManager;
     }
 
-    boolean isNewScore(String levelName, int scoreValue, double time) {
+    boolean isNewScore(String levelName, int score, double time) {
         if (scores.containsKey(levelName)) {
-            return scoreValue > scores.get(levelName).score() || (scoreValue == scores.get(levelName).score() && time < scores.get(levelName).time());
+            return score > scores.get(levelName).score() || (score == scores.get(levelName).score() && time < scores.get(levelName).time());
         }
         return true;
     }
 
-    void writeScore(String levelName, String author, int scoreValue, double time) {
-        if (this.isNewScore(levelName, scoreValue, time)) {
-            scores.put(levelName, new SingleScore(levelName, author, scoreValue, time));
+    void writeScore(SingleScore singleScore) {
+        if (this.isNewScore(singleScore.levelName(), singleScore.score(), singleScore.time())) {
+            scores.put(singleScore.levelName(), singleScore);
         }
     }
 

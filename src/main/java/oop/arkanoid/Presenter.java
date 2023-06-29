@@ -146,7 +146,7 @@ class Presenter {
     }
 
     private void setRecord(String author, double time) {
-        scoresManager.writeScore("level" + currentLevel, author, model.getScore(), time);
+        scoresManager.writeScore(new SingleScore("level" + currentLevel, author, model.getScore(), time));
         scoresManager.storeRecords();
     }
 
