@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 
 class LevelsManager {
-    private final static String PATH_TO_LEVELS_DIR = "./oop/arkanoid/Levels";
+    private final static Path PATH_TO_LEVELS_DIR =  Path.of(".", "oop", "arkanoid", "Levels");
     private final Map<String, JsonObject> availableLevels = new HashMap<>();
     private LevelInitiator levelInitiator = new LevelInitiator(null, "");
 
@@ -60,7 +60,8 @@ class LevelsManager {
 
         availableLevels.clear();
 
-        URI uri = ClassLoader.getSystemResource(PATH_TO_LEVELS_DIR).toURI();
+
+        URI uri = ClassLoader.getSystemResource(PATH_TO_LEVELS_DIR.toString()).toURI();
 
         Path levelsDir = Paths.get(uri);
 

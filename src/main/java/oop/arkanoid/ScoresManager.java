@@ -5,10 +5,11 @@ import com.google.gson.stream.JsonReader;
 import javafx.scene.control.Alert;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.util.*;
 
 class ScoresManager {
-    private final static String PATH_TO_RECORDS = "records.json";
+    private final static Path PATH_TO_RECORDS = Path.of("records.json");
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<String, SingleScore> scores = new HashMap<>();
 
@@ -47,7 +48,8 @@ class ScoresManager {
     }
 
     void storeRecords() {
-        try (FileWriter jsonWriter = new FileWriter("src/main/resources/oop/arkanoid/" + PATH_TO_RECORDS)) {
+        Path pathToSave = Path.of("src", "main", "resources", "oop", "arkanoid", PATH_TO_RECORDS.toString());
+        try (FileWriter jsonWriter = new FileWriter(pathToSave.toString())) {
             ArrayList<SingleScore> singleScores = new ArrayList<>(scores.values());
             gson.toJson(singleScores, jsonWriter);
         } catch (IOException e) {
@@ -62,7 +64,7 @@ class ScoresManager {
 
         scores.clear();
 
-        try (JsonReader fileReader = new JsonReader(new BufferedReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(PATH_TO_RECORDS)))))) {
+        try (JsonReader fileReader = new JsonReader(new BufferedReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(PATH_TO_RECORDS.toString())))))) {
             JsonArray ja = gson.fromJson(fileReader, JsonArray.class);
             if (ja == null) {
                 return;
