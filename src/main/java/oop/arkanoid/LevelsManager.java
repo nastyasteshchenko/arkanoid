@@ -25,16 +25,11 @@ class LevelsManager {
     private final Map<String, JsonObject> availableLevels = new HashMap<>();
     private LevelInitiator levelInitiator = new LevelInitiator(0, null);
 
-    void scanForLevels() throws IOException {
+    void scanForLevels() throws IOException, URISyntaxException {
 
         availableLevels.clear();
 
-        URI uri;
-        try {
-            uri = ClassLoader.getSystemResource(PATH_TO_LEVELS_DIR).toURI();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        URI uri = ClassLoader.getSystemResource(PATH_TO_LEVELS_DIR).toURI();
 
         Path levelsDir = Paths.get(uri);
 

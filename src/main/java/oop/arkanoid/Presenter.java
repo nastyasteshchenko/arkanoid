@@ -15,6 +15,7 @@ import oop.arkanoid.pane.*;
 import oop.arkanoid.view.LevelView;
 
 import java.io.*;
+import java.net.URISyntaxException;
 
 class Presenter {
 
@@ -42,7 +43,7 @@ class Presenter {
     }
 
 
-    void initialize() throws IOException, GeneratingGameException {
+    void initialize() throws IOException, GeneratingGameException, URISyntaxException {
         levelsManager.scanForLevels();
         levelsManager.checkGeneratingAllLevels();
 
