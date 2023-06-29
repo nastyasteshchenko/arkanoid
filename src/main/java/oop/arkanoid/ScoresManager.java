@@ -41,7 +41,7 @@ class ScoresManager {
         }
     }
 
-    double getScoreForLevel(String levelName) {
+    int getScoreForLevel(String levelName) {
         if (scores.containsKey(levelName)) {
             return scores.get(levelName).score();
         }
