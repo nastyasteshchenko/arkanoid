@@ -7,10 +7,12 @@ import oop.arkanoid.model.GameLevel;
 import oop.arkanoid.model.GeneratingGameException;
 import oop.arkanoid.view.LevelView;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.NotDirectoryException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -27,21 +29,21 @@ class LevelsManager {
 
         availableLevels.clear();
 
-        File levelsDir = new File(Objects.requireNonNull(getClass().getClassLoader().getResource(PATH_TO_LEVELS_DIR)).getFile());
+        Path levelsDir = Path.of(Objects.requireNonNull(getClass().getClassLoader().getResource(PATH_TO_LEVELS_DIR)).getPath());
 
-        if (!levelsDir.isDirectory()) {
+        if (!Files.isDirectory(levelsDir)) {
             throw new NotDirectoryException("Expected \"Levels\" directory, but got file");
         }
 
         Gson gson = new Gson();
 
-        for (File f : Objects.requireNonNull(levelsDir.listFiles())) {
-            if (f.isDirectory()) {
+        for (Path f : Objects.requireNonNull(Files.newDirectoryStream(levelsDir))) {
+            if (Files.isDirectory(f)) {
                 continue;
             }
 
-            try (JsonReader reader = new JsonReader(new FileReader(f))) {
-                availableLevels.put(f.getName(), gson.fromJson(reader, JsonObject.class));
+            try (JsonReader reader = new JsonReader(new BufferedReader(new FileReader(f.toString())))) {
+                availableLevels.put(f.getFileName().toString(), gson.fromJson(reader, JsonObject.class));
             }
         }
     }

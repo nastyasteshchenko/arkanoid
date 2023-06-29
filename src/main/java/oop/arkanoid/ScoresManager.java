@@ -20,7 +20,7 @@ class ScoresManager {
 
         scores.clear();
 
-        try (JsonReader fileReader = new JsonReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(PATH_TO_RECORDS))))) {
+        try (JsonReader fileReader = new JsonReader(new BufferedReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(PATH_TO_RECORDS)))))) {
             JsonArray ja = gson.fromJson(fileReader, JsonArray.class);
             if (ja == null) {
                 return;
@@ -31,6 +31,7 @@ class ScoresManager {
             }
         } catch (IOException e) {
             createResourcesAlert(e.getMessage());
+            System.exit(0);
         }
     }
 
