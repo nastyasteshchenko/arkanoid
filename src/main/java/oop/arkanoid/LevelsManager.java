@@ -23,7 +23,7 @@ import java.util.Objects;
 class LevelsManager {
     private final static String PATH_TO_LEVELS_DIR = "./oop/arkanoid/Levels";
     private final Map<String, JsonObject> availableLevels = new HashMap<>();
-    private LevelInitiator levelInitiator = new LevelInitiator(0, null);
+    private LevelInitiator levelInitiator = new LevelInitiator(null, "");
 
     void scanForLevels() throws IOException, URISyntaxException {
 
@@ -50,28 +50,26 @@ class LevelsManager {
         }
     }
 
-    GameLevel initLevelModel(int level) throws GeneratingGameException {
-        if (levelInitiator.numLevel != level) {
-            levelInitiator = new LevelInitiator(level, getLevelJsonObject(level));
+    GameLevel initLevelModel(String levelName) throws GeneratingGameException {
+        if (!levelInitiator.levelName.equals(levelName)) {
+            levelInitiator = new LevelInitiator(getLevelJsonObject(levelName), levelName);
         }
         return levelInitiator.initLevelModel();
     }
 
-    LevelView initLevelView(GameLevel model, ScoresManager scoresManager) {
-        return levelInitiator.initLevelView(model, scoresManager);
+    LevelView initLevelView(GameLevel model, int highScore) {
+        return levelInitiator.initLevelView(model, highScore);
     }
 
     void checkGeneratingAllLevels() throws GeneratingGameException {
-        int level = 1;
         for (JsonObject jsonObject : availableLevels.values()) {
-            LevelInitiator levelsInitiator = new LevelInitiator(level, jsonObject);
+            LevelInitiator levelsInitiator = new LevelInitiator(jsonObject, "");
             levelsInitiator.initLevelModel();
-            level++;
         }
     }
 
-    private JsonObject getLevelJsonObject(int level) {
-        return availableLevels.get("level" + level + ".json");
+    private JsonObject getLevelJsonObject(String levelName) {
+        return availableLevels.get(levelName + ".json");
     }
 
 }

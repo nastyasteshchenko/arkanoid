@@ -19,11 +19,11 @@ import java.util.List;
 
 class LevelInitiator {
     private final JsonObject levelJsonObject;
-    final Integer numLevel;
+    final String levelName;
 
-    LevelInitiator(int numLevel, JsonObject levelJsonObject) {
-        this.numLevel = numLevel;
+    LevelInitiator(JsonObject levelJsonObject, String levelName) {
         this.levelJsonObject = levelJsonObject;
+        this.levelName = levelName;
     }
 
     GameLevel initLevelModel() throws GeneratingGameException {
@@ -44,14 +44,14 @@ class LevelInitiator {
         return builder.build();
     }
 
-    LevelView initLevelView(GameLevel model, ScoresManager scoresManager) {
+    LevelView initLevelView(GameLevel model, int highScore) {
 
         LevelView.Builder builder = new LevelView.Builder();
 
         setBarriersForView(model, builder);
         setBallForView(model, builder);
         setSceneForView(model, builder);
-        setHighScoreForView(builder, scoresManager);
+        setHighScoreForView(builder, highScore);
         setScoreForView(builder);
         setPauseButtonForView(builder);
 
@@ -82,13 +82,13 @@ class LevelInitiator {
         builder.score(new Point(x, y), scoreFont, scoreFontSize);
     }
 
-    private void setHighScoreForView(LevelView.Builder builder, ScoresManager scoresManager) {
-        JsonObject highScore = levelJsonObject.getAsJsonObject("highScore");
-        Font highScoreFont = Font.font(highScore.get("font").getAsString());
-        String highScoreFontSIze = "-fx-font-size: " + highScore.get("fontSize").getAsString();
-        double x = highScore.get("x").getAsDouble();
-        double y = highScore.get("y").getAsDouble();
-        builder.highScore(new Point(x, y), scoresManager.getScoreForLevel("level" + numLevel), highScoreFont, highScoreFontSIze);
+    private void setHighScoreForView(LevelView.Builder builder, int highScore) {
+        JsonObject highScoreJO = levelJsonObject.getAsJsonObject("highScore");
+        Font highScoreFont = Font.font(highScoreJO.get("font").getAsString());
+        String highScoreFontSIze = "-fx-font-size: " + highScoreJO.get("fontSize").getAsString();
+        double x = highScoreJO.get("x").getAsDouble();
+        double y = highScoreJO.get("y").getAsDouble();
+        builder.highScore(new Point(x, y), highScore, highScoreFont, highScoreFontSIze);
     }
 
     private void setSceneForView(GameLevel model, LevelView.Builder builder) {

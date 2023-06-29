@@ -151,8 +151,9 @@ class Presenter {
     }
 
     private void startLevel() {
+        String levelName = "level" + currentLevel;
         try {
-            model = levelsManager.initLevelModel(currentLevel);
+            model = levelsManager.initLevelModel(levelName);
             if (model == null) {
                 updateMainPane(gamePassedPane);
                 return;
@@ -161,7 +162,7 @@ class Presenter {
             //never throws because all checks have already done
         }
 
-        gameView = levelsManager.initLevelView(model, scoresManager);
+        gameView = levelsManager.initLevelView(model, scoresManager.getScoreForLevel(levelName));
         updateMainPane(gameView.getGamePane());
         startAnimation();
 
