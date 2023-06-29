@@ -12,23 +12,16 @@ class ScoresManager {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<String, SingleScore> scores = new HashMap<>();
 
-    void scanForScores() throws IOException {
-
-        scores.clear();
-
-        try (JsonReader fileReader = new JsonReader(new BufferedReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(PATH_TO_RECORDS)))))) {
-            JsonArray ja = gson.fromJson(fileReader, JsonArray.class);
-            if (ja == null) {
-                return;
-            }
-            for (JsonElement je : ja) {
-                SingleScore levelScore = gson.fromJson(je, SingleScore.class);
-                scores.put(levelScore.levelName(), levelScore);
-            }
-        }
+    private ScoresManager() {
     }
 
-    public boolean isNewScore(String levelName, int scoreValue, double time) {
+    static ScoresManager create() throws IOException {
+        ScoresManager scoresManager = new ScoresManager();
+        scoresManager.scanForScores();
+        return scoresManager;
+    }
+
+    boolean isNewScore(String levelName, int scoreValue, double time) {
         if (scores.containsKey(levelName)) {
             return scoreValue > scores.get(levelName).score() || (scoreValue == scores.get(levelName).score() && time < scores.get(levelName).time());
         }
@@ -61,6 +54,22 @@ class ScoresManager {
             alert.setHeaderText("Error saving scores");
             alert.setContentText("Error: " + e.getMessage());
             alert.showAndWait();
+        }
+    }
+
+    private void scanForScores() throws IOException {
+
+        scores.clear();
+
+        try (JsonReader fileReader = new JsonReader(new BufferedReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(PATH_TO_RECORDS)))))) {
+            JsonArray ja = gson.fromJson(fileReader, JsonArray.class);
+            if (ja == null) {
+                return;
+            }
+            for (JsonElement je : ja) {
+                SingleScore levelScore = gson.fromJson(je, SingleScore.class);
+                scores.put(levelScore.levelName(), levelScore);
+            }
         }
     }
 }

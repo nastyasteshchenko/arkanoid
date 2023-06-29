@@ -25,29 +25,13 @@ class LevelsManager {
     private final Map<String, JsonObject> availableLevels = new HashMap<>();
     private LevelInitiator levelInitiator = new LevelInitiator(null, "");
 
-    void scanForLevels() throws IOException, URISyntaxException {
+    private LevelsManager() {
+    }
 
-        availableLevels.clear();
-
-        URI uri = ClassLoader.getSystemResource(PATH_TO_LEVELS_DIR).toURI();
-
-        Path levelsDir = Paths.get(uri);
-
-        if (!Files.isDirectory(levelsDir)) {
-            throw new NotDirectoryException("Expected \"Levels\" directory, but got file");
-        }
-
-        Gson gson = new Gson();
-
-        for (Path f : Objects.requireNonNull(Files.newDirectoryStream(levelsDir))) {
-            if (Files.isDirectory(f)) {
-                continue;
-            }
-
-            try (JsonReader reader = new JsonReader(new BufferedReader(new FileReader(f.toString())))) {
-                availableLevels.put(f.getFileName().toString(), gson.fromJson(reader, JsonObject.class));
-            }
-        }
+    static LevelsManager create() throws IOException, URISyntaxException {
+        LevelsManager levelsManager = new LevelsManager();
+        levelsManager.scanForLevels();
+        return levelsManager;
     }
 
     GameLevel initLevelModel(String levelName) throws GeneratingGameException {
@@ -72,4 +56,28 @@ class LevelsManager {
         return availableLevels.get(levelName + ".json");
     }
 
+    private void scanForLevels() throws IOException, URISyntaxException {
+
+        availableLevels.clear();
+
+        URI uri = ClassLoader.getSystemResource(PATH_TO_LEVELS_DIR).toURI();
+
+        Path levelsDir = Paths.get(uri);
+
+        if (!Files.isDirectory(levelsDir)) {
+            throw new NotDirectoryException("Expected \"Levels\" directory, but got file");
+        }
+
+        Gson gson = new Gson();
+
+        for (Path f : Objects.requireNonNull(Files.newDirectoryStream(levelsDir))) {
+            if (Files.isDirectory(f)) {
+                continue;
+            }
+
+            try (JsonReader reader = new JsonReader(new BufferedReader(new FileReader(f.toString())))) {
+                availableLevels.put(f.getFileName().toString(), gson.fromJson(reader, JsonObject.class));
+            }
+        }
+    }
 }

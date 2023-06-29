@@ -19,8 +19,8 @@ import java.net.URISyntaxException;
 
 class Presenter {
 
-    private final LevelsManager levelsManager = new LevelsManager();
-    private final ScoresManager scoresManager = new ScoresManager();
+    private LevelsManager levelsManager;
+    private ScoresManager scoresManager;
 
     private final GameLosePane gameLosePane = new GameLosePane();
     private final GamePassedPane gamePassedPane = new GamePassedPane();
@@ -44,10 +44,10 @@ class Presenter {
 
 
     void initialize() throws IOException, GeneratingGameException, URISyntaxException {
-        levelsManager.scanForLevels();
+        levelsManager = LevelsManager.create();
         levelsManager.checkGeneratingAllLevels();
 
-        scoresManager.scanForScores();
+        scoresManager = ScoresManager.create();
 
         NotificationsManager.getInstance().subscribe(EventType.START_GAME, this, v -> startGame());
         NotificationsManager.getInstance().subscribe(EventType.EXIT, this, v -> exitGame());
