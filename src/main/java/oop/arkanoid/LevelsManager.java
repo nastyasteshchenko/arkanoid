@@ -10,9 +10,12 @@ import oop.arkanoid.view.LevelView;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -22,14 +25,18 @@ class LevelsManager {
     private final Map<String, JsonObject> availableLevels = new HashMap<>();
     private LevelInitiator levelInitiator = new LevelInitiator(0, null);
 
-    LevelsManager() {
-    }
-
     void scanForLevels() throws IOException {
 
         availableLevels.clear();
 
-        Path levelsDir = Path.of(Objects.requireNonNull(getClass().getClassLoader().getResource(PATH_TO_LEVELS_DIR)).getPath());
+        URI uri;
+        try {
+            uri = ClassLoader.getSystemResource(PATH_TO_LEVELS_DIR).toURI();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+
+        Path levelsDir = Paths.get(uri);
 
         if (!Files.isDirectory(levelsDir)) {
             throw new NotDirectoryException("Expected \"Levels\" directory, but got file");
