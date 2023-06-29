@@ -23,7 +23,6 @@ class Presenter {
     private final LevelsManager levelsManager = new LevelsManager();
     private final ScoresManager scoresManager = new ScoresManager();
 
-    private final AboutPane aboutPane = new AboutPane();
     private final GameLosePane gameLosePane = new GameLosePane();
     private final GamePassedPane gamePassedPane = new GamePassedPane();
     private final GameWinPane gameWinPane = new GameWinPane();
@@ -55,6 +54,8 @@ class Presenter {
         Notifications.getInstance().subscribe(EventType.EXIT, this, v -> exitGame());
         Notifications.getInstance().subscribe(EventType.RECORDS, this, v -> watchRecords());
         Notifications.getInstance().subscribe(EventType.BACK, this, v -> updateMainPane(mainMenuPane));
+
+        final AboutPane aboutPane = new AboutPane();
         Notifications.getInstance().subscribe(EventType.ABOUT, this, v -> updateMainPane(aboutPane));
 
         updateMainPane(mainMenuPane);
