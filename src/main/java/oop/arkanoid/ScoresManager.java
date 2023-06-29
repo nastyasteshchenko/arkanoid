@@ -23,8 +23,8 @@ class ScoresManager {
     }
 
     boolean isNewScore(String levelName, int score, double time) {
-        if (scores.containsKey(levelName)) {
-            SingleScore singleScore = scores.get(levelName);
+        SingleScore singleScore = scores.get(levelName);
+        if (singleScore != null) {
             return score > singleScore.score() || (score == singleScore.score() && time < singleScore.time());
         }
         return true;
@@ -37,8 +37,9 @@ class ScoresManager {
     }
 
     int getScoreForLevel(String levelName) {
-        if (scores.containsKey(levelName)) {
-            return scores.get(levelName).score();
+        SingleScore singleScore = scores.get(levelName);
+        if (singleScore != null) {
+            return singleScore.score();
         }
         return 0;
     }
