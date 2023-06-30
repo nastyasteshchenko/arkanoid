@@ -33,6 +33,7 @@ class ScoresManager {
     void writeScore(SingleScore singleScore) {
         if (this.isNewScore(singleScore.levelName(), singleScore.score(), singleScore.time())) {
             scores.put(singleScore.levelName(), singleScore);
+            storeRecords();
         }
     }
 
@@ -48,7 +49,7 @@ class ScoresManager {
         return scores.values();
     }
 
-    void storeRecords() {
+    private void storeRecords() {
         Path pathToSave = Path.of("src", "main", "resources", "oop", "arkanoid", NAME_OF_RECORDS_FILE);
         try (BufferedWriter jsonWriter = new BufferedWriter(new FileWriter(pathToSave.toString()))) {
             ArrayList<SingleScore> singleScores = new ArrayList<>(scores.values());
