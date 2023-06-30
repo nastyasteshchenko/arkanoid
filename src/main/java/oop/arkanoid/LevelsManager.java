@@ -12,16 +12,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.NotDirectoryException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 class LevelsManager {
-    private final static Path PATH_TO_LEVELS_DIR =  Path.of(".", "oop", "arkanoid", "Levels");
+    private final static Path PATH_TO_LEVELS_DIR = Path.of(".", "oop", "arkanoid", "Levels");
     private final Map<String, JsonObject> availableLevels = new HashMap<>();
     private LevelInitiator levelInitiator = new LevelInitiator(null, "");
 
@@ -71,13 +67,15 @@ class LevelsManager {
 
         Gson gson = new Gson();
 
-        for (Path f : Objects.requireNonNull(Files.newDirectoryStream(levelsDir))) {
-            if (Files.isDirectory(f)) {
-                continue;
-            }
+        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(levelsDir)) {
+            for (Path f : directoryStream) {
+                if (Files.isDirectory(f)) {
+                    continue;
+                }
 
-            try (JsonReader reader = new JsonReader(new BufferedReader(new FileReader(f.toString())))) {
-                availableLevels.put(f.getFileName().toString(), gson.fromJson(reader, JsonObject.class));
+                try (JsonReader reader = new JsonReader(new BufferedReader(new FileReader(f.toString())))) {
+                    availableLevels.put(f.getFileName().toString(), gson.fromJson(reader, JsonObject.class));
+                }
             }
         }
     }
