@@ -1,10 +1,8 @@
 package oop.arkanoid.notifications;
 
-public enum EventType {
-    DESTROY,
+public enum EventTypeWithNoData implements IEventType {
     START_PLAYING_GAME,
     PAUSE,
-    MOVE_PLATFORM,
     START_GAME,
     EXIT,
     RECORDS,
@@ -12,6 +10,5 @@ public enum EventType {
     ABOUT,
     RESTART_LEVEL,
     RESTART_GAME,
-    SAVE_SCORE,
     DONT_SAVE_SCORE
 }

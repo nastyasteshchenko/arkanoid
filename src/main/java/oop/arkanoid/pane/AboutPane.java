@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import oop.arkanoid.notifications.EventType;
+import oop.arkanoid.notifications.EventTypeWithNoData;
 import oop.arkanoid.notifications.NotificationsManager;
 
 public class AboutPane extends GridPane {
@@ -47,7 +47,7 @@ public class AboutPane extends GridPane {
 
         aboutTextAnchorPane.getChildren().add(aboutText);
 
-        backButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventType.BACK));
+        backButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventTypeWithNoData.BACK));
         backButton.setPrefSize(150., 70.);
         backButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 19");
         backButton.setFont(Font.font("Droid Sans Mono"));

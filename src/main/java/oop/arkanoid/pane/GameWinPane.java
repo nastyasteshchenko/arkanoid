@@ -9,7 +9,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
-import oop.arkanoid.notifications.EventType;
+import oop.arkanoid.notifications.EventTypeWithNoData;
 import oop.arkanoid.notifications.NotificationsManager;
 
 public class GameWinPane extends GridPane {
@@ -46,12 +46,12 @@ public class GameWinPane extends GridPane {
         GridPane.setValignment(exitButton, VPos.TOP);
 
 
-        nextLevelButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventType.RESTART_LEVEL));
+        nextLevelButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventTypeWithNoData.RESTART_LEVEL));
         nextLevelButton.setPrefSize(233., 70.);
         nextLevelButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21");
         nextLevelButton.setFont(Font.font("Droid Sans Mono"));
 
-        exitButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventType.EXIT));
+        exitButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventTypeWithNoData.EXIT));
         exitButton.setPrefSize(233., 70.);
         exitButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 21");
         exitButton.setFont(Font.font("Droid Sans Mono"));

@@ -1,16 +1,15 @@
 package oop.arkanoid.notifications;
 
 import oop.arkanoid.model.barrier.Brick;
+import oop.arkanoid.notifications.wrapper.DoubleWrapper;
+import oop.arkanoid.notifications.wrapper.StringWrapper;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class NotificationsManager {
+
     private static final NotificationsManager INSTANCE = new NotificationsManager();
-
-    private final EnumMap<EventType, List<Subscriber>> subscribers = new EnumMap<>(EventType.class);
-
-    private final HashMap<Object, EnumMap<EventType, Subscriber>> subscriberToObjectMapping = new HashMap<>();
+    final Map<IEventType, List<Subscriber<EventData>>> subscribers = new HashMap<>();
 
     private NotificationsManager() {
     }
@@ -19,48 +18,38 @@ public class NotificationsManager {
         return INSTANCE;
     }
 
-    public void publish(EventType type, Brick brick) {
-        List<Subscriber> subscribers = this.subscribers.get(type);
-        for (Subscriber subscriber : subscribers) {
-            subscriber.handler().accept(brick);
-        }
+    public void publishBrickDestroyed(Brick brick) {
+        publish(EventTypeWithData.DESTROY_BRICK, brick);
     }
 
-    public void publish(EventType type, Double x) {
-        List<Subscriber> subscribers = this.subscribers.get(type);
-        for (Subscriber subscriber : subscribers) {
-            subscriber.handler().accept(x);
-        }
+    public void publishSaveScores(String author) {
+        publish(EventTypeWithData.SAVE_SCORE, new StringWrapper(author));
     }
 
-    public void publish(EventType type, String name) {
-        List<Subscriber> subscribers = this.subscribers.get(type);
-        for (Subscriber subscriber : subscribers) {
-            subscriber.handler().accept(name);
-        }
+    public void publishMovePlatform(double x) {
+        publish(EventTypeWithData.MOVE_PLATFORM, new DoubleWrapper(x));
     }
 
-    public void publish(EventType type) {
-        List<Subscriber> subscribers = this.subscribers.get(type);
-        for (Subscriber subscriber : subscribers) {
-            subscriber.handler().accept(null);
-        }
+    public void publish(EventTypeWithNoData eventType) {
+        publish(eventType, null);
     }
 
-    public void subscribe(EventType type, Object subObj, Consumer<Object> handler) {
-        EnumMap<EventType, Subscriber> mapping = this.subscriberToObjectMapping.computeIfAbsent(subObj, v -> new EnumMap<>(EventType.class));
-        List<Subscriber> subscribers = this.subscribers.computeIfAbsent(type, v -> new ArrayList<>());
-        Subscriber subscriber = new Subscriber(handler);
-        mapping.put(type, subscriber);
-        subscribers.add(0, subscriber);
+    public void subscribe(Subscriber<? extends EventData> subscriber) {
+        List<Subscriber<EventData>> subscribers = this.subscribers.computeIfAbsent(subscriber.eventType, v -> new ArrayList<>());
+        //noinspection unchecked
+        subscribers.add((Subscriber<EventData>) subscriber);
     }
 
-    public void unsubscribe(EventType type, Object subObj) {
-        EnumMap<EventType, Subscriber> subscriberEnumMap = subscriberToObjectMapping.get(subObj);
-        Subscriber subscriber = subscriberEnumMap.get(type);
-        subscriberToObjectMapping.remove(subscriberEnumMap);
-        List<Subscriber> subscribers = this.subscribers.get(type);
+    public void unsubscribe(Subscriber<? extends EventData> subscriber) {
+        List<Subscriber<EventData>> subscribers = this.subscribers.get(subscriber.eventType);
         subscribers.remove(subscriber);
     }
+
+    private <T extends EventData> void publish(IEventType eventType, T eventInfo) {
+        for (Subscriber<? super EventData> s : subscribers.getOrDefault(eventType, Collections.emptyList())) {
+            s.actionPerformed(eventInfo);
+        }
+    }
+
 }
 

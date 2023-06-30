@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import oop.arkanoid.notifications.EventType;
+import oop.arkanoid.notifications.EventTypeWithNoData;
 import oop.arkanoid.notifications.NotificationsManager;
 
 public class MainMenuPane extends GridPane {
@@ -66,22 +66,22 @@ public class MainMenuPane extends GridPane {
         arkanoidText.setStyle("-fx-font-size: 70");
         arkanoidText.setTextAlignment(TextAlignment.CENTER);
 
-        startButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventType.START_GAME));
+        startButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventTypeWithNoData.START_GAME));
         startButton.setPrefSize(150., 70.);
         startButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 19");
         startButton.setFont(Font.font("Droid Sans Mono"));
 
-        aboutButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventType.ABOUT));
+        aboutButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventTypeWithNoData.ABOUT));
         aboutButton.setPrefSize(150., 70.);
         aboutButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 19");
         aboutButton.setFont(Font.font("Droid Sans Mono"));
 
-        exitButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventType.EXIT));
+        exitButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventTypeWithNoData.EXIT));
         exitButton.setPrefSize(150., 70.);
         exitButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 19");
         exitButton.setFont(Font.font("Droid Sans Mono"));
 
-        recordsButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventType.RECORDS));
+        recordsButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventTypeWithNoData.RECORDS));
         recordsButton.setPrefSize(150., 70.);
         recordsButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff; -fx-font-size: 19");
         recordsButton.setFont(Font.font("Droid Sans Mono"));

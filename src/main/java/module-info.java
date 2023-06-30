@@ -17,4 +17,6 @@ module oop.arkanoid {
     opens oop.arkanoid.notifications to javafx.fxml;
     exports oop.arkanoid.pane;
     opens oop.arkanoid.pane to javafx.fxml;
+    exports oop.arkanoid.notifications.wrapper;
+    opens oop.arkanoid.notifications.wrapper to javafx.fxml;
 }

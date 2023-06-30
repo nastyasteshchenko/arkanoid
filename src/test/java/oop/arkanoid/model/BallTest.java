@@ -1,8 +1,6 @@
 package oop.arkanoid.model;
 
 import oop.arkanoid.model.barrier.*;
-import oop.arkanoid.notifications.EventType;
-import oop.arkanoid.notifications.NotificationsManager;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -56,19 +54,16 @@ class BallTest {
 
     @Test
     void moveBallWithBottomCollisionTest() {
-        NotificationsManager.getInstance().subscribe(EventType.DESTROY, this, b -> {});
         Ball ball = new Ball(15, new Point(150, 115));
         List<Barrier> barriers = createBarriers();
         Point nextPosition = ball.move(barriers);
         assertSame(ball.position(), nextPosition);
         assertEquals(150.75, roundToThousandths(nextPosition.x()));
         assertEquals(116.299, roundToThousandths(nextPosition.y()));
-        NotificationsManager.getInstance().unsubscribe(EventType.DESTROY, this);
     }
 
     @Test
     void moveBallWithRightCollisionTest() throws GeneratingGameException {
-        NotificationsManager.getInstance().subscribe(EventType.DESTROY, this, b -> {});
         Ball ball = new Ball(15, new Point(285, 25));
         List<Barrier> barriers = createBarriers();
         barriers.add(new Wall(new Point(300, 0), new Point(0, 600), CollisionPlace.RIGHT));
@@ -76,31 +71,26 @@ class BallTest {
         assertSame(ball.position(), nextPosition);
         assertEquals(284.25, roundToThousandths(nextPosition.x()));
         assertEquals(23.701, roundToThousandths(nextPosition.y()));
-        NotificationsManager.getInstance().unsubscribe(EventType.DESTROY, this);
     }
 
     @Test
     void moveBallWithTopCollisionTest() {
-        NotificationsManager.getInstance().subscribe(EventType.DESTROY, this, b -> {});
         Ball ball = new Ball(15, new Point(150, 75));
         List<Barrier> barriers = createBarriers();
         Point nextPosition = ball.move(barriers);
         assertSame(ball.position(), nextPosition);
         assertEquals(150.75, roundToThousandths(nextPosition.x()));
         assertEquals(76.299, roundToThousandths(nextPosition.y()));
-        NotificationsManager.getInstance().unsubscribe(EventType.DESTROY, this);
     }
 
     @Test
     void moveBallWithLeftCollisionTest() {
-        NotificationsManager.getInstance().subscribe(EventType.DESTROY, this, b -> {});
         Ball ball = new Ball(15, new Point(113, 90));
         List<Barrier> barriers = createBarriers();
         Point nextPosition = ball.move(barriers);
         assertSame(ball.position(), nextPosition);
         assertEquals(112.25, roundToThousandths(nextPosition.x()));
         assertEquals(88.701, roundToThousandths(nextPosition.y()));
-        NotificationsManager.getInstance().unsubscribe(EventType.DESTROY, this);
     }
 
 }

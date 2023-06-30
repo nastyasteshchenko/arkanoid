@@ -12,7 +12,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import oop.arkanoid.notifications.EventType;
+import oop.arkanoid.notifications.EventTypeWithNoData;
 import oop.arkanoid.notifications.NotificationsManager;
 
 public class SaveScorePane extends GridPane {
@@ -97,12 +97,12 @@ public class SaveScorePane extends GridPane {
         saveButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff");
         saveButton.setFont(Font.font("Droid Sans Mono", 19.));
         saveButton.setDisable(true);
-        saveButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventType.SAVE_SCORE, authorNameTextField.getText()));
+        saveButton.setOnAction(ae -> NotificationsManager.getInstance().publishSaveScores(authorNameTextField.getText()));
 
         dontSaveButton.setPrefSize(150., 70.);
         dontSaveButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #ffffff");
         dontSaveButton.setFont(Font.font("Droid Sans Mono", 19.));
-        dontSaveButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventType.DONT_SAVE_SCORE));
+        dontSaveButton.setOnAction(ae -> NotificationsManager.getInstance().publish(EventTypeWithNoData.DONT_SAVE_SCORE));
 
         this.getChildren().addAll(newScoreTitleLabel, scoreLabel, newScoreLabel, authorNameWrapper, saveButton, dontSaveButton);
         this.setPrefSize(600, 900);

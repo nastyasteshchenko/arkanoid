@@ -94,8 +94,8 @@ public class LevelView {
             gamePane.setPrefSize(size.x(), size.y());
             String fxColor = String.format("#%2x%2x%2x", (int) (color.getRed() * 255), (int) (color.getGreen() * 255), (int) (color.getBlue() * 255));
             gamePane.setStyle("-fx-background-color: " + fxColor);
-            gamePane.setOnMouseClicked(event -> NotificationsManager.getInstance().publish(EventType.START_PLAYING_GAME));
-            gamePane.setOnMouseMoved(event -> NotificationsManager.getInstance().publish(EventType.MOVE_PLATFORM, event.getX()));
+            gamePane.setOnMouseClicked(event -> NotificationsManager.getInstance().publish(EventTypeWithNoData.START_PLAYING_GAME));
+            gamePane.setOnMouseMoved(event -> NotificationsManager.getInstance().publishMovePlatform(event.getX()));
             return this;
         }
 
@@ -151,7 +151,7 @@ public class LevelView {
         @SuppressWarnings("UnusedReturnValue")
         public Builder pauseButton(Point position, Point size, Font font, String fontSize, Color textColor, String backgroundStyle) {
             Button pauseButton = new Button();
-            pauseButton.setOnMouseClicked(event -> NotificationsManager.getInstance().publish(EventType.PAUSE));
+            pauseButton.setOnMouseClicked(event -> NotificationsManager.getInstance().publish(EventTypeWithNoData.PAUSE));
             pauseButton.setText("Pause");
             pauseButton.setTranslateX(position.x());
             pauseButton.setTranslateY(position.y());

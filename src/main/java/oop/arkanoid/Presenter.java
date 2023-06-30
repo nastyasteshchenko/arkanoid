@@ -11,6 +11,8 @@ import oop.arkanoid.model.GameState;
 import oop.arkanoid.model.GeneratingGameException;
 import oop.arkanoid.model.barrier.Brick;
 import oop.arkanoid.notifications.*;
+import oop.arkanoid.notifications.wrapper.DoubleWrapper;
+import oop.arkanoid.notifications.wrapper.StringWrapper;
 import oop.arkanoid.pane.*;
 import oop.arkanoid.view.LevelView;
 
@@ -53,44 +55,107 @@ class Presenter {
 
         scoresManager = ScoresManager.create();
 
-        NotificationsManager.getInstance().subscribe(EventType.START_GAME, this, v -> startGame());
-        NotificationsManager.getInstance().subscribe(EventType.EXIT, this, v -> exitGame());
-        NotificationsManager.getInstance().subscribe(EventType.RECORDS, this, v -> watchRecords());
-        NotificationsManager.getInstance().subscribe(EventType.BACK, this, v -> updateMainPane(mainMenuPane));
+        NotificationsManager.getInstance().subscribe(new Subscriber<>(EventTypeWithNoData.START_GAME) {
+            @Override
+            public void actionPerformed(EventData eventData) {
+                startGame();
+            }
+        });
+
+        NotificationsManager.getInstance().subscribe(new Subscriber<>(EventTypeWithNoData.EXIT) {
+            @Override
+            public void actionPerformed(EventData eventData) {
+                exitGame();
+            }
+        });
+
+        NotificationsManager.getInstance().subscribe(new Subscriber<>(EventTypeWithNoData.RECORDS) {
+            @Override
+            public void actionPerformed(EventData eventData) {
+                watchRecords();
+            }
+        });
+
+        NotificationsManager.getInstance().subscribe(new Subscriber<>(EventTypeWithNoData.BACK) {
+            @Override
+            public void actionPerformed(EventData eventData) {
+                updateMainPane(mainMenuPane);
+            }
+        });
 
         final AboutPane aboutPane = new AboutPane();
-        NotificationsManager.getInstance().subscribe(EventType.ABOUT, this, v -> updateMainPane(aboutPane));
 
-        NotificationsManager.getInstance().subscribe(EventType.DESTROY, this, b -> {
-            if (b instanceof Brick brick) {
+        NotificationsManager.getInstance().subscribe(new Subscriber<>(EventTypeWithNoData.ABOUT) {
+            @Override
+            public void actionPerformed(EventData eventData) {
+                updateMainPane(aboutPane);
+            }
+        });
+
+        NotificationsManager.getInstance().subscribe(new Subscriber<Brick>(EventTypeWithData.DESTROY_BRICK) {
+            @Override
+            public void actionPerformed(Brick brick) {
                 gameView.deleteBrick(brick.position());
                 gameView.drawScore(model.getScore());
             }
         });
 
-        NotificationsManager.getInstance().subscribe(EventType.START_PLAYING_GAME, this, v -> setGameIsStarted());
-        NotificationsManager.getInstance().subscribe(EventType.PAUSE, this, v -> setPause());
-        NotificationsManager.getInstance().subscribe(EventType.MOVE_PLATFORM, this, v -> {
-            if (v instanceof Double x) {
-                movePlatform(x);
+        NotificationsManager.getInstance().subscribe(new Subscriber<>(EventTypeWithNoData.START_PLAYING_GAME) {
+            @Override
+            public void actionPerformed(EventData eventData) {
+                startPlayingAnimation();
             }
         });
 
-        NotificationsManager.getInstance().subscribe(EventType.RESTART_LEVEL, this, v -> startLevel());
-        NotificationsManager.getInstance().subscribe(EventType.RESTART_GAME, this, v -> restartAllGame());
-        NotificationsManager.getInstance().subscribe(EventType.SAVE_SCORE, this, str -> {
-            if (str instanceof String name) {
-                setRecord(name, secondsPassed);
+        NotificationsManager.getInstance().subscribe(new Subscriber<>(EventTypeWithNoData.PAUSE) {
+            @Override
+            public void actionPerformed(EventData eventData) {
+                setPause();
+            }
+        });
+
+        NotificationsManager.getInstance().subscribe(new Subscriber<DoubleWrapper>(EventTypeWithData.MOVE_PLATFORM) {
+            @Override
+            public void actionPerformed(DoubleWrapper x) {
+                movePlatform(x.value());
+            }
+        });
+
+        NotificationsManager.getInstance().subscribe(new Subscriber<>(EventTypeWithNoData.RESTART_LEVEL) {
+            @Override
+            public void actionPerformed(EventData eventData) {
+                startLevel();
+            }
+        });
+
+        NotificationsManager.getInstance().subscribe(new Subscriber<>(EventTypeWithNoData.RESTART_GAME) {
+            @Override
+            public void actionPerformed(EventData eventData) {
+                restartAllGame();
+            }
+        });
+
+
+        NotificationsManager.getInstance().subscribe(new Subscriber<StringWrapper>(EventTypeWithData.SAVE_SCORE) {
+            @Override
+            public void actionPerformed(StringWrapper author) {
+                setRecord(author.value(), secondsPassed);
                 prepareForLevelOver();
             }
         });
 
-        NotificationsManager.getInstance().subscribe(EventType.DONT_SAVE_SCORE, this, v -> prepareForLevelOver());
+        NotificationsManager.getInstance().subscribe(new Subscriber<>(EventTypeWithNoData.DONT_SAVE_SCORE) {
+            @Override
+            public void actionPerformed(EventData eventData) {
+                prepareForLevelOver();
+            }
+        });
 
         updateMainPane(mainMenuPane);
+
     }
 
-    private void setGameIsStarted() {
+    private void startPlayingAnimation() {
         animation.play();
     }
 

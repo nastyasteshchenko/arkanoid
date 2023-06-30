@@ -1,6 +1,11 @@
 package oop.arkanoid.notifications;
 
-import java.util.function.Consumer;
+public abstract class Subscriber<T extends EventData> {
+    final IEventType eventType;
 
-public record Subscriber(Consumer<Object> handler) {
+    public Subscriber(IEventType eventType) {
+        this.eventType = eventType;
+    }
+
+    public abstract void actionPerformed(T t);
 }
