@@ -2,7 +2,19 @@
   {
     "levelName": "level1",
     "author": "nastya",
-    "score": 20,
-    "time": 13.574999999999442
+    "score": 125,
+    "time": 53.54249999998755
+  },
+  {
+    "levelName": "level3",
+    "author": "nastya",
+    "score": 100,
+    "time": 232.04749999982522
+  },
+  {
+    "levelName": "level2",
+    "author": "nastya",
+    "score": 75,
+    "time": 141.88749999990722
   }
 ]
