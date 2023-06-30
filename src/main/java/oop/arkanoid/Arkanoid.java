@@ -14,10 +14,9 @@ public class Arkanoid extends Application {
         stage.setTitle("Arkanoid");
 
         StackPane mainStackPane = new StackPane();
-        Presenter presenter = new Presenter(mainStackPane);
 
         try {
-            presenter.initialize();
+            Presenter.startPresenter(mainStackPane);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Error");

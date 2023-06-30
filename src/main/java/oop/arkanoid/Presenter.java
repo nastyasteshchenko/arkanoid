@@ -38,12 +38,16 @@ class Presenter {
     private boolean isPause = false;
     private int currentLevel;
 
-    Presenter(StackPane rootStackPane) {
+    private Presenter(StackPane rootStackPane) {
         this.rootStackPane = rootStackPane;
     }
 
+    static void startPresenter(StackPane stackPane) throws GeneratingGameException, IOException, URISyntaxException {
+        Presenter presenter = new Presenter(stackPane);
+        presenter.initialize();
+    }
 
-    void initialize() throws IOException, GeneratingGameException, URISyntaxException {
+    private void initialize() throws IOException, GeneratingGameException, URISyntaxException {
         levelsManager = LevelsManager.create();
         levelsManager.checkGeneratingAllLevels();
 
