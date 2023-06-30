@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 class ScoresManager {
-    private final static Path PATH_TO_RECORDS = Path.of("records.json");
+    private final static String NAME_OF_RECORDS_FILE = "records.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<String, SingleScore> scores = new HashMap<>();
 
@@ -49,8 +49,8 @@ class ScoresManager {
     }
 
     void storeRecords() {
-        Path pathToSave = Path.of("src", "main", "resources", "oop", "arkanoid", PATH_TO_RECORDS.toString());
-        try (FileWriter jsonWriter = new FileWriter(pathToSave.toString())) {
+        Path pathToSave = Path.of("src", "main", "resources", "oop", "arkanoid", NAME_OF_RECORDS_FILE);
+        try (BufferedWriter jsonWriter = new BufferedWriter(new FileWriter(pathToSave.toString()))) {
             ArrayList<SingleScore> singleScores = new ArrayList<>(scores.values());
             gson.toJson(singleScores, jsonWriter);
         } catch (IOException e) {
@@ -65,7 +65,7 @@ class ScoresManager {
 
         scores.clear();
 
-        try (JsonReader fileReader = new JsonReader(new BufferedReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(PATH_TO_RECORDS.toString())))))) {
+        try (JsonReader fileReader = new JsonReader(new BufferedReader(new InputStreamReader(Objects.requireNonNull(Presenter.class.getResourceAsStream(NAME_OF_RECORDS_FILE)))))) {
             JsonArray ja = gson.fromJson(fileReader, JsonArray.class);
             if (ja == null) {
                 return;
